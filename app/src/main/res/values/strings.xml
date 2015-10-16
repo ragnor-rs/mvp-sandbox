@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Sandbox</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="github_repo_list_error">Error loading repositories</string>
+
+    <string name="permissions_required">Some of the required permissions are missing</string>
+
+</resources>
