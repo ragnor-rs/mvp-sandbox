@@ -117,7 +117,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         stateSaved = false;
         Object component = getComponentCache().getComponentFor(this);
         inject(component);
-        attach();
+        onPresenterAttached();
     }
 
     private ComponentCache getComponentCache() {
@@ -138,13 +138,13 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         if (!stateSaved) {
             getComponentCache().invalidateComponentFor(this);
         }
-        detach();
+        onPresenterDetached();
     }
 
     protected abstract void inject(Object component);
 
-    protected abstract void attach();
+    protected abstract void onPresenterAttached();
 
-    protected abstract void detach();
+    protected abstract void onPresenterDetached();
 
 }

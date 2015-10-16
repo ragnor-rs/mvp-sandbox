@@ -27,8 +27,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         this.repoService = repoService;
     }
 
-    @Override
-    public void update() {
+    public void listRepos() {
         repoService.listRepos(GIT_HUB_USER).enqueue(new AsyncResponse<List<Repo>>() {
 
             @Override

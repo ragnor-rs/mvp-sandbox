@@ -34,11 +34,11 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.daggertest_repo_recycler_view);
 
-        // use this setting to improve performance if you know that changes
+        // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
+        // setView a linear layout manager
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         return view;
@@ -47,7 +47,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.update();
+        presenter.listRepos();
     }
 
     @Override
@@ -63,13 +63,13 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     }
 
     @Override
-    protected void attach() {
-        presenter.attach(this);
+    protected void onPresenterAttached() {
+        presenter.setView(this);
     }
 
     @Override
-    protected void detach() {
-        presenter.detach();
+    protected void onPresenterDetached() {
+        presenter.setView(null);
     }
 
     @Override
