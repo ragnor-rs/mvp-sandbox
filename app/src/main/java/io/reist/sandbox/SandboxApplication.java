@@ -12,7 +12,9 @@ import io.reist.sandbox.repos.view.RepoListView;
  */
 public class SandboxApplication extends BaseApplication {
 
-    private final ApplicationComponent applicationComponent = DaggerApplicationComponent.create();
+    private final ApplicationComponent applicationComponent = DaggerApplicationComponent.builder()
+            .applicationModule(new ApplicationModule(this))
+            .build();
 
     @Override
     public Object buildComponentFor(BaseView view) {

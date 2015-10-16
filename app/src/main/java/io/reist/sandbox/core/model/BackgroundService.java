@@ -2,11 +2,16 @@ package io.reist.sandbox.core.model;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 /**
  * Created by Reist on 10/16/15.
  */
 public abstract class BackgroundService extends Thread {
+
+    private static final String TAG = BackgroundService.class.getName();
+
+    private final Object lock = new Object();
 
     private Handler backgroundThreadHandler;
 
@@ -21,7 +26,10 @@ public abstract class BackgroundService extends Thread {
     public void run() {
         super.run();
         Looper.prepare();
-        backgroundThreadHandler = new Handler();
+        synchronized (lock) {
+           backgroundThreadHandler = new Handler();
+           lock.notifyAll();
+        }
         Looper.loop();
     }
 
@@ -52,6 +60,17 @@ public abstract class BackgroundService extends Thread {
 
             @Override
             public void enqueue(final AsyncResponse<R> response) {
+
+                synchronized (lock) {
+                    while (backgroundThreadHandler == null) {
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            Log.e(TAG, "Exception occurred", e);
+                        }
+                    }
+                }
+
                 backgroundThreadHandler.post(new Runnable() {
 
                     @Override
@@ -64,6 +83,7 @@ public abstract class BackgroundService extends Thread {
                     }
 
                 });
+
             }
 
         };
