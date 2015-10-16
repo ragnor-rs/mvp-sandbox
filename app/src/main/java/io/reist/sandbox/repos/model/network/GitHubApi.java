@@ -1,4 +1,4 @@
-package io.reist.sandbox.repos.model.github;
+package io.reist.sandbox.repos.model.network;
 
 import java.util.List;
 

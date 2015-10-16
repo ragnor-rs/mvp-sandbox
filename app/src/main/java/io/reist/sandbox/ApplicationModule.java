@@ -2,9 +2,9 @@ package io.reist.sandbox;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reist.sandbox.repos.model.DummyRepoService;
 import io.reist.sandbox.repos.model.RepoService;
-import io.reist.sandbox.repos.model.github.GitHubApi;
-import io.reist.sandbox.repos.model.github.GitHubRepoService;
+import io.reist.sandbox.repos.model.network.GitHubApi;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
@@ -26,7 +26,8 @@ public class ApplicationModule {
 
         GitHubApi gitHubApi = retrofit.create(GitHubApi.class);
 
-        return new GitHubRepoService(gitHubApi);
+        //return new GitHubRepoService(gitHubApi);
+        return new DummyRepoService();
 
     }
 

@@ -18,7 +18,7 @@ import io.reist.sandbox.repos.view.RepoListView;
  */
 public class RepoListPresenter extends BasePresenter<RepoListView> {
 
-    private static final String GIT_HUB_USER = "JakeWharton";
+    private static final String REPOS_AUTHOR = "JakeWharton";
 
     private final RepoService repoService;
 
@@ -28,7 +28,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
     }
 
     public void listRepos() {
-        repoService.listRepos(GIT_HUB_USER).enqueue(new AsyncResponse<List<Repo>>() {
+        repoService.listRepos(REPOS_AUTHOR).enqueue(new AsyncResponse<List<Repo>>() {
 
             @Override
             public void onSuccess(List<Repo> response) {
