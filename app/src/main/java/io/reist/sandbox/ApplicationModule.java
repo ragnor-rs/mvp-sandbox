@@ -10,12 +10,17 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reist.sandbox.repos.model.CombinedRepoService;
 import io.reist.sandbox.repos.model.Repo;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.repos.model.RepoStorIOSQLiteGetResolver;
 import io.reist.sandbox.repos.model.RepoStorIOSQLitePutResolver;
-import io.reist.sandbox.repos.model.sqlite.StorIoRepoService;
+import io.reist.sandbox.repos.model.database.StorIoRepoService;
+import io.reist.sandbox.repos.model.network.GitHubApi;
+import io.reist.sandbox.repos.model.network.RetrofitRepoService;
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
 
 /**
  * Created by Reist on 10/16/15.
@@ -23,7 +28,7 @@ import io.reist.sandbox.repos.model.sqlite.StorIoRepoService;
 @Module
 public class ApplicationModule {
 
-    //private static final String GIT_HIB_BASE_URL = "https://api.github.com";
+    private static final String GIT_HUB_BASE_URL = "https://api.github.com";
 
     private final Context context;
 
@@ -31,21 +36,18 @@ public class ApplicationModule {
         this.context = context;
     }
 
-    /*
-    @Provides @Singleton
-    RepoService repoService() {
+    RepoService networkRepoService() {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(GIT_HIB_BASE_URL)
+                .baseUrl(GIT_HUB_BASE_URL)
                 .build();
 
         GitHubApi gitHubApi = retrofit.create(GitHubApi.class);
 
-        return new GitHubRepoService(gitHubApi);
+        return new RetrofitRepoService(gitHubApi);
 
     }
-    */
 
     /*
     @Provides @Singleton
@@ -54,8 +56,7 @@ public class ApplicationModule {
     }
     */
 
-    @Provides @Singleton
-    RepoService repoService() {
+    RepoService databaseRepoService() {
 
         DbOpenHelper dbOpenHelper = new DbOpenHelper(context);
 
@@ -73,6 +74,11 @@ public class ApplicationModule {
 
         return new StorIoRepoService(storIoSqLite);
 
+    }
+
+    @Provides @Singleton
+    RepoService repoService() {
+        return new CombinedRepoService(databaseRepoService(), networkRepoService());
     }
 
 }

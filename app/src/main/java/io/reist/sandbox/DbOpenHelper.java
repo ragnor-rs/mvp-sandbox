@@ -5,11 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 
-import io.reist.sandbox.repos.model.sqlite.ReposTable;
+import io.reist.sandbox.repos.model.database.ReposTable;
 
 public class DbOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public DbOpenHelper(@NonNull Context context) {
         super(context, "sandbox", null, DATABASE_VERSION);
@@ -21,6 +21,11 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {}
+    public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
+        String[] reposTableUpgradeQueries = ReposTable.getUpgradeTableQueries(oldVersion);
+        for (String query : reposTableUpgradeQueries) {
+            db.execSQL(query);
+        }
+    }
 
 }

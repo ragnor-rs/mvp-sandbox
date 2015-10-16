@@ -49,6 +49,7 @@ public abstract class BackgroundService extends Thread {
 
             @Override
             public void run() {
+                Log.e(TAG, "Exception occurred", error);
                 response.onError(error);
             }
 

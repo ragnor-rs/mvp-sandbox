@@ -10,11 +10,11 @@ import io.reist.sandbox.repos.model.RepoService;
 /**
  * Created by Reist on 10/14/15.
  */
-public class GitHubRepoService extends RetrofitService implements RepoService {
+public class RetrofitRepoService extends RetrofitService implements RepoService {
 
     private final GitHubApi gitHubApi;
 
-    public GitHubRepoService(GitHubApi gitHubApi) {
+    public RetrofitRepoService(GitHubApi gitHubApi) {
         this.gitHubApi = gitHubApi;
     }
 

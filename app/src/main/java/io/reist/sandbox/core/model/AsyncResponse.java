@@ -5,8 +5,8 @@ package io.reist.sandbox.core.model;
  */
 public interface AsyncResponse<T> {
 
-    void onSuccess(T body);
+    void onSuccess(T result);
 
-    void onError(Throwable t);
+    void onError(Throwable error);
 
 }

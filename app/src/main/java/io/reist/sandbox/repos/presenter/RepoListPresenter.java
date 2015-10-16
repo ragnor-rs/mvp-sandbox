@@ -31,12 +31,12 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         repoService.listRepos(REPOS_AUTHOR).enqueue(new AsyncResponse<List<Repo>>() {
 
             @Override
-            public void onSuccess(List<Repo> response) {
-                getView().getRecyclerView().setAdapter(new RepoListAdapter(response));
+            public void onSuccess(List<Repo> result) {
+                getView().getRecyclerView().setAdapter(new RepoListAdapter(result));
             }
 
             @Override
-            public void onError(Throwable t) {
+            public void onError(Throwable error) {
                 Toast.makeText(getContext(), R.string.github_repo_list_error, Toast.LENGTH_LONG).show();
             }
 
