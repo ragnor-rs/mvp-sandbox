@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 
-import io.reist.sandbox.repos.model.database.ReposTable;
+import io.reist.sandbox.repos.model.local.ReposTable;
 
 public class DbOpenHelper extends SQLiteOpenHelper {
 

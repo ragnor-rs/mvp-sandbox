@@ -1,16 +1,16 @@
-package io.reist.sandbox.repos.model.network;
+package io.reist.sandbox.repos.model.remote;
 
 import java.util.List;
 
 import io.reist.sandbox.core.model.AsyncRequest;
-import io.reist.sandbox.core.model.network.RetrofitService;
+import io.reist.sandbox.core.model.remote.RetrofitService;
 import io.reist.sandbox.repos.model.Repo;
 import io.reist.sandbox.repos.model.RepoService;
 
 /**
  * Created by Reist on 10/14/15.
  */
-public class RetrofitRepoService extends RetrofitService implements RepoService {
+public class RetrofitRepoService extends RetrofitService<Repo> implements RepoService {
 
     private final GitHubApi gitHubApi;
 
@@ -20,7 +20,7 @@ public class RetrofitRepoService extends RetrofitService implements RepoService 
 
     @Override
     public AsyncRequest<List<Repo>> listRepos(final String user) {
-        return createRequest(gitHubApi.listRepos(user));
+        return createListRequest(gitHubApi.listRepos(user));
     }
 
 }

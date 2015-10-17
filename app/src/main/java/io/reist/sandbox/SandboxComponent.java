@@ -10,8 +10,8 @@ import io.reist.sandbox.repos.ReposFragmentModule;
  * Created by Reist on 10/14/15.
  */
 @Singleton
-@Component(modules = ApplicationModule.class)
-public interface ApplicationComponent {
+@Component(modules = SandboxModule.class)
+public interface SandboxComponent {
 
     ReposFragmentComponent reposComponent(ReposFragmentModule reposFragmentModule);
 

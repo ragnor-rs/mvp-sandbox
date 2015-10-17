@@ -1,4 +1,4 @@
-package io.reist.sandbox.repos.model.database;
+package io.reist.sandbox.repos.model.local;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.queries.Query;
@@ -7,19 +7,16 @@ import java.util.List;
 
 import io.reist.sandbox.core.model.AsyncRequest;
 import io.reist.sandbox.core.model.BackgroundOp;
-import io.reist.sandbox.core.model.BackgroundService;
+import io.reist.sandbox.core.model.local.StorIoService;
 import io.reist.sandbox.repos.model.Repo;
-import io.reist.sandbox.repos.model.RepoService;
 
 /**
  * Created by Reist on 10/16/15.
  */
-public class StorIoRepoService extends BackgroundService implements RepoService {
-
-    private final StorIOSQLite storIoSqLite;
+public class StorIoRepoService extends StorIoService<Repo> implements LocalRepoService {
 
     public StorIoRepoService(StorIOSQLite storIoSqLite) {
-        this.storIoSqLite = storIoSqLite;
+        super(storIoSqLite);
     }
 
     @Override
@@ -28,7 +25,7 @@ public class StorIoRepoService extends BackgroundService implements RepoService 
 
             @Override
             public List<Repo> execute() {
-                return storIoSqLite.get()
+                return get()
                         .listOfObjects(Repo.class)
                         .withQuery(
                                 Query.builder()

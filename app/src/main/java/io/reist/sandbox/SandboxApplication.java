@@ -3,6 +3,7 @@ package io.reist.sandbox;
 import android.content.Context;
 
 import io.reist.sandbox.core.BaseApplication;
+import io.reist.sandbox.core.BaseModule;
 import io.reist.sandbox.core.view.BaseView;
 import io.reist.sandbox.repos.ReposFragmentModule;
 import io.reist.sandbox.repos.view.RepoListView;
@@ -12,8 +13,9 @@ import io.reist.sandbox.repos.view.RepoListView;
  */
 public class SandboxApplication extends BaseApplication {
 
-    private final ApplicationComponent applicationComponent = DaggerApplicationComponent.builder()
-            .applicationModule(new ApplicationModule(this))
+    private final SandboxComponent sandboxComponent = DaggerSandboxComponent.builder()
+            .sandboxModule(new SandboxModule())
+            .baseModule(new BaseModule(this))
             .build();
 
     @Override
@@ -23,7 +25,7 @@ public class SandboxApplication extends BaseApplication {
         Context context = view.getContext();
 
         if (RepoListView.class.isAssignableFrom(viewClass)) {
-            return applicationComponent.reposComponent(new ReposFragmentModule(context));
+            return sandboxComponent.reposComponent(new ReposFragmentModule(context));
         } else {
             throw new RuntimeException("Unknown view class: " + viewClass.getName());
         }

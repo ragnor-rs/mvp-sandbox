@@ -2,6 +2,8 @@ package io.reist.sandbox;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
@@ -10,36 +12,37 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.reist.sandbox.repos.model.CombinedRepoService;
+import io.reist.sandbox.core.BaseModule;
+import io.reist.sandbox.core.model.remote.NestedFieldNameAdapter;
+import io.reist.sandbox.repos.model.CachedRepoService;
 import io.reist.sandbox.repos.model.Repo;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.repos.model.RepoStorIOSQLiteGetResolver;
 import io.reist.sandbox.repos.model.RepoStorIOSQLitePutResolver;
-import io.reist.sandbox.repos.model.database.StorIoRepoService;
-import io.reist.sandbox.repos.model.network.GitHubApi;
-import io.reist.sandbox.repos.model.network.RetrofitRepoService;
+import io.reist.sandbox.repos.model.local.LocalRepoService;
+import io.reist.sandbox.repos.model.local.StorIoRepoService;
+import io.reist.sandbox.repos.model.remote.GitHubApi;
+import io.reist.sandbox.repos.model.remote.RetrofitRepoService;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
 /**
  * Created by Reist on 10/16/15.
  */
-@Module
-public class ApplicationModule {
+@Module(includes = BaseModule.class)
+public class SandboxModule {
 
     private static final String GIT_HUB_BASE_URL = "https://api.github.com";
 
-    private final Context context;
+    private RepoService remoteRepoService() {
 
-    public ApplicationModule(Context context) {
-        this.context = context;
-    }
-
-    RepoService networkRepoService() {
+        Gson gson = new GsonBuilder()
+                .registerTypeHierarchyAdapter(Object.class, new NestedFieldNameAdapter())
+                .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(GIT_HUB_BASE_URL)
                 .build();
 
@@ -49,14 +52,7 @@ public class ApplicationModule {
 
     }
 
-    /*
-    @Provides @Singleton
-    RepoService repoService() {
-        return new DummyRepoService();
-    }
-    */
-
-    RepoService databaseRepoService() {
+    private LocalRepoService localRepoService(Context context) {
 
         DbOpenHelper dbOpenHelper = new DbOpenHelper(context);
 
@@ -77,8 +73,8 @@ public class ApplicationModule {
     }
 
     @Provides @Singleton
-    RepoService repoService() {
-        return new CombinedRepoService(databaseRepoService(), networkRepoService());
+    RepoService repoService(Context context) {
+        return new CachedRepoService(localRepoService(context), remoteRepoService());
     }
 
 }

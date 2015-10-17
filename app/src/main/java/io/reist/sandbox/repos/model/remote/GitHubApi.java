@@ -1,4 +1,4 @@
-package io.reist.sandbox.repos.model.network;
+package io.reist.sandbox.repos.model.remote;
 
 import java.util.List;
 

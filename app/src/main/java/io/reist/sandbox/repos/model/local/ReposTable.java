@@ -1,4 +1,4 @@
-package io.reist.sandbox.repos.model.database;
+package io.reist.sandbox.repos.model.local;
 
 /**
  * Created by Reist on 10/16/15.
@@ -46,40 +46,12 @@ public class ReposTable {
             case 1:
                 return new String[] {
 
-                        "create table " + TEMPORARY_TABLE_NAME + "(" +
-                                COLUMN_ID + " integer not null primary key, " +
-                                COLUMN_NAME + " text not null, " +
-                                COLUMN_URL + " text, " +
-                                COLUMN_AUTHOR + " text" +
-                        ")",
-
-                        "insert into " +
-                                TEMPORARY_TABLE_NAME + " " +
-                        "select " +
-                                COLUMN_ID + ", " +
-                                COLUMN_NAME + ", " +
-                                COLUMN_URL + ", " +
-                                "\"JakeWharton\" " +
-                        "from " +
-                                TABLE_NAME,
-
-                        "drop table " +
-                                TABLE_NAME,
-
-                        getCreateTableQuery(2),
-
-                        "insert into " +
+                        "alter table " +
                                 TABLE_NAME + " " +
-                        "select " +
-                                COLUMN_ID + ", " +
-                                COLUMN_NAME + ", " +
-                                COLUMN_URL + ", " +
-                                COLUMN_AUTHOR + " " +
-                        "from " +
-                                TEMPORARY_TABLE_NAME,
-
-                        "drop table " +
-                                TEMPORARY_TABLE_NAME
+                        "add column " +
+                                COLUMN_AUTHOR + " text " +
+                        "default " +
+                                "\"JakeWharton\""
 
                 };
 
