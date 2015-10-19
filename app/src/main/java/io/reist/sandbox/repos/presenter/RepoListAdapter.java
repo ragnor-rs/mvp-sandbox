@@ -8,6 +8,10 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.reist.sandbox.R;
 import io.reist.sandbox.repos.model.Repo;
 
@@ -18,13 +22,16 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHo
 
     private final List<Repo> repos;
 
+    @Inject
+    LayoutInflater layoutInflater;
+
     public RepoListAdapter(List<Repo> repos) {
         this.repos = repos;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.github_repo_item, parent, false);
+        View v = layoutInflater.inflate(R.layout.github_repo_item, parent, false);
         return new ViewHolder(v);
     }
 
@@ -38,13 +45,14 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHo
         return repos.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
-        final TextView textView;
+        @Bind(R.id.daggertest_repo_item_text_view)
+        TextView textView;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-            this.textView = (TextView) itemView.findViewById(R.id.daggertest_repo_item_text_view);
+            ButterKnife.bind(this, itemView);
         }
 
     }

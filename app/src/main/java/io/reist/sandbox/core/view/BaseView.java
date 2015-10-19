@@ -13,4 +13,6 @@ public interface BaseView {
 
     void setComponentId(Long componentId);
 
+    Object getComponent();
+
 }

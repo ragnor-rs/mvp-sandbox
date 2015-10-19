@@ -3,14 +3,19 @@ package io.reist.sandbox.core.view;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
 import io.reist.sandbox.R;
 import io.reist.sandbox.core.BaseApplication;
 import io.reist.sandbox.core.ComponentCache;
@@ -21,22 +26,21 @@ import io.reist.sandbox.core.presenter.BasePresenter;
  */
 public abstract class BaseFragment<P extends BasePresenter> extends Fragment implements BaseView {
 
-    public static final int PERMISSION_REQUEST_CODE_GROUP = 0xab;
+    private static final int PERMISSION_REQUEST_CODE_GROUP = 0xab;
+
+    private Runnable runnable;
+    private int fragmentIndex;
 
     private static final String STATE_COMPONENT_ID = "STATE_COMPONENT_ID";
 
-    private Runnable runnable;
-
-    private int fragmentIndex;
-
     private Long componentId;
-
     private boolean stateSaved;
+    private final int layoutResId;
 
-    public final String getName() {
-        return getClass().getName();
+    public BaseFragment(int layoutResId) {
+        this.layoutResId = layoutResId;
     }
-    
+
     public final void runPrivileged(Runnable runnable, String... permissions) {
 
         Activity activity = getActivity();
@@ -69,10 +73,6 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
 
     }
 
-    private int getPermissionRequestCode() {
-        return PERMISSION_REQUEST_CODE_GROUP | (fragmentIndex + 1 << 8);
-    }
-
     @Override
     public final void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
@@ -94,6 +94,16 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
 
     }
 
+    private int getPermissionRequestCode() {
+        return PERMISSION_REQUEST_CODE_GROUP | (fragmentIndex + 1 << 8);
+    }
+
+    /// --- ///
+
+    public final String getName() {
+        return getClass().getName();
+    }
+
     public final void setFragmentIndex(int fragmentIndex) {
         this.fragmentIndex = fragmentIndex;
     }
@@ -111,18 +121,39 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        componentId = savedInstanceState == null ? null : savedInstanceState.getLong(STATE_COMPONENT_ID);
-        stateSaved = false;
-        Object component = getComponentCache().getComponentFor(this);
-        inject(component);
-        onPresenterAttached();
+    public final Object getComponent() {
+        return getComponentCache().getComponentFor(this);
     }
 
     private ComponentCache getComponentCache() {
         BaseApplication application = (BaseApplication) getActivity().getApplication();
         return application.getComponentCache();
+    }
+
+    /// --- ///
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        componentId = savedInstanceState == null ? null : savedInstanceState.getLong(STATE_COMPONENT_ID);
+        stateSaved = false;
+        inject(getComponent());
+        getPresenter().setView(this);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(layoutResId, container, false);
+        ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
+        ButterKnife.bind(getPresenter(), view);
     }
 
     @Override
@@ -138,13 +169,13 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         if (!stateSaved) {
             getComponentCache().invalidateComponentFor(this);
         }
-        onPresenterDetached();
+        getPresenter().setView(null);
     }
 
-    protected abstract void inject(Object component);
+    /// --- ///
 
-    protected abstract void onPresenterAttached();
+    protected abstract void inject(Object from);
 
-    protected abstract void onPresenterDetached();
+    protected abstract P getPresenter();
 
 }
