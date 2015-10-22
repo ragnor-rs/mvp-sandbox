@@ -7,19 +7,27 @@ import android.view.LayoutInflater;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by Reist on 10/17/15.
- */
-@Module(includes = BaseModule.class)
+@Module
 public class BaseViewModule {
 
+    private final Context context;
+
+    public BaseViewModule(Context context) {
+        this.context = context;
+    }
+
     @Provides
-    LayoutInflater layoutInflater(Context context) {
+    Context context() {
+        return context;
+    }
+
+    @Provides
+    LayoutInflater layoutInflater() {
         return (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Provides
-    LinearLayoutManager linearLayoutManager(Context context) {
+    LinearLayoutManager linearLayoutManager() {
         return new LinearLayoutManager(context);
     }
 

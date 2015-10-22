@@ -4,6 +4,7 @@ import android.content.Context;
 
 import io.reist.sandbox.core.BaseApplication;
 import io.reist.sandbox.core.BaseModule;
+import io.reist.sandbox.core.BaseViewModule;
 import io.reist.sandbox.core.view.BaseView;
 import io.reist.sandbox.repos.view.RepoListFragment;
 
@@ -24,7 +25,7 @@ public class SandboxApplication extends BaseApplication {
         Context context = view.getContext();
 
         if (RepoListFragment.class.isAssignableFrom(viewClass)) {
-            return sandboxComponent.reposComponent(new BaseModule(context));
+            return sandboxComponent.reposFragmentComponent(new BaseViewModule(context));
         } else {
             throw new RuntimeException("Unknown view class: " + viewClass.getName());
         }

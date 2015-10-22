@@ -27,9 +27,6 @@ import io.reist.sandbox.repos.model.remote.RetrofitRepoService;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
-/**
- * Created by Reist on 10/16/15.
- */
 @Module(includes = BaseModule.class)
 public class SandboxModule {
 
