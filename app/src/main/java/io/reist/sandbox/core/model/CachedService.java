@@ -4,51 +4,57 @@ import android.util.Log;
 
 import java.util.List;
 
-import io.reist.sandbox.core.model.local.LocalService;
-
 /**
  * Created by Reist on 10/17/15.
  */
-public abstract class CachedService<R, LS extends LocalService<R>> {
+public abstract class CachedService<R, S extends EntityService<R>> implements EntityService<R> {
 
     private static final String TAG = CachedService.class.getName();
 
-    private final LS localService;
+    protected final S localService;
+    protected final S remoteService;
 
-    protected CachedService(LS localService) {
+    protected CachedService(S localService, S remoteService) {
         this.localService = localService;
+        this.remoteService = remoteService;
     }
 
-    protected void enqueueLocalReadRequest(AsyncRequest<R> request, final AsyncRequest<R> remoteReadRequest, final AsyncResponse<R> response) {
-        request.enqueue(new AsyncResponse<R>() {
+    protected void enqueueReadListRequests(
+            AsyncRequest<List<R>> localRequest,
+            final AsyncRequest<List<R>> remoteRequest,
+            final AsyncResponse<List<R>> response
+    ) {
+
+        localRequest.enqueue(new AsyncResponse<List<R>>() {
 
             @Override
-            public void onSuccess(R result) {
-                if (result == null) {
-                    enqueueRemoteReadRequest(remoteReadRequest, response);
-                } else {
-                    response.onSuccess(result);
-                }
-            }
+            public void onSuccess(final List<R> result) {
 
-            @Override
-            public void onError(Throwable error) {
-                response.onError(error);
-            }
-
-        });
-    }
-
-    protected void enqueueLocalReadListRequest(AsyncRequest<List<R>> request, final AsyncRequest<List<R>> remoteReadRequest, final AsyncResponse<List<R>> response) {
-        request.enqueue(new AsyncResponse<List<R>>() {
-
-            @Override
-            public void onSuccess(List<R> result) {
                 if (result == null || result.isEmpty()) {
-                    enqueueRemoteReadListRequest(remoteReadRequest, response);
+                    remoteRequest.enqueue(new AsyncResponse<List<R>>() {
+
+                        @Override
+                        public void onSuccess(final List<R> data) {
+                            chain(
+                                    data,
+                                    localService.storeList(data),
+                                    response,
+                                    "Wrote objects to cache: %s",
+                                    "Error occurred"
+                            );
+                        }
+
+                        @Override
+                        public void onError(Throwable error) {
+                            response.onError(error);
+                        }
+
+                    });
                 } else {
                     response.onSuccess(result);
                 }
+
+
             }
 
             @Override
@@ -57,15 +63,86 @@ public abstract class CachedService<R, LS extends LocalService<R>> {
             }
 
         });
+
     }
 
-    protected void enqueueRemoteReadRequest(AsyncRequest<R> request, final AsyncResponse<R> response) {
-        request.enqueue(new AsyncResponse<R>() {
+    private static <I, O> void chain(
+            final I inputData,
+            AsyncRequest<O> outputRequest,
+            final AsyncResponse<I> response,
+            final String successLogMessage,
+            final String errorLogMessage
+    ) {
+
+        outputRequest.enqueue(new AsyncResponse<O>() {
 
             @Override
-            public void onSuccess(R result) {
-                enqueueLocalWriteRequest(result);
-                response.onSuccess(result);
+            public void onSuccess(O result) {
+                if (successLogMessage != null) {
+                    Log.i(TAG, String.format(successLogMessage, result.toString()));
+                }
+                response.onSuccess(inputData);
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                if (errorLogMessage != null) {
+                    Log.e(TAG, errorLogMessage, error);
+                }
+                response.onError(error);
+            }
+
+        });
+
+    }
+
+    /*
+    private static <I, O> void chain(
+            AsyncRequest<I> inputRequest,
+            final AsyncRequest<I> acceptorRequest,
+            final AsyncRequest<O> outputRequest,
+            final AsyncResponse<I> response,
+            final String successLogMessage,
+            final String errorLogMessage
+    ) {
+
+        inputRequest.enqueue(new AsyncResponse<I>() {
+
+            @Override
+            public void onSuccess(final I inputData) {
+                acceptorRequest.enqueue(new AsyncResponse<I>() {
+
+                    @Override
+                    public void onSuccess(I inputData) {
+                        Log.d(TAG, "Result accepted: " + inputData.toString());
+                        response.onSuccess(inputData);
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        Log.e(TAG, "Result discarded: " + inputData.toString(), error);
+                        outputRequest.enqueue(new AsyncResponse<O>() {
+
+                            @Override
+                            public void onSuccess(O result) {
+                                if (successLogMessage != null) {
+                                    Log.i(TAG, String.format(successLogMessage, result.toString()));
+                                }
+                                response.onSuccess(inputData);
+                            }
+
+                            @Override
+                            public void onError(Throwable error) {
+                                if (errorLogMessage != null) {
+                                    Log.e(TAG, errorLogMessage, error);
+                                }
+                                response.onError(error);
+                            }
+
+                        });
+                    }
+
+                });
             }
 
             @Override
@@ -74,59 +151,18 @@ public abstract class CachedService<R, LS extends LocalService<R>> {
             }
 
         });
+
+    }
+    */
+
+    @Override
+    public AsyncRequest<Boolean> store(R data) {
+        throw new UnsupportedOperationException();
     }
 
-    protected void enqueueRemoteReadListRequest(AsyncRequest<List<R>> request, final AsyncResponse<List<R>> response) {
-        request.enqueue(new AsyncResponse<List<R>>() {
-
-            @Override
-            public void onSuccess(List<R> result) {
-                enqueueLocalWriteListRequest(result);
-                response.onSuccess(result);
-            }
-
-            @Override
-            public void onError(Throwable error) {
-                response.onError(error);
-            }
-
-        });
-    }
-
-    protected void enqueueLocalWriteRequest(R data) {
-        localService.store(data).enqueue(new AsyncResponse<Boolean>() {
-
-            @Override
-            public void onSuccess(Boolean result) {
-                Log.i(TAG, "Wrote an object to cache: " + result.toString());
-            }
-
-            @Override
-            public void onError(Throwable error) {
-                Log.e(TAG, "Error writing to cache", error);
-            }
-
-        });
-    }
-
-    protected void enqueueLocalWriteListRequest(List<R> data) {
-        localService.storeList(data).enqueue(new AsyncResponse<Integer>() {
-
-            @Override
-            public void onSuccess(Integer result) {
-                Log.i(TAG, "Wrote objects to cache: " + result.toString());
-            }
-
-            @Override
-            public void onError(Throwable error) {
-                Log.e(TAG, "Error writing to cache", error);
-            }
-
-        });
-    }
-
-    public LS getLocalService() {
-        return localService;
+    @Override
+    public AsyncRequest<Integer> storeList(final List<R> data) {
+        throw new UnsupportedOperationException();
     }
 
 }

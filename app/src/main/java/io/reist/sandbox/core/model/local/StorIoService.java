@@ -11,11 +11,12 @@ import java.util.List;
 import io.reist.sandbox.core.model.AsyncRequest;
 import io.reist.sandbox.core.model.BackgroundOp;
 import io.reist.sandbox.core.model.BackgroundService;
+import io.reist.sandbox.core.model.EntityService;
 
 /**
  * Created by Reist on 10/17/15.
  */
-public abstract class StorIoService<R> extends BackgroundService implements LocalService<R> {
+public abstract class StorIoService<R> extends BackgroundService implements EntityService<R> {
 
     private final StorIOSQLite storIoSqLite;
 

@@ -1,13 +1,11 @@
-package io.reist.sandbox.core.model.local;
+package io.reist.sandbox.core.model;
 
 import java.util.List;
-
-import io.reist.sandbox.core.model.AsyncRequest;
 
 /**
  * Created by Reist on 10/17/15.
  */
-public interface LocalService<R> {
+public interface EntityService<R> {
 
     AsyncRequest<Integer> storeList(List<R> data);
 

@@ -23,4 +23,14 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
         return createListRequest(gitHubApi.listRepos(user));
     }
 
+    @Override
+    public AsyncRequest<Integer> storeList(List<Repo> data) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public AsyncRequest<Boolean> store(Repo data) {
+        throw new UnsupportedOperationException();
+    }
+
 }

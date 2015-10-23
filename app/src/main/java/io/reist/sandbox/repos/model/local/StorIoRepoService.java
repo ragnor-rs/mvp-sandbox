@@ -7,13 +7,15 @@ import java.util.List;
 
 import io.reist.sandbox.core.model.AsyncRequest;
 import io.reist.sandbox.core.model.BackgroundOp;
+import io.reist.sandbox.core.model.EntityService;
 import io.reist.sandbox.core.model.local.StorIoService;
 import io.reist.sandbox.repos.model.Repo;
+import io.reist.sandbox.repos.model.RepoService;
 
 /**
  * Created by Reist on 10/16/15.
  */
-public class StorIoRepoService extends StorIoService<Repo> implements LocalRepoService {
+public class StorIoRepoService extends StorIoService<Repo> implements EntityService<Repo>, RepoService {
 
     public StorIoRepoService(StorIOSQLite storIoSqLite) {
         super(storIoSqLite);

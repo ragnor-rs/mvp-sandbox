@@ -20,7 +20,6 @@ import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.repos.model.RepoStorIOSQLiteGetResolver;
 import io.reist.sandbox.repos.model.RepoStorIOSQLitePutResolver;
-import io.reist.sandbox.repos.model.local.LocalRepoService;
 import io.reist.sandbox.repos.model.local.StorIoRepoService;
 import io.reist.sandbox.repos.model.remote.GitHubApi;
 import io.reist.sandbox.repos.model.remote.RetrofitRepoService;
@@ -49,7 +48,7 @@ public class SandboxModule {
 
     }
 
-    private LocalRepoService localRepoService(Context context) {
+    private RepoService localRepoService(Context context) {
 
         DbOpenHelper dbOpenHelper = new DbOpenHelper(context);
 
