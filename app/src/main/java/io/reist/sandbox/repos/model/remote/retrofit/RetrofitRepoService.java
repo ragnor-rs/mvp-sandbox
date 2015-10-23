@@ -1,9 +1,9 @@
-package io.reist.sandbox.repos.model.remote;
+package io.reist.sandbox.repos.model.remote.retrofit;
 
 import java.util.List;
 
 import io.reist.sandbox.core.model.AsyncRequest;
-import io.reist.sandbox.core.model.remote.RetrofitService;
+import io.reist.sandbox.core.model.remote.retrofit.RetrofitService;
 import io.reist.sandbox.repos.model.Repo;
 import io.reist.sandbox.repos.model.RepoService;
 

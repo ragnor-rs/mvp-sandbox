@@ -1,4 +1,4 @@
-package io.reist.sandbox.core.model.remote;
+package io.reist.sandbox.core.model.remote.retrofit;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,8 +13,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
-
-import io.reist.sandbox.core.model.NestedFieldName;
 
 /**
  * Created by Reist on 10/17/15.

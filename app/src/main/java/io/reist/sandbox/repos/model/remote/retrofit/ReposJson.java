@@ -1,4 +1,4 @@
-package io.reist.sandbox.repos.model.remote;
+package io.reist.sandbox.repos.model.remote.retrofit;
 
 /**
  * Created by Reist on 10/16/15.

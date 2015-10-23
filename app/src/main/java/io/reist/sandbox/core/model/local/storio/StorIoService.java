@@ -1,4 +1,4 @@
-package io.reist.sandbox.core.model.local;
+package io.reist.sandbox.core.model.local.storio;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGet;

@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
-import io.reist.sandbox.core.model.NestedFieldName;
-import io.reist.sandbox.repos.model.local.ReposTable;
-import io.reist.sandbox.repos.model.remote.ReposJson;
+import io.reist.sandbox.core.model.remote.retrofit.NestedFieldName;
+import io.reist.sandbox.repos.model.local.storio.ReposTable;
+import io.reist.sandbox.repos.model.remote.retrofit.ReposJson;
 
 @StorIOSQLiteType(table = ReposTable.TABLE_NAME)
 public class Repo {

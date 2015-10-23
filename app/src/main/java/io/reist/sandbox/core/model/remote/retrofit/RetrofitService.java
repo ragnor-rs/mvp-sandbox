@@ -1,4 +1,4 @@
-package io.reist.sandbox.core.model.remote;
+package io.reist.sandbox.core.model.remote.retrofit;
 
 import android.util.Log;
 

@@ -1,9 +1,7 @@
-package io.reist.sandbox.core.model.remote;
+package io.reist.sandbox.core.model.remote.retrofit;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
-
-import io.reist.sandbox.core.model.NestedFieldName;
 
 /**
  * Created by Reist on 10/17/15.

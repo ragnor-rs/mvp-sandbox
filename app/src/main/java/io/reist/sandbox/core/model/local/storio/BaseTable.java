@@ -1,4 +1,4 @@
-package io.reist.sandbox.core.model.local;
+package io.reist.sandbox.core.model.local.storio;
 
 /**
  * Created by Reist on 10/23/15.

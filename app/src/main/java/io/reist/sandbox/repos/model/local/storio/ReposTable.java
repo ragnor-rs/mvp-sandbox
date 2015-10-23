@@ -1,6 +1,6 @@
-package io.reist.sandbox.repos.model.local;
+package io.reist.sandbox.repos.model.local.storio;
 
-import io.reist.sandbox.core.model.local.BaseTable;
+import io.reist.sandbox.core.model.local.storio.BaseTable;
 
 /**
  * Created by Reist on 10/16/15.

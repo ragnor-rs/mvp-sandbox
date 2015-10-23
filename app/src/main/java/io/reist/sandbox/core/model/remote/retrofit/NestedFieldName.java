@@ -1,4 +1,4 @@
-package io.reist.sandbox.core.model;
+package io.reist.sandbox.core.model.remote.retrofit;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

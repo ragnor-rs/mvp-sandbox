@@ -1,4 +1,4 @@
-package io.reist.sandbox.repos.model.remote;
+package io.reist.sandbox.repos.model.remote.retrofit;
 
 import java.util.List;
 
