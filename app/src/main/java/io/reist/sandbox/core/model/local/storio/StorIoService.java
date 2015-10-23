@@ -8,10 +8,10 @@ import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 
 import java.util.List;
 
-import io.reist.sandbox.core.model.AsyncRequest;
-import io.reist.sandbox.core.model.BackgroundOp;
 import io.reist.sandbox.core.model.BackgroundService;
 import io.reist.sandbox.core.model.EntityService;
+import io.reist.sandbox.core.model.Func0;
+import io.reist.sandbox.core.model.Observable;
 
 /**
  * Created by Reist on 10/17/15.
@@ -33,11 +33,11 @@ public abstract class StorIoService<R> extends BackgroundService implements Enti
     }
 
     @Override
-    public AsyncRequest<Integer> storeList(final List<R> data) {
-        return createRequest(new BackgroundOp<Integer>() {
+    public Observable<Integer> storeList(final List<R> data) {
+        return createObservable(new Func0<Integer>() {
 
             @Override
-            public Integer execute() {
+            public Integer call() {
                 PutResults<R> putResults = put()
                         .objects(data)
                         .prepare()
@@ -49,11 +49,11 @@ public abstract class StorIoService<R> extends BackgroundService implements Enti
     }
 
     @Override
-    public AsyncRequest<Boolean> store(final R data) {
-        return createRequest(new BackgroundOp<Boolean>() {
+    public Observable<Boolean> store(final R data) {
+        return createObservable(new Func0<Boolean>() {
 
             @Override
-            public Boolean execute() {
+            public Boolean call() {
                 PutResult putResult = put()
                         .object(data)
                         .prepare()

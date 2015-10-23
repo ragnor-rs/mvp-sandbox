@@ -2,7 +2,7 @@ package io.reist.sandbox.repos.model.remote.retrofit;
 
 import java.util.List;
 
-import io.reist.sandbox.core.model.AsyncRequest;
+import io.reist.sandbox.core.model.Observable;
 import io.reist.sandbox.core.model.remote.retrofit.RetrofitService;
 import io.reist.sandbox.repos.model.Repo;
 import io.reist.sandbox.repos.model.RepoService;
@@ -19,17 +19,17 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
     }
 
     @Override
-    public AsyncRequest<List<Repo>> listRepos(final String user) {
-        return createListRequest(gitHubApi.listRepos(user));
+    public Observable<List<Repo>> reposList(final String user) {
+        return toListObservable(gitHubApi.listRepos(user));
     }
 
     @Override
-    public AsyncRequest<Integer> storeList(List<Repo> data) {
+    public Observable<Integer> storeList(List<Repo> data) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public AsyncRequest<Boolean> store(Repo data) {
+    public Observable<Boolean> store(Repo data) {
         throw new UnsupportedOperationException();
     }
 

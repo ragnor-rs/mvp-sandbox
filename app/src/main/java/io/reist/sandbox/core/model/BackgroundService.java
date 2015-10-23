@@ -33,18 +33,18 @@ public abstract class BackgroundService extends Thread {
         Looper.loop();
     }
 
-    private <R> void reportSuccess(final AsyncResponse<R> response, final R result) {
+    private <R> void reportSuccess(final Observer<R> response, final R result) {
         mainThreadHandler.post(new Runnable() {
 
             @Override
             public void run() {
-                response.onSuccess(result);
+                response.onNext(result);
             }
 
         });
     }
 
-    private <R> void reportFailure(final AsyncResponse<R> response, final Throwable error) {
+    private <R> void reportFailure(final Observer<R> response, final Throwable error) {
         mainThreadHandler.post(new Runnable() {
 
             @Override
@@ -56,11 +56,11 @@ public abstract class BackgroundService extends Thread {
         });
     }
 
-    public <R> AsyncRequest<R> createRequest(final BackgroundOp<R> call) {
-        return new AsyncRequest<R>() {
+    public <R> Observable<R> createObservable(final Func0<R> call) {
+        return new Observable<R>() {
 
             @Override
-            public void enqueue(final AsyncResponse<R> response) {
+            public void subscribe(final Observer<R> observer) {
 
                 synchronized (lock) {
                     while (backgroundThreadHandler == null) {
@@ -77,9 +77,9 @@ public abstract class BackgroundService extends Thread {
                     @Override
                     public void run() {
                         try {
-                            reportSuccess(response, call.execute());
+                            reportSuccess(observer, call.call());
                         } catch (Throwable e) {
-                            reportFailure(response, e);
+                            reportFailure(observer, e);
                         }
                     }
 

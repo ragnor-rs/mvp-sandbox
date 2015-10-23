@@ -5,9 +5,9 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
-import io.reist.sandbox.core.model.AsyncRequest;
-import io.reist.sandbox.core.model.BackgroundOp;
 import io.reist.sandbox.core.model.EntityService;
+import io.reist.sandbox.core.model.Func0;
+import io.reist.sandbox.core.model.Observable;
 import io.reist.sandbox.core.model.local.storio.StorIoService;
 import io.reist.sandbox.repos.model.Repo;
 import io.reist.sandbox.repos.model.RepoService;
@@ -22,11 +22,11 @@ public class StorIoRepoService extends StorIoService<Repo> implements EntityServ
     }
 
     @Override
-    public AsyncRequest<List<Repo>> listRepos(String user) {
-        return createRequest(new BackgroundOp<List<Repo>>() {
+    public Observable<List<Repo>> reposList(String user) {
+        return createObservable(new Func0<List<Repo>>() {
 
             @Override
-            public List<Repo> execute() {
+            public List<Repo> call() {
                 return get()
                         .listOfObjects(Repo.class)
                         .withQuery(

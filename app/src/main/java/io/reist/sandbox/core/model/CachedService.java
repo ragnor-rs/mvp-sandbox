@@ -20,24 +20,24 @@ public abstract class CachedService<R, S extends EntityService<R>> implements En
     }
 
     protected void enqueueReadListRequests(
-            AsyncRequest<List<R>> localRequest,
-            final AsyncRequest<List<R>> remoteRequest,
-            final AsyncResponse<List<R>> response
+            Observable<List<R>> localRequest,
+            final Observable<List<R>> remoteRequest,
+            final Observer<List<R>> response
     ) {
 
-        localRequest.enqueue(new AsyncResponse<List<R>>() {
+        localRequest.subscribe(new Observer<List<R>>() {
 
             @Override
-            public void onSuccess(final List<R> result) {
+            public void onNext(final List<R> t) {
 
-                if (result == null || result.isEmpty()) {
-                    remoteRequest.enqueue(new AsyncResponse<List<R>>() {
+                if (t == null || t.isEmpty()) {
+                    remoteRequest.subscribe(new Observer<List<R>>() {
 
                         @Override
-                        public void onSuccess(final List<R> data) {
+                        public void onNext(final List<R> t) {
                             chain(
-                                    data,
-                                    localService.storeList(data),
+                                    t,
+                                    localService.storeList(t),
                                     response,
                                     "Wrote objects to cache: %s",
                                     "Error occurred"
@@ -45,21 +45,21 @@ public abstract class CachedService<R, S extends EntityService<R>> implements En
                         }
 
                         @Override
-                        public void onError(Throwable error) {
-                            response.onError(error);
+                        public void onError(Throwable e) {
+                            response.onError(e);
                         }
 
                     });
                 } else {
-                    response.onSuccess(result);
+                    response.onNext(t);
                 }
 
 
             }
 
             @Override
-            public void onError(Throwable error) {
-                response.onError(error);
+            public void onError(Throwable e) {
+                response.onError(e);
             }
 
         });
@@ -68,28 +68,28 @@ public abstract class CachedService<R, S extends EntityService<R>> implements En
 
     private static <I, O> void chain(
             final I inputData,
-            AsyncRequest<O> outputRequest,
-            final AsyncResponse<I> response,
+            Observable<O> outputRequest,
+            final Observer<I> response,
             final String successLogMessage,
             final String errorLogMessage
     ) {
 
-        outputRequest.enqueue(new AsyncResponse<O>() {
+        outputRequest.subscribe(new Observer<O>() {
 
             @Override
-            public void onSuccess(O result) {
+            public void onNext(O t) {
                 if (successLogMessage != null) {
-                    Log.i(TAG, String.format(successLogMessage, result.toString()));
+                    Log.i(TAG, String.format(successLogMessage, t.toString()));
                 }
-                response.onSuccess(inputData);
+                response.onNext(inputData);
             }
 
             @Override
-            public void onError(Throwable error) {
+            public void onError(Throwable e) {
                 if (errorLogMessage != null) {
-                    Log.e(TAG, errorLogMessage, error);
+                    Log.e(TAG, errorLogMessage, e);
                 }
-                response.onError(error);
+                response.onError(e);
             }
 
         });
@@ -98,37 +98,37 @@ public abstract class CachedService<R, S extends EntityService<R>> implements En
 
     /*
     private static <I, O> void chain(
-            AsyncRequest<I> inputRequest,
-            final AsyncRequest<I> acceptorRequest,
-            final AsyncRequest<O> outputRequest,
-            final AsyncResponse<I> response,
+            Observable<I> inputRequest,
+            final Observable<I> acceptorRequest,
+            final Observable<O> outputRequest,
+            final Observer<I> response,
             final String successLogMessage,
             final String errorLogMessage
     ) {
 
-        inputRequest.enqueue(new AsyncResponse<I>() {
+        inputRequest.subscribe(new Observer<I>() {
 
             @Override
-            public void onSuccess(final I inputData) {
-                acceptorRequest.enqueue(new AsyncResponse<I>() {
+            public void onNext(final I inputData) {
+                acceptorRequest.subscribe(new Observer<I>() {
 
                     @Override
-                    public void onSuccess(I inputData) {
+                    public void onNext(I inputData) {
                         Log.d(TAG, "Result accepted: " + inputData.toString());
-                        response.onSuccess(inputData);
+                        response.onNext(inputData);
                     }
 
                     @Override
                     public void onError(Throwable error) {
                         Log.e(TAG, "Result discarded: " + inputData.toString(), error);
-                        outputRequest.enqueue(new AsyncResponse<O>() {
+                        outputRequest.subscribe(new Observer<O>() {
 
                             @Override
-                            public void onSuccess(O result) {
+                            public void onNext(O result) {
                                 if (successLogMessage != null) {
                                     Log.i(TAG, String.format(successLogMessage, result.toString()));
                                 }
-                                response.onSuccess(inputData);
+                                response.onNext(inputData);
                             }
 
                             @Override
@@ -156,12 +156,12 @@ public abstract class CachedService<R, S extends EntityService<R>> implements En
     */
 
     @Override
-    public AsyncRequest<Boolean> store(R data) {
+    public Observable<Boolean> store(R data) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public AsyncRequest<Integer> storeList(final List<R> data) {
+    public Observable<Integer> storeList(final List<R> data) {
         throw new UnsupportedOperationException();
     }
 

@@ -7,8 +7,8 @@ import java.util.List;
  */
 public interface EntityService<R> {
 
-    AsyncRequest<Integer> storeList(List<R> data);
+    Observable<Integer> storeList(List<R> data);
 
-    AsyncRequest<Boolean> store(R data);
+    Observable<Boolean> store(R data);
 
 }

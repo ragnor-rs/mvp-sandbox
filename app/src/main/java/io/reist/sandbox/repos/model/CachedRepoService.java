@@ -2,9 +2,9 @@ package io.reist.sandbox.repos.model;
 
 import java.util.List;
 
-import io.reist.sandbox.core.model.AsyncRequest;
-import io.reist.sandbox.core.model.AsyncResponse;
 import io.reist.sandbox.core.model.CachedService;
+import io.reist.sandbox.core.model.Observable;
+import io.reist.sandbox.core.model.Observer;
 
 /**
  * Created by Reist on 10/17/15.
@@ -16,15 +16,15 @@ public class CachedRepoService extends CachedService<Repo, RepoService> implemen
     }
 
     @Override
-    public AsyncRequest<List<Repo>> listRepos(final String user) {
-        return new AsyncRequest<List<Repo>>() {
+    public Observable<List<Repo>> reposList(final String user) {
+        return new Observable<List<Repo>>() {
 
             @Override
-            public void enqueue(final AsyncResponse<List<Repo>> response) {
+            public void subscribe(final Observer<List<Repo>> observer) {
                 enqueueReadListRequests(
-                        localService.listRepos(user),
-                        remoteService.listRepos(user),
-                        response
+                        localService.reposList(user),
+                        remoteService.reposList(user),
+                        observer
                 );
             }
 

@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 
 import butterknife.Bind;
 import io.reist.sandbox.R;
-import io.reist.sandbox.core.model.AsyncResponse;
+import io.reist.sandbox.core.model.Observer;
 import io.reist.sandbox.core.presenter.BasePresenter;
 import io.reist.sandbox.repos.ReposFragmentComponent;
 import io.reist.sandbox.repos.model.Repo;
@@ -32,17 +32,17 @@ public class RepoListPresenter extends BasePresenter {
     }
 
     public void listRepos() {
-        repoService.listRepos(REPOS_AUTHOR).enqueue(new AsyncResponse<List<Repo>>() {
+        repoService.reposList(REPOS_AUTHOR).subscribe(new Observer<List<Repo>>() {
 
             @Override
-            public void onSuccess(List<Repo> result) {
-                RepoListAdapter adapter = new RepoListAdapter(result);
+            public void onNext(List<Repo> t) {
+                RepoListAdapter adapter = new RepoListAdapter(t);
                 ((ReposFragmentComponent) getComponent()).inject(adapter);
                 mRecyclerView.setAdapter(adapter);
             }
 
             @Override
-            public void onError(Throwable error) {
+            public void onError(Throwable e) {
                 Toast.makeText(getContext(), R.string.github_repo_list_error, Toast.LENGTH_LONG).show();
             }
 

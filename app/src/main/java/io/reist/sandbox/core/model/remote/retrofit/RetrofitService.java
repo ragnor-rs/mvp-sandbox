@@ -4,8 +4,8 @@ import android.util.Log;
 
 import java.util.List;
 
-import io.reist.sandbox.core.model.AsyncRequest;
-import io.reist.sandbox.core.model.AsyncResponse;
+import io.reist.sandbox.core.model.Observable;
+import io.reist.sandbox.core.model.Observer;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -18,22 +18,22 @@ public abstract class RetrofitService<R> {
 
     private static final String TAG = RetrofitService.class.getName();
 
-    public AsyncRequest<R> createRequest(final Call<R> call) {
-        return new AsyncRequest<R>() {
+    public Observable<R> toObservable(final Call<R> call) {
+        return new Observable<R>() {
 
             @Override
-            public void enqueue(final AsyncResponse<R> asyncResponse) {
+            public void subscribe(final Observer<R> observer) {
                 call.enqueue(new Callback<R>() {
 
                     @Override
                     public void onResponse(Response<R> response, Retrofit retrofit) {
-                        asyncResponse.onSuccess(response.body());
+                        observer.onNext(response.body());
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
                         Log.e(TAG, "Exception occurred", t);
-                        asyncResponse.onError(t);
+                        observer.onError(t);
                     }
 
                 });
@@ -42,22 +42,22 @@ public abstract class RetrofitService<R> {
         };
     }
 
-    public AsyncRequest<List<R>> createListRequest(final Call<List<R>> call) {
-        return new AsyncRequest<List<R>>() {
+    public Observable<List<R>> toListObservable(final Call<List<R>> call) {
+        return new Observable<List<R>>() {
 
             @Override
-            public void enqueue(final AsyncResponse<List<R>> asyncResponse) {
+            public void subscribe(final Observer<List<R>> observer) {
                 call.enqueue(new Callback<List<R>>() {
 
                     @Override
                     public void onResponse(Response<List<R>> response, Retrofit retrofit) {
-                        asyncResponse.onSuccess(response.body());
+                        observer.onNext(response.body());
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
                         Log.e(TAG, "Exception occurred", t);
-                        asyncResponse.onError(t);
+                        observer.onError(t);
                     }
 
                 });
