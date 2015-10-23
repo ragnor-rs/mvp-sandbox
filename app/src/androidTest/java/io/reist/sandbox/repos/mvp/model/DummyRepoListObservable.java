@@ -11,12 +11,12 @@ import io.reist.sandbox.core.mvp.model.ListObservable;
 public class DummyRepoListObservable extends ListObservable<Repo> {
 
     @Override
-    protected Integer put(List<Repo> list) {
+    public Integer put(List<Repo> list) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected List<Repo> get() {
+    public List<Repo> get() {
         List<Repo> reposList = new ArrayList<>();
         Repo testRepo = new Repo();
         testRepo.name = "test-repo";

@@ -24,7 +24,7 @@ public class RetrofitRepoListObservable extends RetrofitListObservable<Repo> {
 
     @Override
     protected Call<List<Repo>> getReadCall() {
-        return gitHubApi.listRepos(null);
+        return gitHubApi.listRepos("JackWharton");
     }
 
 }

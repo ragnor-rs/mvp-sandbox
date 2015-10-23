@@ -12,7 +12,7 @@ import retrofit.Call;
 public abstract class RetrofitListObservable<I> extends ListObservable<I> {
 
     @Override
-    protected Integer put(List<I> list) {
+    public Integer put(List<I> list) {
         try {
             return getWriteCall().execute().body();
         } catch (IOException e) {
@@ -23,7 +23,7 @@ public abstract class RetrofitListObservable<I> extends ListObservable<I> {
     protected abstract Call<Integer> getWriteCall();
 
     @Override
-    protected List<I> get() {
+    public List<I> get() {
         try {
             return getReadCall().execute().body();
         } catch (IOException e) {

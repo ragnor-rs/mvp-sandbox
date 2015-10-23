@@ -18,7 +18,7 @@ public class StorIoRepoListObservable extends StorIoListObservable<Repo> {
     }
 
     @Override
-    protected List<Repo> get() {
+    public List<Repo> get() {
         return preparedGetBuilder().listOfObjects(Repo.class)
                 .withQuery(
                         Query.builder()

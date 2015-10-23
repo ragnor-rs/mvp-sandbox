@@ -56,8 +56,8 @@ public class Schedulers {
         @Override
         public void run() {
             Looper.prepare();
+            handler = new Handler();
             synchronized (lock) {
-                handler = new Handler();
                 lock.notifyAll();
             }
             Looper.loop();

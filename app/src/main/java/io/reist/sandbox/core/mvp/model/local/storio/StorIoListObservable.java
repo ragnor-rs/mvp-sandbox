@@ -23,7 +23,7 @@ public abstract class StorIoListObservable<I> extends ListObservable<I> {
     }
 
     @Override
-    protected Integer put(List<I> list) {
+    public Integer put(List<I> list) {
         PutResults<I> putResults =  preparedPutBuilder()
                 .objects(list)
                 .prepare()

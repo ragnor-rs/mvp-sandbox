@@ -7,33 +7,72 @@ import junit.framework.TestCase;
  */
 public class RxTest extends TestCase {
 
+    public static final String[] ITEMS = new String[]{"one", "two", "three"};
+
+    private final Object lock = new Object();
+
     public void testRxOnSingleThread() throws Exception {
-        final String[] items = {"one", "two", "three"};
-        Observable.from(items).subscribe(new Observer<String>() {
+        Observable
+                .from(ITEMS)
+                .subscribe(new TestStringObserver());
+    }
 
-            private int pointer = 0;
+    public void testRxOnTwoThreads() throws Exception {
 
-            private int onCompletedCallCounter = 0;
+        final Thread observerThread = Thread.currentThread();
 
-            @Override
-            public void onNext(String s) {
-                assertEquals(items[pointer], s);
-                pointer++;
+        Observable
+                .from(ITEMS)
+                .forEach(new Action1<String>() {
+
+                    @Override
+                    public void call(String s) {
+                        assertNotSame(observerThread, Thread.currentThread());
+                    }
+
+                })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.immediate())
+                .subscribe(new TestStringObserver());
+
+        synchronized (lock) {
+            lock.wait();
+        }
+
+    }
+
+    private class TestStringObserver implements Observer<String> {
+
+        private int pointer;
+
+        private int onCompletedCallCounter;
+
+        public TestStringObserver() {
+            pointer = 0;
+            onCompletedCallCounter = 0;
+        }
+
+        @Override
+        public void onNext(String s) {
+            assertEquals(ITEMS[pointer], s);
+            pointer++;
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            throw new RuntimeException(e);
+        }
+
+        @Override
+        public void onCompleted() {
+            onCompletedCallCounter++;
+            assertEquals(ITEMS.length, pointer);
+            assertFalse(onCompletedCallCounter > 1);
+            synchronized (lock) {
+                lock.notifyAll();
             }
+        }
 
-            @Override
-            public void onError(Throwable e) {
-                fail();
-            }
-
-            @Override
-            public void onCompleted() {
-                onCompletedCallCounter++;
-                assertEquals(items.length, pointer);
-                assertFalse(onCompletedCallCounter > 1);
-            }
-
-        });
     }
 
 }
