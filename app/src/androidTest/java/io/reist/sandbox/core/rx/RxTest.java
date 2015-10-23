@@ -7,14 +7,22 @@ import junit.framework.TestCase;
  */
 public class RxTest extends TestCase {
 
-    public static final String[] ITEMS = new String[]{"one", "two", "three"};
+    public static final String[] STRINGS = new String[]{"one", "two", "three"};
+
+    public static final Integer[] STRING_LENGTHS = new Integer[STRINGS.length];
+
+    static {
+        for (int i = 0; i < STRING_LENGTHS.length; i++) {
+            STRING_LENGTHS[i] = STRINGS[i].length();
+        }
+    }
 
     private final Object lock = new Object();
 
     public void testRxOnSingleThread() throws Exception {
         Observable
-                .from(ITEMS)
-                .subscribe(new TestStringObserver());
+                .from(STRINGS)
+                .subscribe(new TestObserver<>(STRINGS));
     }
 
     public void testRxOnTwoThreads() throws Exception {
@@ -22,7 +30,7 @@ public class RxTest extends TestCase {
         final Thread observerThread = Thread.currentThread();
 
         Observable
-                .from(ITEMS)
+                .from(STRINGS)
                 .forEach(new Action1<String>() {
 
                     @Override
@@ -33,7 +41,7 @@ public class RxTest extends TestCase {
                 })
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.immediate())
-                .subscribe(new TestStringObserver());
+                .subscribe(new TestObserver<>(STRINGS));
 
         synchronized (lock) {
             lock.wait();
@@ -41,21 +49,72 @@ public class RxTest extends TestCase {
 
     }
 
-    private class TestStringObserver implements Observer<String> {
+    public void testConcatMapOnSingleThread() throws Exception {
 
-        private int pointer;
+        Observable
+                .from(STRINGS)
+                .concatMap(new Func1<String, Integer>() {
+
+                    @Override
+                    public Integer call(String s) {
+                        return s.length();
+                    }
+
+                })
+                .subscribe(new TestObserver<>(STRING_LENGTHS));
+
+    }
+
+    public void testConcatMapOnTwoThreads() throws Exception {
+
+        final Thread observerThread = Thread.currentThread();
+
+        Observable
+                .from(STRINGS)
+                .concatMap(new Func1<String, Integer>() {
+
+                    @Override
+                    public Integer call(String s) {
+                        return s.length();
+                    }
+
+                })
+                .forEach(new Action1<Integer>() {
+
+                    @Override
+                    public void call(Integer i) {
+                        assertNotSame(observerThread, Thread.currentThread());
+                    }
+
+                })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.immediate())
+                .subscribe(new TestObserver<>(STRING_LENGTHS));
+
+        synchronized (lock) {
+            lock.wait();
+        }
+
+    }
+
+    private class TestObserver<T> implements Observer<T> {
+
+        private final T[] expected;
+
+        private int itemCounter;
 
         private int onCompletedCallCounter;
 
-        public TestStringObserver() {
-            pointer = 0;
+        public TestObserver(T[] expected) {
+            this.expected = expected;
+            itemCounter = 0;
             onCompletedCallCounter = 0;
         }
 
         @Override
-        public void onNext(String s) {
-            assertEquals(ITEMS[pointer], s);
-            pointer++;
+        public void onNext(T t) {
+            assertEquals(expected[itemCounter], t);
+            itemCounter++;
         }
 
         @Override
@@ -66,7 +125,7 @@ public class RxTest extends TestCase {
         @Override
         public void onCompleted() {
             onCompletedCallCounter++;
-            assertEquals(ITEMS.length, pointer);
+            assertEquals(STRINGS.length, itemCounter);
             assertFalse(onCompletedCallCounter > 1);
             synchronized (lock) {
                 lock.notifyAll();
