@@ -19,8 +19,10 @@ import io.reist.sandbox.app.mvp.model.DbOpenHelper;
 import io.reist.sandbox.core.di.BaseModule;
 import io.reist.sandbox.core.mvp.model.ListObservable;
 import io.reist.sandbox.core.mvp.model.remote.retrofit.NestedFieldNameAdapter;
+import io.reist.sandbox.core.rx.AndroidSchedulers;
 import io.reist.sandbox.core.rx.Func1;
 import io.reist.sandbox.core.rx.Observer;
+import io.reist.sandbox.core.rx.Schedulers;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteGetResolver;
@@ -81,33 +83,37 @@ public class SandboxModule {
         final ListObservable<Repo> local = localRepoListObservable(context);
         final ListObservable<Repo> remote = remoteRepoListObservable();
 
-        remote.concatMap(new Func1<List<Repo>, Integer>() {
+        remote
+                .concatMap(new Func1<List<Repo>, Integer>() {
 
-            @Override
-            public Integer call(List<Repo> repos) {
-                return local.put(repos);
-            }
+                    @Override
+                    public Integer call(List<Repo> repos) {
+                        return local.put(repos);
+                    }
 
-        }).subscribe(new Observer<Integer>() {
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Observer<Integer>() {
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.i(TAG, "Saving to cache " + integer.toString() + " object(s)");
-            }
+                    @Override
+                    public void onNext(Integer integer) {
+                        Log.i(TAG, "Saving to cache " + integer.toString() + " object(s)");
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "Error saving objects to cache", e);
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "Error saving objects to cache", e);
+                    }
 
-            @Override
-            public void onCompleted() {
-                throw new RuntimeException("It should never happen!");
-            }
+                    @Override
+                    public void onCompleted() {
+                        Log.i(TAG, "Finished queue");
+                    }
 
-        });
+                });
 
-        return local.switchIfListEmpty(remote);
+        return local.switchIfListEmpty(remote); //.sample(1, TimeUnit.SECONDS);
 
     }
 
