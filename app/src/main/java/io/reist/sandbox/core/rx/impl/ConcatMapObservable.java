@@ -13,6 +13,7 @@ public class ConcatMapObservable<T, R> extends Observable<R> {
     private final Func1<T, R> func;
 
     public ConcatMapObservable(Observable<T> source, Func1<T, R> func) {
+        super(source);
         this.source = source;
         this.func = func;
     }
@@ -23,16 +24,10 @@ public class ConcatMapObservable<T, R> extends Observable<R> {
 
             @Override
             public R call() {
-                final Func0<T> emittingFunction = source.getEmittingFunction();
-                return func.call(emittingFunction.call());
+                return func.call(source.getEmittingFunction().call());
             }
 
         };
-    }
-
-    @Override
-    public boolean isDepleted() {
-        return source.isDepleted();
     }
 
 }

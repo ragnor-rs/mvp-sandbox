@@ -1,5 +1,9 @@
 package io.reist.sandbox.core.rx;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import io.reist.sandbox.core.rx.impl.ArrayObservable;
 import io.reist.sandbox.core.rx.impl.ConcatMapObservable;
 import io.reist.sandbox.core.rx.impl.ForEachObservable;
@@ -9,75 +13,129 @@ import io.reist.sandbox.core.rx.impl.ForEachObservable;
  */
 public abstract class Observable<T> {
 
-    private Scheduler subscriptionScheduler = Schedulers.immediate();
-    private Scheduler observationScheduler = Schedulers.immediate();
+    public static final Scheduler DEFAULT_SCHEDULER = Schedulers.immediate();
+
+    private final Action0 work = new Action0() {
+
+        @Override
+        public void call() {
+            final Observable<T> source = Observable.this;
+            while (!source.isDepleted()) {
+                try {
+                    source.doOnNext(source.getEmittingFunction().call());
+                } catch (final Throwable e) {
+                    source.doOnError(e);
+                }
+            }
+            source.doOnCompleted();
+        }
+
+    };
+
+    private final Observable<?> source;
+
+    private Scheduler.Worker backgroundWorker;
+    private Scheduler.Worker mainWorker;
+
+    private final List<Observer<T>> observers = Collections.synchronizedList(new ArrayList<Observer<T>>());
+
+    public Observable(Observable<?> source) {
+        this.source = source;
+    }
 
     public final Subscription subscribe(final Observer<T> observer) {
-        final Observable<T> parent = this;
-        subscriptionScheduler.post(new Action0() {
+
+        observers.add(observer);
+
+        initWorkers();
+
+        return new Subscription() {
 
             @Override
-            public void call() {
-                while(!parent.isDepleted()) {
-                    try {
-                        doOnNext(parent.getEmittingFunction().call(), observer);
-                    } catch (final Throwable e) {
-                        doOnError(observer, e);
-                    }
+            public void unsubscribe() {
+                observers.remove(observer);
+                if (observers.isEmpty()) {
+                    backgroundWorker.unsubscribe();
                 }
-                doOnCompleted(observer);
             }
 
-        });
-        return new Subscription();
+        };
+
     }
 
-    public void doOnError(final Observer<T> observer, final Throwable e) {
-        observationScheduler.post(new Action0() {
+    private void initWorkers() {
+
+        if (mainWorker == null) {
+            mainWorker = source == null ?
+                    DEFAULT_SCHEDULER.createWorker() :
+                    source.mainWorker;
+        }
+
+        if (backgroundWorker == null) {
+            backgroundWorker = source == null ?
+                    DEFAULT_SCHEDULER.createWorker() :
+                    source.backgroundWorker;
+        }
+
+        if (source != null) {
+            source.initWorkers();
+        }
+
+    }
+
+    public final void doOnError(final Throwable e) {
+        mainWorker.schedule(new Action0() {
 
             @Override
             public void call() {
-                observer.onError(e);
+                for (Observer<T> observer : observers) {
+                    observer.onError(e);
+                }
             }
 
         });
     }
 
-    public void doOnNext(final T value, final Observer<T> observer) {
-        observationScheduler.post(new Action0() {
+    public final void doOnNext(final T value) {
+        mainWorker.schedule(new Action0() {
 
             @Override
             public void call() {
-                observer.onNext(value);
+                for (Observer<T> observer : observers) {
+                    observer.onNext(value);
+                }
             }
 
         });
     }
 
-    public void doOnCompleted(final Observer<T> observer) {
-        observationScheduler.post(new Action0() {
+    public final void doOnCompleted() {
+        mainWorker.schedule(new Action0() {
 
             @Override
             public void call() {
-                observer.onCompleted();
+                for (Observer<T> observer : observers) {
+                    observer.onCompleted();
+                }
             }
 
         });
     }
 
     public boolean isDepleted() {
-        return false;
+        return source != null && source.isDepleted();
     }
 
     public abstract Func0<T> getEmittingFunction();
 
     public final Observable<T> subscribeOn(Scheduler scheduler) {
-        this.subscriptionScheduler = scheduler;
+        this.backgroundWorker = scheduler.createWorker();
+        backgroundWorker.schedule(work);
         return this;
     }
 
     public final Observable<T> observeOn(Scheduler scheduler) {
-        this.observationScheduler = scheduler;
+        this.mainWorker = scheduler.createWorker();
         return this;
     }
 

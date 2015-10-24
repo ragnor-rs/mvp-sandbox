@@ -15,12 +15,8 @@ public class ArrayObservable<I> extends Observable<I> {
     private final I[] items;
 
     public ArrayObservable(I[] items) {
+        super(null);
         this.items = items;
-    }
-
-    @Override
-    public boolean isDepleted() {
-        return pointer.get() >= items.length;
     }
 
     @Override
@@ -33,6 +29,11 @@ public class ArrayObservable<I> extends Observable<I> {
             }
 
         };
+    }
+
+    @Override
+    public boolean isDepleted() {
+        return pointer.get() >= items.length;
     }
 
 }

@@ -11,6 +11,10 @@ import retrofit.Call;
  */
 public abstract class RetrofitListObservable<I> extends ListObservable<I> {
 
+    public RetrofitListObservable() {
+        super(null);
+    }
+
     @Override
     public Integer put(List<I> list) {
         try {

@@ -19,6 +19,7 @@ public abstract class StorIoListObservable<I> extends ListObservable<I> {
     private final StorIOSQLite storIoSqLite;
 
     protected StorIoListObservable(StorIOSQLite storIoSqLite) {
+        super(null);
         this.storIoSqLite = storIoSqLite;
     }
 

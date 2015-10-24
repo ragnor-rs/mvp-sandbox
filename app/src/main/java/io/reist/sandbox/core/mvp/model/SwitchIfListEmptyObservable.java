@@ -3,7 +3,6 @@ package io.reist.sandbox.core.mvp.model;
 import java.util.List;
 
 import io.reist.sandbox.core.rx.Func0;
-import io.reist.sandbox.core.rx.Observer;
 
 /**
  * Created by Reist on 10/23/15.
@@ -14,6 +13,7 @@ public class SwitchIfListEmptyObservable<I> extends ListObservable<I> {
     private final ListObservable<I> alternative;
 
     public SwitchIfListEmptyObservable(ListObservable<I> source, ListObservable<I> alternative) {
+        super(source);
         this.source = source;
         this.alternative = alternative;
     }
@@ -29,31 +29,20 @@ public class SwitchIfListEmptyObservable<I> extends ListObservable<I> {
     }
 
     @Override
-    public void doOnNext(List<I> value, Observer<List<I>> observer) {
-        if (isEmpty(value)) {
-            alternative.doOnNext(value, observer);
-        } else {
-            source.doOnNext(value, observer);
-        }
-    }
-
-    private boolean isEmpty(List<I> value) {
-        return value == null || value.isEmpty();
-    }
-
-    @Override
     public Func0<List<I>> getEmittingFunction() {
-        return source.getEmittingFunction();
-    }
+        final Func0<List<I>> sourceEmitter = source.getEmittingFunction();
+        final Func0<List<I>> alternativeEmitter = source.getEmittingFunction();
+        return new Func0<List<I>>() {
 
-    @Override
-    public void doOnError(Observer<List<I>> observer, Throwable e) {
-        source.doOnError(observer, e);
-    }
+            @Override
+            public List<I> call() {
+                final List<I> value = sourceEmitter.call();
+                return value == null || value.isEmpty() ?
+                        alternativeEmitter.call() :
+                        value;
+            }
 
-    @Override
-    public void doOnCompleted(Observer<List<I>> observer) {
-        source.doOnCompleted(observer);
+        };
     }
 
     @Override

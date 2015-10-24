@@ -10,6 +10,10 @@ import io.reist.sandbox.core.rx.Observable;
  */
 public abstract class ListObservable<I> extends Observable<List<I>> {
 
+    public ListObservable(Observable<?> source) {
+        super(source);
+    }
+
     @Override
     public Func0<List<I>> getEmittingFunction() {
         return new Func0<List<I>>() {

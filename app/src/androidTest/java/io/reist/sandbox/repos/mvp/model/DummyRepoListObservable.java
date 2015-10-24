@@ -10,6 +10,10 @@ import io.reist.sandbox.core.mvp.model.ListObservable;
  */
 public class DummyRepoListObservable extends ListObservable<Repo> {
 
+    public DummyRepoListObservable() {
+        super(null);
+    }
+
     @Override
     public Integer put(List<Repo> list) {
         throw new UnsupportedOperationException();
