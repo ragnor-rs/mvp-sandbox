@@ -2,18 +2,22 @@ package io.reist.sandbox.core.rx;
 
 import junit.framework.TestCase;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by Reist on 10/23/15.
  */
 public class RxTest extends TestCase {
 
-    public static final String[] STRINGS = new String[]{"one", "two", "three"};
+    public static final String[] STRING_VALUES = new String[]{"one", "two", "three"};
+    public static final Integer[] STRING_LENGTHS = new Integer[STRING_VALUES.length];
 
-    public static final Integer[] STRING_LENGTHS = new Integer[STRINGS.length];
+    private static final long PERIOD_VALUE = 1;
+    private static final TimeUnit PERIOD_UNIT = TimeUnit.SECONDS;
 
     static {
         for (int i = 0; i < STRING_LENGTHS.length; i++) {
-            STRING_LENGTHS[i] = STRINGS[i].length();
+            STRING_LENGTHS[i] = STRING_VALUES[i].length();
         }
     }
 
@@ -21,8 +25,8 @@ public class RxTest extends TestCase {
 
     public void testRxOnSingleThread() throws Exception {
         Observable
-                .from(STRINGS)
-                .subscribe(new TestObserver<>(STRINGS));
+                .from(STRING_VALUES)
+                .subscribe(new TestObserver<>(STRING_VALUES));
     }
 
     public void testRxOnTwoThreads() throws Exception {
@@ -30,7 +34,7 @@ public class RxTest extends TestCase {
         final Thread observerThread = Thread.currentThread();
 
         Observable
-                .from(STRINGS)
+                .from(STRING_VALUES)
                 .forEach(new Action1<String>() {
 
                     @Override
@@ -41,7 +45,55 @@ public class RxTest extends TestCase {
                 })
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.immediate())
-                .subscribe(new TestObserver<>(STRINGS));
+                .subscribe(new TestObserver<>(STRING_VALUES));
+
+        synchronized (lock) {
+            lock.wait();
+        }
+
+    }
+
+    public void testForEachOnSingleThread() throws Exception {
+        Observable
+                .from(STRING_VALUES)
+                .forEach(new Action1<String>() {
+
+                    private int i = 0;
+
+                    @Override
+                    public void call(String s) {
+                        assertEquals(STRING_VALUES[i], s);
+                        i++;
+                    }
+
+                })
+                .subscribe(new TestObserver<>(STRING_VALUES));
+    }
+
+    public void testForEachOnTwoThreads() throws Exception {
+
+        final Thread observerThread = Thread.currentThread();
+
+        Observable
+                .from(STRING_VALUES)
+                .forEach(new Action1<String>() {
+
+                    private int i = 0;
+
+                    @Override
+                    public void call(String s) {
+
+                        assertEquals(STRING_VALUES[i], s);
+                        i++;
+
+                        assertNotSame(observerThread, Thread.currentThread());
+
+                    }
+
+                })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.immediate())
+                .subscribe(new TestObserver<>(STRING_VALUES));
 
         synchronized (lock) {
             lock.wait();
@@ -50,9 +102,8 @@ public class RxTest extends TestCase {
     }
 
     public void testConcatMapOnSingleThread() throws Exception {
-
         Observable
-                .from(STRINGS)
+                .from(STRING_VALUES)
                 .concatMap(new Func1<String, Integer>() {
 
                     @Override
@@ -62,7 +113,6 @@ public class RxTest extends TestCase {
 
                 })
                 .subscribe(new TestObserver<>(STRING_LENGTHS));
-
     }
 
     public void testConcatMapOnTwoThreads() throws Exception {
@@ -70,7 +120,7 @@ public class RxTest extends TestCase {
         final Thread observerThread = Thread.currentThread();
 
         Observable
-                .from(STRINGS)
+                .from(STRING_VALUES)
                 .concatMap(new Func1<String, Integer>() {
 
                     @Override
@@ -90,6 +140,70 @@ public class RxTest extends TestCase {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.immediate())
                 .subscribe(new TestObserver<>(STRING_LENGTHS));
+
+        synchronized (lock) {
+            lock.wait();
+        }
+
+    }
+
+    public void testSampleOnSingleThread() throws Exception {
+
+        final long expectedPeriod = TimeUnit.MILLISECONDS.convert(PERIOD_VALUE, PERIOD_UNIT);
+
+        Observable
+                .from(STRING_VALUES)
+                .sample(PERIOD_VALUE, PERIOD_UNIT)
+                .forEach(new Action1<String>() {
+
+                    private long startTime = -1;
+
+                    @Override
+                    public void call(String s) {
+                        final long now = System.currentTimeMillis();
+                        if (startTime != -1) {
+                            final long realPeriod = now - startTime;
+                            assertTrue(Math.abs(realPeriod - expectedPeriod) < 0.1 * expectedPeriod);
+                        }
+                        startTime = now;
+                    }
+
+                })
+                .subscribe(new TestObserver<>(STRING_VALUES));
+
+    }
+
+    public void testSampleOnTwoThreads() throws Exception {
+
+        final Thread observerThread = Thread.currentThread();
+
+        final long expectedPeriod = TimeUnit.MILLISECONDS.convert(PERIOD_VALUE, PERIOD_UNIT);
+
+        Observable
+                .from(STRING_VALUES)
+                .sample(PERIOD_VALUE, PERIOD_UNIT)
+                .forEach(new Action1<String>() {
+
+                    private long startTime = -1;
+
+                    @Override
+                    public void call(String s) {
+
+                        final long now = System.currentTimeMillis();
+                        if (startTime != -1) {
+                            final long realPeriod = now - startTime;
+                            assertTrue(Math.abs(realPeriod - expectedPeriod) < 0.1 * expectedPeriod);
+                        }
+                        startTime = now;
+
+                        assertNotSame(observerThread, Thread.currentThread());
+
+                    }
+
+                })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.immediate())
+                .subscribe(new TestObserver<>(STRING_VALUES));
 
         synchronized (lock) {
             lock.wait();
@@ -125,7 +239,7 @@ public class RxTest extends TestCase {
         @Override
         public void onCompleted() {
             onCompletedCallCounter++;
-            assertEquals(STRINGS.length, itemCounter);
+            assertEquals(STRING_VALUES.length, itemCounter);
             assertFalse(onCompletedCallCounter > 1);
             synchronized (lock) {
                 lock.notifyAll();

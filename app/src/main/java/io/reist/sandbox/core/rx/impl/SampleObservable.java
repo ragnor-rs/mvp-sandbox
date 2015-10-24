@@ -1,0 +1,43 @@
+package io.reist.sandbox.core.rx.impl;
+
+import io.reist.sandbox.core.rx.Func0;
+import io.reist.sandbox.core.rx.Observable;
+
+/**
+ * Created by Reist on 10/24/15.
+ */
+public class SampleObservable<T> extends Observable<T> {
+
+    private final long period;
+    private final Observable<T> source;
+
+    public SampleObservable(Observable<T> source, long period) {
+        super(source);
+        this.source = source;
+        this.period = period;
+    }
+
+    @Override
+    public Func0<T> getEmittingFunction() {
+        final Func0<T> emittingFunction = source.getEmittingFunction();
+        return new Func0<T>() {
+
+            @Override
+            public T call() {
+                return emittingFunction.call();
+            }
+
+        };
+    }
+
+    @Override
+    public void onItemEmitted() {
+        source.onItemEmitted();
+        try {
+            Thread.sleep(period);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+}

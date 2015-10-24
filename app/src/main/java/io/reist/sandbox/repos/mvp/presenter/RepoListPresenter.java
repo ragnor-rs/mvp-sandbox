@@ -37,8 +37,8 @@ public class RepoListPresenter extends BasePresenter {
     @Override
     protected void onViewAttached(BaseView view) {
         repoListSubscription = repoListObservable
-                .observeOn(Schedulers.newThread())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
                 .subscribe(new RepoListObserver());
     }
 

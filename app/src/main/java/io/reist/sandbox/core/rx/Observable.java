@@ -3,34 +3,19 @@ package io.reist.sandbox.core.rx;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reist.sandbox.core.rx.impl.ArrayObservable;
 import io.reist.sandbox.core.rx.impl.ConcatMapObservable;
 import io.reist.sandbox.core.rx.impl.ForEachObservable;
+import io.reist.sandbox.core.rx.impl.SampleObservable;
 
 /**
  * Created by Reist on 10/14/15.
  */
-public abstract class Observable<T> {
+public abstract class Observable<T> implements Action0 {
 
     public static final Scheduler DEFAULT_SCHEDULER = Schedulers.immediate();
-
-    private final Action0 work = new Action0() {
-
-        @Override
-        public void call() {
-            final Observable<T> source = Observable.this;
-            while (!source.isDepleted()) {
-                try {
-                    source.doOnNext(source.getEmittingFunction().call());
-                } catch (final Throwable e) {
-                    source.doOnError(e);
-                }
-            }
-            source.doOnCompleted();
-        }
-
-    };
 
     private final Observable<?> source;
 
@@ -49,6 +34,8 @@ public abstract class Observable<T> {
 
         initWorkers();
 
+        backgroundWorker.schedule(this);
+
         return new Subscription() {
 
             @Override
@@ -65,22 +52,42 @@ public abstract class Observable<T> {
 
     private void initWorkers() {
 
-        if (mainWorker == null) {
-            mainWorker = source == null ?
-                    DEFAULT_SCHEDULER.createWorker() :
-                    source.mainWorker;
+        if (mainWorker == null){
+            observeOn(DEFAULT_SCHEDULER);
         }
 
         if (backgroundWorker == null) {
-            backgroundWorker = source == null ?
-                    DEFAULT_SCHEDULER.createWorker() :
-                    source.backgroundWorker;
+            subscribeOn(DEFAULT_SCHEDULER);
         }
 
         if (source != null) {
+
             source.initWorkers();
+
+            source.mainWorker = mainWorker;
+            source.backgroundWorker = backgroundWorker;
+
         }
 
+    }
+
+    @Override
+    public final void call() {
+        try {
+            while (!isDepleted()) {
+                doOnNext(getEmittingFunction().call());
+                onItemEmitted();
+            }
+        } catch (final Throwable e) {
+            doOnError(e);
+        }
+        doOnCompleted();
+    }
+
+    public void onItemEmitted() {
+        if (source != null) {
+            source.onItemEmitted();
+        }
     }
 
     public final void doOnError(final Throwable e) {
@@ -130,7 +137,6 @@ public abstract class Observable<T> {
 
     public final Observable<T> subscribeOn(Scheduler scheduler) {
         this.backgroundWorker = scheduler.createWorker();
-        backgroundWorker.schedule(work);
         return this;
     }
 
@@ -149,6 +155,10 @@ public abstract class Observable<T> {
 
     public final <R> Observable<R> concatMap(Func1<T, R> func) {
         return new ConcatMapObservable<>(this, func);
+    }
+
+    public final Observable<T> sample(long period, TimeUnit unit) {
+        return new SampleObservable<>(this, TimeUnit.MILLISECONDS.convert(period, unit));
     }
 
 }
