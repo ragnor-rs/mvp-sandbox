@@ -101,10 +101,10 @@ public class RxTest extends TestCase {
 
     }
 
-    public void testConcatMapOnSingleThread() throws Exception {
+    public void testMapOnSingleThread() throws Exception {
         Observable
                 .from(STRING_VALUES)
-                .concatMap(new Func1<String, Integer>() {
+                .map(new Func1<String, Integer>() {
 
                     @Override
                     public Integer call(String s) {
@@ -115,13 +115,13 @@ public class RxTest extends TestCase {
                 .subscribe(new TestObserver<>(STRING_LENGTHS));
     }
 
-    public void testConcatMapOnTwoThreads() throws Exception {
+    public void testMapOnTwoThreads() throws Exception {
 
         final Thread observerThread = Thread.currentThread();
 
         Observable
                 .from(STRING_VALUES)
-                .concatMap(new Func1<String, Integer>() {
+                .map(new Func1<String, Integer>() {
 
                     @Override
                     public Integer call(String s) {

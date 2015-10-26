@@ -1,7 +1,6 @@
 package io.reist.sandbox.app.di;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -11,18 +10,16 @@ import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
 
 import java.util.List;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import io.reist.sandbox.app.mvp.model.DbOpenHelper;
 import io.reist.sandbox.core.di.BaseModule;
-import io.reist.sandbox.core.mvp.model.ListObservable;
 import io.reist.sandbox.core.mvp.model.remote.retrofit.NestedFieldNameAdapter;
-import io.reist.sandbox.core.rx.AndroidSchedulers;
-import io.reist.sandbox.core.rx.Func1;
-import io.reist.sandbox.core.rx.Observer;
-import io.reist.sandbox.core.rx.Schedulers;
+import io.reist.sandbox.core.rx.Action1;
+import io.reist.sandbox.core.rx.Observable;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteGetResolver;
@@ -38,9 +35,31 @@ public class SandboxModule {
 
     private static final String GIT_HUB_BASE_URL = "https://api.github.com";
 
-    private static final String TAG = SandboxModule.class.getName();
+    public static final String LOCAL_SERVICE = "local";
+    public static final String REMOTE_SERVICE = "remote";
 
-    private ListObservable<Repo> remoteRepoListObservable() {
+    @Provides @Singleton
+    DbOpenHelper dbOpenHelper(Context context) {
+        return new DbOpenHelper(context);
+    }
+
+    @Provides @Singleton
+    StorIOSQLite storIoSqLite(DbOpenHelper dbOpenHelper) {
+        return DefaultStorIOSQLite.builder()
+                .sqliteOpenHelper(dbOpenHelper)
+                .addTypeMapping(
+                        Repo.class,
+                        SQLiteTypeMapping.<Repo>builder()
+                                .putResolver(new RepoStorIOSQLitePutResolver())
+                                .getResolver(new RepoStorIOSQLiteGetResolver())
+                                .deleteResolver(new RepoStorIOSQLiteDeleteResolver())
+                                .build()
+                )
+                .build();
+    }
+
+    @Provides @Singleton @Named(REMOTE_SERVICE)
+    Observable<List<Repo>> remoteRepoListObservable(final StorIOSQLite storIoSqLite) {
 
         Gson gson = new GsonBuilder()
                 .registerTypeHierarchyAdapter(Object.class, new NestedFieldNameAdapter())
@@ -53,67 +72,34 @@ public class SandboxModule {
 
         GitHubApi gitHubApi = retrofit.create(GitHubApi.class);
 
-        return new RetrofitRepoListObservable(gitHubApi);
-
-    }
-
-    private ListObservable<Repo> localRepoListObservable(Context context) {
-
-        DbOpenHelper dbOpenHelper = new DbOpenHelper(context);
-
-        StorIOSQLite storIoSqLite = DefaultStorIOSQLite.builder()
-                .sqliteOpenHelper(dbOpenHelper)
-                .addTypeMapping(
-                        Repo.class,
-                        SQLiteTypeMapping.<Repo>builder()
-                            .putResolver(new RepoStorIOSQLitePutResolver())
-                            .getResolver(new RepoStorIOSQLiteGetResolver())
-                            .deleteResolver(new RepoStorIOSQLiteDeleteResolver())
-                            .build()
-                )
-                .build();
-
-        return new StorIoRepoListObservable(storIoSqLite);
-
-    }
-
-    @Provides @Singleton
-    ListObservable<Repo> repoListObservable(Context context) {
-
-        final ListObservable<Repo> local = localRepoListObservable(context);
-        final ListObservable<Repo> remote = remoteRepoListObservable();
-
-        remote
-                .concatMap(new Func1<List<Repo>, Integer>() {
+        return new RetrofitRepoListObservable(gitHubApi)
+                .forEach(new Action1<List<Repo>>() {
 
                     @Override
-                    public Integer call(List<Repo> repos) {
-                        return local.put(repos);
-                    }
-
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(new Observer<Integer>() {
-
-                    @Override
-                    public void onNext(Integer integer) {
-                        Log.i(TAG, "Saving to cache " + integer.toString() + " object(s)");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "Error saving objects to cache", e);
-                    }
-
-                    @Override
-                    public void onCompleted() {
-                        Log.i(TAG, "Finished queue");
+                    public void call(List<Repo> repos) {
+                        storIoSqLite.put()
+                                .objects(repos)
+                                .prepare()
+                                .executeAsBlocking();
                     }
 
                 });
 
-        return local.switchIfListEmpty(remote);
+    }
+
+    @Provides @Singleton @Named(LOCAL_SERVICE)
+    Observable<List<Repo>> localRepoListObservable(StorIOSQLite storIoSqLite) {
+        return new StorIoRepoListObservable(storIoSqLite);
+    }
+
+    @Provides @Singleton
+    Observable<List<Repo>> repoListObservable(
+            @Named(LOCAL_SERVICE) final Observable<List<Repo>> local,
+            @Named(REMOTE_SERVICE) final Observable<List<Repo>> remote
+    ) {
+
+        return local
+                .concatWith(remote);
 
     }
 

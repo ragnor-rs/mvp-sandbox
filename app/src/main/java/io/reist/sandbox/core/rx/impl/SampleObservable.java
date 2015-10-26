@@ -19,15 +19,7 @@ public class SampleObservable<T> extends Observable<T> {
 
     @Override
     public Func0<T> getEmittingFunction() {
-        final Func0<T> emittingFunction = source.getEmittingFunction();
-        return new Func0<T>() {
-
-            @Override
-            public T call() {
-                return emittingFunction.call();
-            }
-
-        };
+        return source.getEmittingFunction();
     }
 
     @Override

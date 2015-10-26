@@ -10,10 +10,10 @@ import javax.inject.Singleton;
 
 import butterknife.Bind;
 import io.reist.sandbox.R;
-import io.reist.sandbox.core.mvp.model.ListObservable;
 import io.reist.sandbox.core.mvp.presenter.BasePresenter;
 import io.reist.sandbox.core.mvp.view.BaseView;
 import io.reist.sandbox.core.rx.AndroidSchedulers;
+import io.reist.sandbox.core.rx.Observable;
 import io.reist.sandbox.core.rx.Observer;
 import io.reist.sandbox.core.rx.Schedulers;
 import io.reist.sandbox.core.rx.Subscription;
@@ -23,7 +23,7 @@ import io.reist.sandbox.repos.mvp.model.Repo;
 @Singleton
 public class RepoListPresenter extends BasePresenter {
 
-    private final ListObservable<Repo> repoListObservable;
+    private final Observable<List<Repo>> repoListObservable;
 
     @Bind(R.id.daggertest_repo_recycler_view)
     RecyclerView mRecyclerView;
@@ -31,7 +31,7 @@ public class RepoListPresenter extends BasePresenter {
     private Subscription repoListSubscription;
 
     @Inject
-    public RepoListPresenter(ListObservable<Repo> repoListObservable) {
+    public RepoListPresenter(Observable<List<Repo>> repoListObservable) {
         this.repoListObservable = repoListObservable;
     }
 

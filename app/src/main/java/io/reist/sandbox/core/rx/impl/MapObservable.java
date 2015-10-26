@@ -7,12 +7,12 @@ import io.reist.sandbox.core.rx.Observable;
 /**
  * Created by Reist on 10/23/15.
  */
-public class ConcatMapObservable<T, R> extends Observable<R> {
+public class MapObservable<T, R> extends Observable<R> {
 
     private final Observable<T> source;
     private final Func1<T, R> func;
 
-    public ConcatMapObservable(Observable<T> source, Func1<T, R> func) {
+    public MapObservable(Observable<T> source, Func1<T, R> func) {
         super(source);
         this.source = source;
         this.func = func;

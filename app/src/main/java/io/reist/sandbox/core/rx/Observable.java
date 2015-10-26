@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reist.sandbox.core.rx.impl.ArrayObservable;
-import io.reist.sandbox.core.rx.impl.ConcatMapObservable;
+import io.reist.sandbox.core.rx.impl.ConcatWithObservable;
 import io.reist.sandbox.core.rx.impl.ForEachObservable;
+import io.reist.sandbox.core.rx.impl.MapObservable;
 import io.reist.sandbox.core.rx.impl.SampleObservable;
 
 /**
@@ -153,12 +154,16 @@ public abstract class Observable<T> implements Action0 {
         return new ForEachObservable<>(this, action);
     }
 
-    public final <R> Observable<R> concatMap(Func1<T, R> func) {
-        return new ConcatMapObservable<>(this, func);
+    public final <R> Observable<R> map(Func1<T, R> func) {
+        return new MapObservable<>(this, func);
     }
 
     public final Observable<T> sample(long period, TimeUnit unit) {
         return new SampleObservable<>(this, TimeUnit.MILLISECONDS.convert(period, unit));
+    }
+
+    public Observable<T> concatWith(Observable<T> alternative) {
+        return new ConcatWithObservable(this, alternative);
     }
 
 }

@@ -18,11 +18,6 @@ public class RetrofitRepoListObservable extends RetrofitListObservable<Repo> {
     }
 
     @Override
-    protected Call<Integer> getWriteCall() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     protected Call<List<Repo>> getReadCall() {
         return gitHubApi.listRepos("JackWharton");
     }

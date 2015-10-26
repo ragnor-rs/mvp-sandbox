@@ -3,29 +3,20 @@ package io.reist.sandbox.core.mvp.model;
 import java.util.List;
 
 import io.reist.sandbox.core.rx.Func0;
+import io.reist.sandbox.core.rx.Observable;
 
 /**
  * Created by Reist on 10/23/15.
  */
-public class SwitchIfListEmptyObservable<I> extends ListObservable<I> {
+public class SwitchIfListEmptyObservable<I> extends Observable<List<I>> {
 
-    private final ListObservable<I> source;
-    private final ListObservable<I> alternative;
+    private final Observable<List<I>> source;
+    private final Observable<List<I>> alternative;
 
-    public SwitchIfListEmptyObservable(ListObservable<I> source, ListObservable<I> alternative) {
+    public SwitchIfListEmptyObservable(Observable<List<I>> source, Observable<List<I>> alternative) {
         super(source);
         this.source = source;
         this.alternative = alternative;
-    }
-
-    @Override
-    public Integer put(List<I> list) {
-        throw new RuntimeException("It should never happen");
-    }
-
-    @Override
-    public List<I> get() {
-        throw new RuntimeException("It should never happen");
     }
 
     @Override
@@ -43,11 +34,6 @@ public class SwitchIfListEmptyObservable<I> extends ListObservable<I> {
             }
 
         };
-    }
-
-    @Override
-    public boolean isDepleted() {
-        return source.isDepleted();
     }
 
 }

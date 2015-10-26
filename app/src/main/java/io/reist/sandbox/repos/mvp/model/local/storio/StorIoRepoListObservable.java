@@ -6,6 +6,7 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 import java.util.List;
 
 import io.reist.sandbox.core.mvp.model.local.storio.StorIoListObservable;
+import io.reist.sandbox.core.rx.Func0;
 import io.reist.sandbox.repos.mvp.model.Repo;
 
 /**
@@ -18,15 +19,20 @@ public class StorIoRepoListObservable extends StorIoListObservable<Repo> {
     }
 
     @Override
-    public List<Repo> get() {
-        return preparedGetBuilder().listOfObjects(Repo.class)
-                .withQuery(
-                        Query.builder()
-                                .table(ReposTable.TABLE_NAME)
-                                .build()
-                )
-                .prepare()
-                .executeAsBlocking();
+    public Func0<List<Repo>> getEmittingFunction() {
+        return new Func0<List<Repo>>() {
+            @Override
+            public List<Repo> call() {
+                return preparedGetBuilder().listOfObjects(Repo.class)
+                        .withQuery(
+                                Query.builder()
+                                        .table(ReposTable.TABLE_NAME)
+                                        .build()
+                        )
+                        .prepare()
+                        .executeAsBlocking();
+            }
+        };
     }
 
 }
