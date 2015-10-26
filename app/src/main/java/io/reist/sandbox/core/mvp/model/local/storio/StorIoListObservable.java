@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGet;
-import com.pushtorefresh.storio.sqlite.operations.put.PreparedPut;
 
 import java.util.List;
 
@@ -17,14 +16,9 @@ public abstract class StorIoListObservable<I> extends Observable<List<I>> {
 
     private final StorIOSQLite storIoSqLite;
 
-    protected StorIoListObservable(StorIOSQLite storIoSqLite) {
+    public StorIoListObservable(StorIOSQLite storIoSqLite) {
         super(null);
         this.storIoSqLite = storIoSqLite;
-    }
-
-    @NonNull
-    protected PreparedPut.Builder preparedPutBuilder() {
-        return storIoSqLite.put();
     }
 
     @NonNull
