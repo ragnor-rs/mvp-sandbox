@@ -163,7 +163,7 @@ public abstract class Observable<T> implements Action0 {
     }
 
     public Observable<T> concatWith(Observable<T> alternative) {
-        return new ConcatWithObservable(this, alternative);
+        return new ConcatWithObservable<>(this, alternative);
     }
 
 }

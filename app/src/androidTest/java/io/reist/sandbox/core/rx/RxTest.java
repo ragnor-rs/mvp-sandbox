@@ -2,6 +2,9 @@ package io.reist.sandbox.core.rx;
 
 import junit.framework.TestCase;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -11,6 +14,8 @@ public class RxTest extends TestCase {
 
     public static final String[] STRING_VALUES = new String[]{"one", "two", "three"};
     public static final Integer[] STRING_LENGTHS = new Integer[STRING_VALUES.length];
+
+    public static final String[] MORE_STRING_VALUES = new String[]{"1", "2", "3"};
 
     private static final long PERIOD_VALUE = 1;
     private static final TimeUnit PERIOD_UNIT = TimeUnit.SECONDS;
@@ -211,6 +216,56 @@ public class RxTest extends TestCase {
 
     }
 
+    public void testConcatWithOnSingleThread() throws Exception {
+
+        String[] expected = new String[STRING_VALUES.length + MORE_STRING_VALUES.length];
+        List<String> strings = new ArrayList<>();
+        Collections.addAll(strings, STRING_VALUES);
+        Collections.addAll(strings, MORE_STRING_VALUES);
+        expected = strings.toArray(expected);
+
+        Observable
+                .from(STRING_VALUES)
+                .concatWith(
+                        Observable.from(MORE_STRING_VALUES)
+                )
+                .subscribe(new TestObserver<>(expected));
+
+    }
+
+    public void testConcatWithOnTwoThreads() throws Exception {
+
+        final Thread observerThread = Thread.currentThread();
+
+        String[] expected = new String[STRING_VALUES.length + MORE_STRING_VALUES.length];
+        List<String> strings = new ArrayList<>();
+        Collections.addAll(strings, STRING_VALUES);
+        Collections.addAll(strings, MORE_STRING_VALUES);
+        expected = strings.toArray(expected);
+
+        Observable
+                .from(STRING_VALUES)
+                .concatWith(
+                        Observable.from(MORE_STRING_VALUES)
+                )
+                .forEach(new Action1<String>() {
+
+                    @Override
+                    public void call(String i) {
+                        assertNotSame(observerThread, Thread.currentThread());
+                    }
+
+                })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.immediate())
+                .subscribe(new TestObserver<>(expected));
+
+        synchronized (lock) {
+            lock.wait();
+        }
+
+    }
+
     private class TestObserver<T> implements Observer<T> {
 
         private final T[] expected;
@@ -239,7 +294,7 @@ public class RxTest extends TestCase {
         @Override
         public void onCompleted() {
             onCompletedCallCounter++;
-            assertEquals(STRING_VALUES.length, itemCounter);
+            assertEquals(expected.length, itemCounter);
             assertFalse(onCompletedCallCounter > 1);
             synchronized (lock) {
                 lock.notifyAll();
