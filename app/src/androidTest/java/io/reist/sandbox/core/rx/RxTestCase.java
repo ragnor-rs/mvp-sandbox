@@ -92,6 +92,8 @@ public abstract class RxTestCase extends TestCase {
 
     public abstract void testSwitchMap() throws Exception;
 
+    public abstract void testCache() throws Exception;
+
     @NonNull
     protected static Integer[] expectedForMap() {
         final Integer[] expected = new Integer[STRING_VALUES.length];
@@ -128,6 +130,21 @@ public abstract class RxTestCase extends TestCase {
             } else {
                 expectedList.add(MORE_ALTERNATIVE_STRINGS[pointerToAlternative2]);
                 pointerToAlternative2++;
+            }
+        }
+        return expectedList.toArray(new String[expectedList.size()]);
+    }
+
+    @NonNull
+    protected static String[] expectedForCache() {
+        List<String> expectedList = new ArrayList<>();
+        int pointerToAlternative = 0;
+        for (String s : RxTestCase.STRING_VALUES) {
+            if (RxTestCase.checkSwitchCondition(s)) {
+                expectedList.add(RxTestCase.MORE_STRING_VALUES[pointerToAlternative]);
+                pointerToAlternative++;
+            } else {
+                expectedList.add(s);
             }
         }
         return expectedList.toArray(new String[expectedList.size()]);

@@ -169,6 +169,39 @@ public class RxTwoThreadsTestCase extends RxTestCase {
     }
 
     @Override
+    public void testCache() throws Exception {
+
+        final Observable<String> local = Observable.from(RxTestCase.STRING_VALUES);
+        final Observable<String> remote = Observable.from(RxTestCase.MORE_STRING_VALUES);
+
+        String[] expected = expectedForCache();
+
+        local
+                .switchMap(new Func1<String, Observable<String>>() {
+
+                    @Override
+                    public Observable<String> call(String s) {
+                        return RxTestCase.checkSwitchCondition(s) ?
+                                remote :
+                                Observable.just(s).concatWith(local);
+                    }
+
+                })
+                .forEach(new Action1<String>() {
+
+                    @Override
+                    public void call(String i) {
+                        assertNotSame(observerThread, Thread.currentThread());
+                    }
+
+                })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.immediate())
+                .subscribe(createObserver(expected));
+
+    }
+
+    @Override
     protected <T> RxTestCase.TestObserver<T> createObserver(T[] expected) {
         final TestObserver<T> observer = super.createObserver(expected);
         observer.setLock(lock);

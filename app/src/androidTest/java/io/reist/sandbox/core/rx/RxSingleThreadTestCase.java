@@ -97,4 +97,27 @@ public class RxSingleThreadTestCase extends RxTestCase {
 
     }
 
+    @Override
+    public void testCache() throws Exception {
+
+        final Observable<String> local = Observable.from(RxTestCase.STRING_VALUES);
+        final Observable<String> remote = Observable.from(RxTestCase.MORE_STRING_VALUES);
+
+        String[] expected = expectedForCache();
+
+        local
+                .switchMap(new Func1<String, Observable<String>>() {
+
+                    @Override
+                    public Observable<String> call(String s) {
+                        return RxTestCase.checkSwitchCondition(s) ?
+                                remote :
+                                Observable.just(s).concatWith(local);
+                    }
+
+                })
+                .subscribe(new RxTestCase.TestObserver<>(expected));
+
+    }
+
 }
