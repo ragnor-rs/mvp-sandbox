@@ -24,7 +24,7 @@ public class SampleObservable<T> extends Observable<T> {
 
     @Override
     public void onItemEmitted() {
-        source.onItemEmitted();
+        super.onItemEmitted();
         try {
             Thread.sleep(period);
         } catch (InterruptedException e) {

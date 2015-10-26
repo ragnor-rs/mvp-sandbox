@@ -19,7 +19,7 @@ public class MainThreadScheduler extends Scheduler {
 
     private class MainThreadWorker extends Worker {
 
-        private final Handler handler;
+        private Handler handler;
 
         public MainThreadWorker() {
             handler = new Handler(Looper.getMainLooper());
@@ -36,6 +36,12 @@ public class MainThreadScheduler extends Scheduler {
 
             });
             return this;
+        }
+
+        @Override
+        public void unsubscribe() {
+            super.unsubscribe();
+            handler = null;
         }
 
     }

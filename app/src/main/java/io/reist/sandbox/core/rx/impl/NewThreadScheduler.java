@@ -24,6 +24,8 @@ public class NewThreadScheduler extends Scheduler {
 
         private final Object lock = new Object();
 
+        private Looper looper;
+
         @Override
         public Subscription schedule(final Action0 action) {
 
@@ -50,11 +52,12 @@ public class NewThreadScheduler extends Scheduler {
 
         }
 
-        public final Thread thread = new Thread() {
+        public Thread thread = new Thread() {
 
             @Override
             public void run() {
                 Looper.prepare();
+                looper = Looper.myLooper();
                 handler = new Handler();
                 synchronized (lock) {
                     lock.notifyAll();
@@ -68,6 +71,15 @@ public class NewThreadScheduler extends Scheduler {
 
         private NewThreadWorker() {
             thread.start();
+        }
+
+        @Override
+        public void unsubscribe() {
+            super.unsubscribe();
+            if (looper != null) {
+                looper.quit();
+            }
+            thread = null;
         }
 
     }

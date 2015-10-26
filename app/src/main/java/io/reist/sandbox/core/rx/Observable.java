@@ -8,8 +8,10 @@ import java.util.concurrent.TimeUnit;
 import io.reist.sandbox.core.rx.impl.ArrayObservable;
 import io.reist.sandbox.core.rx.impl.ConcatWithObservable;
 import io.reist.sandbox.core.rx.impl.ForEachObservable;
+import io.reist.sandbox.core.rx.impl.JustObservable;
 import io.reist.sandbox.core.rx.impl.MapObservable;
 import io.reist.sandbox.core.rx.impl.SampleObservable;
+import io.reist.sandbox.core.rx.impl.SwitchMapObservable;
 
 /**
  * Created by Reist on 10/14/15.
@@ -83,6 +85,7 @@ public abstract class Observable<T> implements Action0 {
             doOnError(e);
         }
         doOnCompleted();
+        backgroundWorker.unsubscribe();
     }
 
     public void onItemEmitted() {
@@ -131,7 +134,7 @@ public abstract class Observable<T> implements Action0 {
     }
 
     public boolean isDepleted() {
-        return source != null && source.isDepleted();
+        return source != null && source.isDepleted() || getEmittingFunction() == null;
     }
 
     public abstract Func0<T> getEmittingFunction();
@@ -146,8 +149,12 @@ public abstract class Observable<T> implements Action0 {
         return this;
     }
 
-    public static <I> Observable<I> from(I[] items) {
+    public static <T> Observable<T> from(T[] items) {
         return new ArrayObservable<>(items);
+    }
+
+    public static <T> Observable<T> just(T t) {
+        return new JustObservable<>(t);
     }
 
     public final Observable<T> forEach(Action1<T> action) {
@@ -162,8 +169,12 @@ public abstract class Observable<T> implements Action0 {
         return new SampleObservable<>(this, TimeUnit.MILLISECONDS.convert(period, unit));
     }
 
-    public Observable<T> concatWith(Observable<T> alternative) {
+    public final Observable<T> concatWith(Observable<T> alternative) {
         return new ConcatWithObservable<>(this, alternative);
+    }
+
+    public final <R> Observable<R> switchMap(Func1<T, Observable<R>> observableEmitter) {
+        return new SwitchMapObservable<>(this, observableEmitter);
     }
 
 }
