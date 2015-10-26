@@ -21,14 +21,21 @@ public abstract class Scheduler {
         workers.remove(worker);
     }
 
-    public abstract class Worker implements Subscription {
+    public static abstract class Worker implements Subscription {
+
+        private final Scheduler parent;
+
+        public Worker(Scheduler parent) {
+            this.parent = parent;
+        }
 
         public abstract Subscription schedule(Action0 action);
 
         @Override
         public void unsubscribe() {
-            unregister(this);
+            parent.unregister(this);
         }
+
     }
 
 }

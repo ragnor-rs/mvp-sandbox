@@ -195,7 +195,7 @@ public class RxTwoThreadsTestCase extends RxTestCase {
                     }
 
                 })
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.immediate())
                 .subscribe(createObserver(expected));
 

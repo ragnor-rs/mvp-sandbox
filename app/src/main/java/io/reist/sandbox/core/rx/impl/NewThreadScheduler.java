@@ -17,10 +17,10 @@ public class NewThreadScheduler extends Scheduler {
 
     @Override
     public Worker createWorker() {
-        return register(new NewThreadWorker());
+        return register(new NewThreadWorker(this));
     }
 
-    private class NewThreadWorker extends Worker {
+    protected static class NewThreadWorker extends Worker {
 
         private final Object lock = new Object();
 
@@ -69,7 +69,8 @@ public class NewThreadScheduler extends Scheduler {
 
         private Handler handler;
 
-        private NewThreadWorker() {
+        protected NewThreadWorker(Scheduler scheduler) {
+            super(scheduler);
             thread.start();
         }
 

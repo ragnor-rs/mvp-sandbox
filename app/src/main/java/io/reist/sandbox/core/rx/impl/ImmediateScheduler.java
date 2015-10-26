@@ -11,10 +11,14 @@ public class ImmediateScheduler extends Scheduler {
 
     @Override
     public Worker createWorker() {
-        return register(new ImmediateWorker());
+        return register(new ImmediateWorker(this));
     }
 
     private class ImmediateWorker extends Worker {
+
+        public ImmediateWorker(Scheduler parent) {
+            super(parent);
+        }
 
         @Override
         public Subscription schedule(Action0 action) {

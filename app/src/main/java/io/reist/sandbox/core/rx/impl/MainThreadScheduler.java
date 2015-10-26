@@ -14,14 +14,15 @@ public class MainThreadScheduler extends Scheduler {
 
     @Override
     public Worker createWorker() {
-        return register(new MainThreadWorker());
+        return register(new MainThreadWorker(this));
     }
 
-    private class MainThreadWorker extends Worker {
+    protected static class MainThreadWorker extends Worker {
 
         private Handler handler;
 
-        public MainThreadWorker() {
+        protected MainThreadWorker(MainThreadScheduler scheduler) {
+            super(scheduler);
             handler = new Handler(Looper.getMainLooper());
         }
 
