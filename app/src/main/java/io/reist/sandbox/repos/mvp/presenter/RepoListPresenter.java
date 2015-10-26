@@ -34,9 +34,11 @@ public class RepoListPresenter extends BasePresenter {
     public RepoListPresenter(ListObservable<Repo> repoListObservable) {
         this.repoListObservable = repoListObservable;
     }
+
     @Override
     protected void onViewAttached(BaseView view) {
         repoListSubscription = repoListObservable
+                //.sample(1, TimeUnit.SECONDS);
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RepoListObserver());

@@ -113,7 +113,7 @@ public class SandboxModule {
 
                 });
 
-        return local.switchIfListEmpty(remote); //.sample(1, TimeUnit.SECONDS);
+        return local.switchIfListEmpty(remote);
 
     }
 
