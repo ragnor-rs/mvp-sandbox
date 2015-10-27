@@ -18,7 +18,7 @@ public class StorIoRepoListObservable extends StorIoListObservable<Repo> {
         super(storIoSqLite);
     }
 
-    @Override
+    //@Override
     public Func0<List<Repo>> getEmittingFunction() {
         return new Func0<List<Repo>>() {
             @Override

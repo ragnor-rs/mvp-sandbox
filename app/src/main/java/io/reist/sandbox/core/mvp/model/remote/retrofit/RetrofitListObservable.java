@@ -16,7 +16,7 @@ public abstract class RetrofitListObservable<I> extends Observable<List<I>> {
         super(null);
     }
 
-    @Override
+    //@Override
     public Func0<List<I>> getEmittingFunction() {
         return new Func0<List<I>>() {
 

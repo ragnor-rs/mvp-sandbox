@@ -1,11 +1,6 @@
 package io.reist.sandbox.core.rx.impl;
 
-import io.reist.sandbox.core.rx.Func0;
-import io.reist.sandbox.core.rx.Observable;
-
-/**
- * Created by Reist on 10/24/15.
- */
+/*
 public class SampleObservable<T> extends Observable<T> {
 
     private final long period;
@@ -33,3 +28,4 @@ public class SampleObservable<T> extends Observable<T> {
     }
 
 }
+*/

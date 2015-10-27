@@ -5,11 +5,11 @@ import io.reist.sandbox.core.rx.Scheduler;
 /**
  * Created by Reist on 10/26/15.
  */
-public class IoThreadScheduler extends Scheduler {
+public class SingleThreadScheduler extends Scheduler {
 
     private final Worker worker;
 
-    public IoThreadScheduler() {
+    public SingleThreadScheduler() {
         this.worker = register(new NewThreadScheduler.NewThreadWorker(this));
     }
 

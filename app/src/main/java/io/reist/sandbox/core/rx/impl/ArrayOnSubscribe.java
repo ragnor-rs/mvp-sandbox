@@ -3,19 +3,17 @@ package io.reist.sandbox.core.rx.impl;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reist.sandbox.core.rx.Func0;
-import io.reist.sandbox.core.rx.Observable;
 
 /**
  * Created by Reist on 10/23/15.
  */
-public class ArrayObservable<I> extends Observable<I> {
+public class ArrayOnSubscribe<I> extends CompatOnSubscribe<I> {
 
     private final AtomicInteger pointer = new AtomicInteger();
 
     private final I[] items;
 
-    public ArrayObservable(I[] items) {
-        super(null);
+    public ArrayOnSubscribe(I[] items) {
         this.items = items;
     }
 
@@ -32,7 +30,7 @@ public class ArrayObservable<I> extends Observable<I> {
     }
 
     @Override
-    public boolean isDepleted() {
+    public boolean isCompleted() {
         return pointer.get() >= items.length;
     }
 

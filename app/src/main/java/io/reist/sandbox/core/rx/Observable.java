@@ -5,39 +5,49 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reist.sandbox.core.rx.impl.ArrayObservable;
-import io.reist.sandbox.core.rx.impl.ConcatWithObservable;
-import io.reist.sandbox.core.rx.impl.ForEachObservable;
-import io.reist.sandbox.core.rx.impl.JustObservable;
-import io.reist.sandbox.core.rx.impl.MapObservable;
-import io.reist.sandbox.core.rx.impl.SampleObservable;
-import io.reist.sandbox.core.rx.impl.SwitchMapObservable;
+import io.reist.sandbox.core.rx.impl.ArrayOnSubscribe;
+import io.reist.sandbox.core.rx.impl.ConcatWithOnSubscribe;
+import io.reist.sandbox.core.rx.impl.ForEachOnSubscribe;
+import io.reist.sandbox.core.rx.impl.JustOnSubscribe;
 
 /**
  * Created by Reist on 10/14/15.
  */
-public abstract class Observable<T> implements Action0 {
+public class Observable<T> implements Subscriber<T> {
 
     public static final Scheduler DEFAULT_SCHEDULER = Schedulers.immediate();
-
-    private final Observable<?> source;
 
     private Scheduler.Worker backgroundWorker;
     private Scheduler.Worker mainWorker;
 
     private final List<Observer<T>> observers = Collections.synchronizedList(new ArrayList<Observer<T>>());
 
-    public Observable(Observable<?> source) {
-        this.source = source;
+    private final OnSubscribe<T> onSubscribe;
+
+    protected Observable(Observable.OnSubscribe<T> onSubscribe) {
+        this.onSubscribe = onSubscribe;
     }
 
     public final Subscription subscribe(final Observer<T> observer) {
 
         observers.add(observer);
 
-        initWorkers();
+        if (backgroundWorker == null) {
+            subscribeOn(DEFAULT_SCHEDULER);
+        }
 
-        backgroundWorker.schedule(this);
+        if (mainWorker == null) {
+            observeOn(DEFAULT_SCHEDULER);
+        }
+
+        backgroundWorker.schedule(new Action0() {
+
+            @Override
+            public void call() {
+                onSubscribe.call(Observable.this);
+            }
+
+        });
 
         return new Subscription() {
 
@@ -53,48 +63,8 @@ public abstract class Observable<T> implements Action0 {
 
     }
 
-    private void initWorkers() {
-
-        if (mainWorker == null){
-            observeOn(DEFAULT_SCHEDULER);
-        }
-
-        if (backgroundWorker == null) {
-            subscribeOn(DEFAULT_SCHEDULER);
-        }
-
-        if (source != null) {
-
-            source.initWorkers();
-
-            source.mainWorker = mainWorker;
-            source.backgroundWorker = backgroundWorker;
-
-        }
-
-    }
-
     @Override
-    public final void call() {
-        try {
-            while (!isDepleted()) {
-                doOnNext(getEmittingFunction().call());
-                onItemEmitted();
-            }
-        } catch (final Throwable e) {
-            doOnError(e);
-        }
-        doOnCompleted();
-        backgroundWorker.unsubscribe();
-    }
-
-    public void onItemEmitted() {
-        if (source != null) {
-            source.onItemEmitted();
-        }
-    }
-
-    public final void doOnError(final Throwable e) {
+    public final void onError(final Throwable e) {
         mainWorker.schedule(new Action0() {
 
             @Override
@@ -107,7 +77,8 @@ public abstract class Observable<T> implements Action0 {
         });
     }
 
-    public final void doOnNext(final T value) {
+    @Override
+    public final void onNext(final T value) {
         mainWorker.schedule(new Action0() {
 
             @Override
@@ -120,7 +91,8 @@ public abstract class Observable<T> implements Action0 {
         });
     }
 
-    public final void doOnCompleted() {
+    @Override
+    public final void onCompleted() {
         mainWorker.schedule(new Action0() {
 
             @Override
@@ -133,12 +105,6 @@ public abstract class Observable<T> implements Action0 {
         });
     }
 
-    public boolean isDepleted() {
-        return source != null && source.isDepleted() || getEmittingFunction() == null;
-    }
-
-    public abstract Func0<T> getEmittingFunction();
-
     public final Observable<T> subscribeOn(Scheduler scheduler) {
         this.backgroundWorker = scheduler.createWorker();
         return this;
@@ -150,31 +116,37 @@ public abstract class Observable<T> implements Action0 {
     }
 
     public static <T> Observable<T> from(T[] items) {
-        return new ArrayObservable<>(items);
+        return new Observable<>(new ArrayOnSubscribe<>(items));
     }
 
     public static <T> Observable<T> just(T t) {
-        return new JustObservable<>(t);
+        return new Observable<>(new JustOnSubscribe<>(t));
     }
 
-    public final Observable<T> forEach(Action1<T> action) {
-        return new ForEachObservable<>(this, action);
-    }
-
-    public final <R> Observable<R> map(Func1<T, R> func) {
-        return new MapObservable<>(this, func);
-    }
-
-    public final Observable<T> sample(long period, TimeUnit unit) {
-        return new SampleObservable<>(this, TimeUnit.MILLISECONDS.convert(period, unit));
+    public static <T> Observable<T> create(OnSubscribe<T> onSubscribe) {
+        return new Observable<>(onSubscribe);
     }
 
     public final Observable<T> concatWith(Observable<T> alternative) {
-        return new ConcatWithObservable<>(this, alternative);
+        return new Observable<>(new ConcatWithOnSubscribe<>(this, alternative));
+    }
+
+    public final Observable<T> forEach(Action1<T> action) {
+        return new Observable<>(new ForEachOnSubscribe<>(this, action));
+    }
+
+    public final <R> Observable<R> map(Func1<T, R> func) {
+        return null; //return new MapObservable<>(this, func);
+    }
+
+    public final Observable<T> sample(long period, TimeUnit unit) {
+        return null; //return new SampleObservable<>(this, TimeUnit.MILLISECONDS.convert(period, unit));
     }
 
     public final <R> Observable<R> switchMap(Func1<T, Observable<R>> observableEmitter) {
-        return new SwitchMapObservable<>(this, observableEmitter);
+        return null; //return new SwitchMapObservable<>(this, observableEmitter);
     }
+
+    public interface OnSubscribe<T> extends Action1<Subscriber<T>> {}
 
 }

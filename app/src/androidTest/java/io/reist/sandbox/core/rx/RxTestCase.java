@@ -28,10 +28,12 @@ public abstract class RxTestCase extends TestCase {
 
         private final T[] expected;
 
-        private Object lock;
-
+        private final Thread mainThread;
         private int itemCounter;
         private int onCompletedCallCounter;
+
+        private Object lock;
+        private List<Thread> computationThreads;
 
         protected TestObserver(T[] expected) {
 
@@ -39,18 +41,31 @@ public abstract class RxTestCase extends TestCase {
 
             itemCounter = 0;
             onCompletedCallCounter = 0;
+            mainThread = Thread.currentThread();
 
         }
 
         @Override
         public void onNext(T t) {
             assertEquals(expected[itemCounter], t);
+            checkThreads();
             itemCounter++;
+        }
+
+        private void checkThreads() {
+            if (computationThreads == null) {
+                return;
+            }
+            final Thread expected = Thread.currentThread();
+            assertNotSame(expected, mainThread);
+            for (Thread thread : computationThreads) {
+                assertNotSame(expected, thread);
+            }
         }
 
         @Override
         public void onError(Throwable e) {
-            throw new RuntimeException(e);
+            checkThreads();
         }
 
         @Override
@@ -58,6 +73,7 @@ public abstract class RxTestCase extends TestCase {
             onCompletedCallCounter++;
             assertEquals(expected.length, itemCounter);
             assertFalse(onCompletedCallCounter > 1);
+            checkThreads();
             if (lock != null) {
                 synchronized (lock) {
                     lock.notifyAll();
@@ -67,6 +83,10 @@ public abstract class RxTestCase extends TestCase {
 
         public void setLock(Object lock) {
             this.lock = lock;
+        }
+
+        public void setComputationThreads(List<Thread> computationThreads) {
+            this.computationThreads = computationThreads;
         }
 
     }

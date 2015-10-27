@@ -1,5 +1,8 @@
 package io.reist.sandbox.core.rx;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Reist on 10/26/15.
  */
@@ -7,21 +10,24 @@ public class RxTwoThreadsTestCase extends RxTestCase {
 
     private final Object lock = new Object();
 
-    private Thread observerThread;
+    private Thread mainThread;
+
+    private final List<Thread> computationThreads = new ArrayList<>();
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        observerThread = Thread.currentThread();
+        mainThread = Thread.currentThread();
     }
 
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        observerThread = null;
         synchronized (lock) {
             lock.wait();
         }
+        assertEquals(1, computationThreads.size());
+        mainThread = null;
     }
 
     @Override
@@ -31,13 +37,21 @@ public class RxTwoThreadsTestCase extends RxTestCase {
 
                     @Override
                     public void call(String s) {
-                        assertNotSame(observerThread, Thread.currentThread());
+                        checkThreads();
                     }
 
                 })
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.immediate())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
                 .subscribe(createObserver(STRING_VALUES));
+    }
+
+    protected void checkThreads() {
+        final Thread computationThread = Thread.currentThread();
+        if (!computationThreads.contains(computationThread)) {
+            computationThreads.add(computationThread);
+        }
+        assertNotSame(mainThread, computationThread);
     }
 
     @Override
@@ -53,13 +67,13 @@ public class RxTwoThreadsTestCase extends RxTestCase {
                         assertEquals(STRING_VALUES[i], s);
                         i++;
 
-                        assertNotSame(observerThread, Thread.currentThread());
+                        checkThreads();
 
                     }
 
                 })
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.immediate())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
                 .subscribe(createObserver(STRING_VALUES));
     }
 
@@ -78,7 +92,7 @@ public class RxTwoThreadsTestCase extends RxTestCase {
 
                     @Override
                     public void call(Integer i) {
-                        assertNotSame(observerThread, Thread.currentThread());
+                        assertNotSame(mainThread, Thread.currentThread());
                     }
 
                 })
@@ -108,7 +122,7 @@ public class RxTwoThreadsTestCase extends RxTestCase {
                         }
                         startTime = now;
 
-                        assertNotSame(observerThread, Thread.currentThread());
+                        assertNotSame(mainThread, Thread.currentThread());
 
                     }
 
@@ -129,7 +143,7 @@ public class RxTwoThreadsTestCase extends RxTestCase {
 
                     @Override
                     public void call(String i) {
-                        assertNotSame(observerThread, Thread.currentThread());
+                        assertNotSame(mainThread, Thread.currentThread());
                     }
 
                 })
@@ -158,7 +172,7 @@ public class RxTwoThreadsTestCase extends RxTestCase {
 
                     @Override
                     public void call(String i) {
-                        assertNotSame(observerThread, Thread.currentThread());
+                        assertNotSame(mainThread, Thread.currentThread());
                     }
 
                 })
@@ -191,7 +205,7 @@ public class RxTwoThreadsTestCase extends RxTestCase {
 
                     @Override
                     public void call(String i) {
-                        assertNotSame(observerThread, Thread.currentThread());
+                        assertNotSame(mainThread, Thread.currentThread());
                     }
 
                 })
@@ -205,6 +219,7 @@ public class RxTwoThreadsTestCase extends RxTestCase {
     protected <T> RxTestCase.TestObserver<T> createObserver(T[] expected) {
         final TestObserver<T> observer = super.createObserver(expected);
         observer.setLock(lock);
+        observer.setComputationThreads(computationThreads);
         return observer;
     }
 

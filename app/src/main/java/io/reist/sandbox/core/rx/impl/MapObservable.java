@@ -1,12 +1,6 @@
 package io.reist.sandbox.core.rx.impl;
 
-import io.reist.sandbox.core.rx.Func0;
-import io.reist.sandbox.core.rx.Func1;
-import io.reist.sandbox.core.rx.Observable;
-
-/**
- * Created by Reist on 10/23/15.
- */
+/*
 public class MapObservable<T, R> extends Observable<R> {
 
     private final Observable<T> source;
@@ -31,3 +25,4 @@ public class MapObservable<T, R> extends Observable<R> {
     }
 
 }
+*/
