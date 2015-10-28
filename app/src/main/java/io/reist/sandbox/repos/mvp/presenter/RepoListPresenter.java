@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,10 +13,8 @@ import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.core.mvp.presenter.BasePresenter;
 import io.reist.sandbox.core.mvp.view.BaseView;
-import io.reist.sandbox.core.rx.AndroidSchedulers;
 import io.reist.sandbox.core.rx.Observable;
 import io.reist.sandbox.core.rx.Observer;
-import io.reist.sandbox.core.rx.Schedulers;
 import io.reist.sandbox.core.rx.Subscription;
 import io.reist.sandbox.repos.di.ReposFragmentComponent;
 import io.reist.sandbox.repos.mvp.model.Repo;
@@ -38,9 +37,7 @@ public class RepoListPresenter extends BasePresenter {
     @Override
     protected void onViewAttached(BaseView view) {
         repoListSubscription = repoListObservable
-                //.sample(1, TimeUnit.SECONDS);
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .sample(1, TimeUnit.SECONDS)
                 .subscribe(new RepoListObserver());
     }
 

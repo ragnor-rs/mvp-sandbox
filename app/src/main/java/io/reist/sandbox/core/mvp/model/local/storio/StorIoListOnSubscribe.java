@@ -12,12 +12,11 @@ import io.reist.sandbox.core.rx.Observable;
 /**
  * Created by Reist on 10/23/15.
  */
-public abstract class StorIoListObservable<I> extends Observable<List<I>> {
+public abstract class StorIoListOnSubscribe<I> implements Observable.OnSubscribe<List<I>> {
 
     private final StorIOSQLite storIoSqLite;
 
-    public StorIoListObservable(StorIOSQLite storIoSqLite) {
-        super(null);
+    public StorIoListOnSubscribe(StorIOSQLite storIoSqLite) {
         this.storIoSqLite = storIoSqLite;
     }
 

@@ -17,7 +17,7 @@ import io.reist.sandbox.core.rx.impl.SwitchMapOnSubscribe;
 /**
  * Created by Reist on 10/14/15.
  */
-public class Observable<T> implements Subscriber<T> {
+public final class Observable<T> extends Subscriber<T> {
 
     public static final Scheduler DEFAULT_SCHEDULER = Schedulers.immediate();
 
@@ -83,16 +83,20 @@ public class Observable<T> implements Subscriber<T> {
 
     @Override
     public final void onNext(final T value) {
-        mainWorker.schedule(new Action0() {
+        try {
+            mainWorker.schedule(new Action0() {
 
-            @Override
-            public void call() {
-                for (Observer<T> observer : observers) {
-                    observer.onNext(value);
+                @Override
+                public void call() {
+                    for (Observer<T> observer : observers) {
+                        observer.onNext(value);
+                    }
                 }
-            }
 
-        });
+            });
+        } catch (Exception e) {
+            onError(e);
+        }
     }
 
     @Override
@@ -153,6 +157,11 @@ public class Observable<T> implements Subscriber<T> {
 
     public final Observable<T> first() {
         return new Observable<>(new FirstOnSubscribe<>(this));
+    }
+
+    @Override
+    public void unsubscribe() {
+        observers.clear();
     }
 
     public interface OnSubscribe<T> extends Action1<Subscriber<T>> {}

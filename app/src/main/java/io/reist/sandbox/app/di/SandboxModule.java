@@ -19,14 +19,17 @@ import io.reist.sandbox.app.mvp.model.DbOpenHelper;
 import io.reist.sandbox.core.di.BaseModule;
 import io.reist.sandbox.core.mvp.model.remote.retrofit.NestedFieldNameAdapter;
 import io.reist.sandbox.core.rx.Action1;
+import io.reist.sandbox.core.rx.AndroidSchedulers;
+import io.reist.sandbox.core.rx.Func1;
 import io.reist.sandbox.core.rx.Observable;
+import io.reist.sandbox.core.rx.Schedulers;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteGetResolver;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLitePutResolver;
-import io.reist.sandbox.repos.mvp.model.local.storio.StorIoRepoListObservable;
+import io.reist.sandbox.repos.mvp.model.local.storio.StorIoRepoListOnSubscribe;
 import io.reist.sandbox.repos.mvp.model.remote.retrofit.GitHubApi;
-import io.reist.sandbox.repos.mvp.model.remote.retrofit.RetrofitRepoListObservable;
+import io.reist.sandbox.repos.mvp.model.remote.retrofit.RetrofitRepoListOnSubscribe;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
@@ -72,7 +75,8 @@ public class SandboxModule {
 
         GitHubApi gitHubApi = retrofit.create(GitHubApi.class);
 
-        return new RetrofitRepoListObservable(gitHubApi)
+        return Observable
+                .create(new RetrofitRepoListOnSubscribe(gitHubApi))
                 .forEach(new Action1<List<Repo>>() {
 
                     @Override
@@ -89,7 +93,7 @@ public class SandboxModule {
 
     @Provides @Singleton @Named(LOCAL_SERVICE)
     Observable<List<Repo>> localRepoListObservable(StorIOSQLite storIoSqLite) {
-        return new StorIoRepoListObservable(storIoSqLite);
+        return Observable.create(new StorIoRepoListOnSubscribe(storIoSqLite));
     }
 
     @Provides @Singleton
@@ -99,7 +103,18 @@ public class SandboxModule {
     ) {
 
         return local
-                .concatWith(remote);
+                .switchMap(new Func1<List<Repo>, Observable<List<Repo>>>() {
+
+                    @Override
+                    public Observable<List<Repo>> call(List<Repo> repos) {
+                        return repos == null || repos.isEmpty() ?
+                                remote :
+                                Observable.just(repos).concatWith(local);
+                    }
+
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
 
     }
 
