@@ -7,8 +7,12 @@ import java.util.concurrent.TimeUnit;
 
 import io.reist.sandbox.core.rx.impl.ArrayOnSubscribe;
 import io.reist.sandbox.core.rx.impl.ConcatWithOnSubscribe;
+import io.reist.sandbox.core.rx.impl.FirstOnSubscribe;
 import io.reist.sandbox.core.rx.impl.ForEachOnSubscribe;
 import io.reist.sandbox.core.rx.impl.JustOnSubscribe;
+import io.reist.sandbox.core.rx.impl.MapOnSubscribe;
+import io.reist.sandbox.core.rx.impl.SampleOnSubscribe;
+import io.reist.sandbox.core.rx.impl.SwitchMapOnSubscribe;
 
 /**
  * Created by Reist on 10/14/15.
@@ -136,15 +140,19 @@ public class Observable<T> implements Subscriber<T> {
     }
 
     public final <R> Observable<R> map(Func1<T, R> func) {
-        return null; //return new MapObservable<>(this, func);
+        return new Observable<>(new MapOnSubscribe<>(this, func));
     }
 
     public final Observable<T> sample(long period, TimeUnit unit) {
-        return null; //return new SampleObservable<>(this, TimeUnit.MILLISECONDS.convert(period, unit));
+        return new Observable<>(new SampleOnSubscribe<>(this, TimeUnit.MILLISECONDS.convert(period, unit)));
     }
 
     public final <R> Observable<R> switchMap(Func1<T, Observable<R>> observableEmitter) {
-        return null; //return new SwitchMapObservable<>(this, observableEmitter);
+        return new Observable<>(new SwitchMapOnSubscribe<>(this, observableEmitter));
+    }
+
+    public final Observable<T> first() {
+        return new Observable<>(new FirstOnSubscribe<>(this));
     }
 
     public interface OnSubscribe<T> extends Action1<Subscriber<T>> {}

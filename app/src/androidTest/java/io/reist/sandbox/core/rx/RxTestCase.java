@@ -110,6 +110,8 @@ public abstract class RxTestCase extends TestCase {
 
     public abstract void testConcatWith() throws Exception;
 
+    public abstract void testFirst() throws Exception;
+
     public abstract void testSwitchMap() throws Exception;
 
     public abstract void testCache() throws Exception;
@@ -168,6 +170,11 @@ public abstract class RxTestCase extends TestCase {
             }
         }
         return expectedList.toArray(new String[expectedList.size()]);
+    }
+
+    @NonNull
+    protected static String[] expectedForFirst() {
+        return new String[] { STRING_VALUES[0] };
     }
 
     public static boolean checkSwitchCondition(String s) {

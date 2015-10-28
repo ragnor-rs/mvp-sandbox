@@ -92,13 +92,57 @@ public class RxTwoThreadsTestCase extends RxTestCase {
 
                     @Override
                     public void call(Integer i) {
-                        assertNotSame(mainThread, Thread.currentThread());
+                        checkThreads();
                     }
 
                 })
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.immediate())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
                 .subscribe(createObserver(expectedForMap()));
+    }
+
+    @Override
+    public void testConcatWith() throws Exception {
+        createObservable()
+                .concatWith(
+                        Observable.from(MORE_STRING_VALUES)
+                )
+                .forEach(new Action1<String>() {
+
+                    @Override
+                    public void call(String i) {
+                        checkThreads();
+                    }
+
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
+                .subscribe(createObserver(expectedForConcatWith()));
+    }
+
+    @Override
+    public void testFirst() throws Exception {
+        createObservable()
+                .first()
+                .forEach(new Action1<String>() {
+
+                    private int i = 0;
+
+                    @Override
+                    public void call(String s) {
+
+                        assertEquals(STRING_VALUES[i], s);
+                        assertEquals(0, i);
+                        i++;
+
+                        checkThreads();
+
+                    }
+
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
+                .subscribe(createObserver(expectedForFirst()));
     }
 
     @Override
@@ -122,34 +166,15 @@ public class RxTwoThreadsTestCase extends RxTestCase {
                         }
                         startTime = now;
 
-                        assertNotSame(mainThread, Thread.currentThread());
+                        checkThreads();
 
                     }
 
                 })
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.immediate())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
                 .subscribe(createObserver(STRING_VALUES));
 
-    }
-
-    @Override
-    public void testConcatWith() throws Exception {
-        createObservable()
-                .concatWith(
-                        Observable.from(MORE_STRING_VALUES)
-                )
-                .forEach(new Action1<String>() {
-
-                    @Override
-                    public void call(String i) {
-                        assertNotSame(mainThread, Thread.currentThread());
-                    }
-
-                })
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.immediate())
-                .subscribe(createObserver(expectedForConcatWith()));
     }
 
     @Override
@@ -172,12 +197,12 @@ public class RxTwoThreadsTestCase extends RxTestCase {
 
                     @Override
                     public void call(String i) {
-                        assertNotSame(mainThread, Thread.currentThread());
+                        checkThreads();
                     }
 
                 })
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.immediate())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
                 .subscribe(createObserver(expectedForSwitchMap()));
 
     }
@@ -205,12 +230,12 @@ public class RxTwoThreadsTestCase extends RxTestCase {
 
                     @Override
                     public void call(String i) {
-                        assertNotSame(mainThread, Thread.currentThread());
+                        checkThreads();
                     }
 
                 })
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.immediate())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
                 .subscribe(createObserver(expected));
 
     }

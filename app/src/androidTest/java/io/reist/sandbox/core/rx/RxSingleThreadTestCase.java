@@ -43,6 +43,34 @@ public class RxSingleThreadTestCase extends RxTestCase {
     }
 
     @Override
+    public void testConcatWith() throws Exception {
+        createObservable()
+                .concatWith(
+                        Observable.from(MORE_STRING_VALUES)
+                )
+                .subscribe(createObserver(expectedForConcatWith()));
+    }
+
+    @Override
+    public void testFirst() throws Exception {
+        createObservable()
+                .first()
+                .forEach(new Action1<String>() {
+
+                    private int i = 0;
+
+                    @Override
+                    public void call(String s) {
+                        assertEquals(STRING_VALUES[i], s);
+                        assertEquals(0, i);
+                        i++;
+                    }
+
+                })
+                .subscribe(createObserver(expectedForFirst()));
+    }
+
+    @Override
     public void testSample() throws Exception {
 
         final long expectedPeriod = expectedForSample();
@@ -69,20 +97,13 @@ public class RxSingleThreadTestCase extends RxTestCase {
     }
 
     @Override
-    public void testConcatWith() throws Exception {
-        createObservable()
-                .concatWith(
-                        Observable.from(MORE_STRING_VALUES)
-                )
-                .subscribe(createObserver(expectedForConcatWith()));
-    }
-
-    @Override
     public void testSwitchMap() throws Exception {
 
         final Observable<String> source = createObservable();
         final Observable<String> output1 = Observable.from(MORE_STRING_VALUES);
         final Observable<String> output2 = Observable.from(MORE_ALTERNATIVE_STRINGS);
+
+        final String[] expected = expectedForSwitchMap();
 
         source
                 .switchMap(new Func1<String, Observable<String>>() {
@@ -93,7 +114,7 @@ public class RxSingleThreadTestCase extends RxTestCase {
                     }
 
                 })
-                .subscribe(createObserver(expectedForSwitchMap()));
+                .subscribe(createObserver(expected));
 
     }
 
