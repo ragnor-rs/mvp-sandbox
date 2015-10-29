@@ -2,8 +2,6 @@ package io.reist.sandbox.core.rx.impl.origins;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reist.sandbox.core.rx.Func0;
-
 /**
  * Created by Reist on 10/23/15.
  */
@@ -18,20 +16,13 @@ public class ArrayOnSubscribe<I> extends OriginOnSubscribe<I> {
     }
 
     @Override
-    public Func0<I> getEmittingFunction() {
-        return new Func0<I>() {
-
-            @Override
-            public I call() {
-                return items[pointer.getAndIncrement()];
-            }
-
-        };
+    public boolean isCompleted() {
+        return pointer.get() >= items.length;
     }
 
     @Override
-    public boolean isCompleted() {
-        return pointer.get() >= items.length;
+    public I call() {
+        return items[pointer.getAndIncrement()];
     }
 
 }

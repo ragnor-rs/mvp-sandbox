@@ -7,6 +7,8 @@ import io.reist.sandbox.core.rx.Observable;
  */
 public class SampleOnSubscribe<T> extends WrapperOnSubscribe<T, T> {
 
+    private static final String TAG = SampleOnSubscribe.class.getName();
+
     private final long period;
 
     public SampleOnSubscribe(Observable<T> source, long period) {
@@ -16,11 +18,11 @@ public class SampleOnSubscribe<T> extends WrapperOnSubscribe<T, T> {
 
     @Override
     public void onNext(T t) {
-        doOnNext(t);
         try {
+            doOnNext(t);
             Thread.sleep(period);
         } catch (java.lang.InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new Observable.StopThreadException();
         }
     }
 

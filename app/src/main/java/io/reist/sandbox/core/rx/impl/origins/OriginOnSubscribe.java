@@ -1,6 +1,5 @@
 package io.reist.sandbox.core.rx.impl.origins;
 
-import io.reist.sandbox.core.rx.Func0;
 import io.reist.sandbox.core.rx.impl.AbstractOnSubscribe;
 
 /**
@@ -11,11 +10,11 @@ public abstract class OriginOnSubscribe<T> extends AbstractOnSubscribe<T> {
     @Override
     protected void emit() throws Exception {
         while (!isCompleted()) {
-            doOnNext(getEmittingFunction().call());
+            doOnNext(call());
         }
     }
 
-    public abstract Func0<T> getEmittingFunction();
+    protected abstract T call() throws Exception;
 
     public abstract boolean isCompleted();
 

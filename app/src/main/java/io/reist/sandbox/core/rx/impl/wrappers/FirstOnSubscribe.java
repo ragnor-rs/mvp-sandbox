@@ -14,7 +14,7 @@ public class FirstOnSubscribe<T> extends WrapperOnSubscribe<T, T> {
     @Override
     public void onNext(T t) {
         doOnNext(t);
-        throw new Observable.InterruptedException();
+        throw new Observable.StopObservableException();
     }
 
 }

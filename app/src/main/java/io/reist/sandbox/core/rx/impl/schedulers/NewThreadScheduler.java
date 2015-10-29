@@ -1,10 +1,12 @@
 package io.reist.sandbox.core.rx.impl.schedulers;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import io.reist.sandbox.core.rx.Action0;
+import io.reist.sandbox.core.rx.Observable;
 import io.reist.sandbox.core.rx.Scheduler;
 import io.reist.sandbox.core.rx.Subscription;
 
@@ -22,64 +24,43 @@ public class NewThreadScheduler extends Scheduler {
 
     protected static class NewThreadWorker extends Worker {
 
-        private final Object lock = new Object();
-
-        private Looper looper;
+        private final BlockingQueue<Action0> queue = new LinkedBlockingQueue<>();
 
         @Override
-        public Subscription schedule(final Action0 action) {
-
-            synchronized (lock) {
-                while (handler == null) {
-                    try {
-                        lock.wait();
-                    } catch (InterruptedException e) {
-                        Log.e(TAG, "Exception occurred", e);
-                    }
-                }
-            }
-
-            handler.post(new Runnable() {
-
-                @Override
-                public void run() {
-                    action.call();
-                }
-
-            });
-
+        public Subscription schedule(Action0 action) {
+            queue.offer(action);
             return this;
-
         }
 
         public Thread thread = new Thread() {
 
             @Override
             public void run() {
-                Looper.prepare();
-                looper = Looper.myLooper();
-                handler = new Handler();
-                synchronized (lock) {
-                    lock.notifyAll();
+                Log.e(TAG, "--- " + this + " STARTED  ---");
+                Action0 action;
+                try {
+                    while ((action = queue.take()) != null) {
+                        action.call();
+                    }
+                    Log.e(TAG, "--- " + this + " DIED ---");
+                } catch (InterruptedException | Observable.StopThreadException e) {
+                    Log.e(TAG, "--- " + this + " INTERRUPTED  ---");
                 }
-                Looper.loop();
             }
 
         };
 
-        private Handler handler;
-
         protected NewThreadWorker(Scheduler scheduler) {
             super(scheduler);
+            Log.e(TAG, "--- " + thread + " STARTING ---");
             thread.start();
         }
 
         @Override
         public void unsubscribe() {
             super.unsubscribe();
-            if (looper != null) {
-                looper.quit();
-            }
+            Log.e(TAG, "--- " + thread + " STOPPING ---");
+            thread.interrupt();
             thread = null;
         }
 

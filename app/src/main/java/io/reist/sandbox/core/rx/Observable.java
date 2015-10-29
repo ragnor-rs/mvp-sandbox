@@ -50,7 +50,9 @@ public final class Observable<T> extends Subscriber<T> {
             public void call() {
                 try {
                     onSubscribe.call(Observable.this);
-                } catch (InterruptedException e) {
+                } catch (StopThreadException e) {
+                    throw new StopThreadException();
+                } catch (StopObservableException e) {
                     onCompleted();
                 }
             }
@@ -62,6 +64,9 @@ public final class Observable<T> extends Subscriber<T> {
             @Override
             public void unsubscribe() {
                 observers.remove(observer);
+                if (observers.isEmpty()) {
+                    backgroundWorker.unsubscribe();
+                }
             }
 
         };
@@ -164,6 +169,8 @@ public final class Observable<T> extends Subscriber<T> {
 
     public interface OnSubscribe<T> extends Action1<Subscriber<T>> {}
 
-    public static class InterruptedException extends RuntimeException {}
+    public static class StopObservableException extends RuntimeException {}
+
+    public static class StopThreadException extends RuntimeException {}
 
 }

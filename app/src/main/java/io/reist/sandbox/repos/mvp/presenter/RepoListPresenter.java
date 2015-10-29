@@ -1,6 +1,7 @@
 package io.reist.sandbox.repos.mvp.presenter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.List;
@@ -24,6 +25,8 @@ import io.reist.sandbox.repos.mvp.model.Repo;
 @Singleton
 public class RepoListPresenter extends BasePresenter {
 
+    private static final String TAG = RepoListPresenter.class.getName();
+
     private final Observable<List<Repo>> repoListObservable;
 
     @Bind(R.id.daggertest_repo_recycler_view)
@@ -39,8 +42,8 @@ public class RepoListPresenter extends BasePresenter {
     @Override
     protected void onViewAttached(BaseView view) {
         repoListSubscription = repoListObservable
-                .sample(1, TimeUnit.SECONDS)
-                .subscribeOn(Schedulers.io())
+                .sample(5, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RepoListObserver());
     }
@@ -54,6 +57,7 @@ public class RepoListPresenter extends BasePresenter {
 
         @Override
         public void onNext(List<Repo> repos) {
+            Log.e(TAG, "--- " + Thread.currentThread() + " OBSERVED ---");
             RepoListAdapter adapter = new RepoListAdapter(repos);
             ((ReposFragmentComponent) getComponent()).inject(adapter);
             mRecyclerView.setAdapter(adapter);

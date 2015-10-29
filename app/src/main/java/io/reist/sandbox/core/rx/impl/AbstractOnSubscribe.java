@@ -20,6 +20,8 @@ public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T
         try {
             emit();
             doOnCompleted();
+        } catch (Observable.StopThreadException e) {
+            throw e;
         } catch (Exception e) {
             doOnError(e);
         }
@@ -34,9 +36,6 @@ public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T
     }
 
     protected final void doOnError(Throwable e) {
-        if (e instanceof Observable.InterruptedException) {
-            return;
-        }
         log("thrown " + e);
         subscriber.onError(e);
     }

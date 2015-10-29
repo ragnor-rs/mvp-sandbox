@@ -7,17 +7,22 @@ import com.pushtorefresh.storio.sqlite.operations.get.PreparedGet;
 
 import java.util.List;
 
-import io.reist.sandbox.core.rx.Observable;
+import io.reist.sandbox.core.rx.impl.origins.OriginOnSubscribe;
 
 /**
  * Created by Reist on 10/23/15.
  */
-public abstract class StorIoListOnSubscribe<I> implements Observable.OnSubscribe<List<I>> {
+public abstract class StorIoListOnSubscribe<I> extends OriginOnSubscribe<List<I>> {
 
     private final StorIOSQLite storIoSqLite;
 
     public StorIoListOnSubscribe(StorIOSQLite storIoSqLite) {
         this.storIoSqLite = storIoSqLite;
+    }
+
+    @Override
+    public boolean isCompleted() {
+        return false;
     }
 
     @NonNull
