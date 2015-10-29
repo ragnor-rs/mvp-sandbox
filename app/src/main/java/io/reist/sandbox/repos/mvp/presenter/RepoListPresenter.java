@@ -5,7 +5,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,7 +41,6 @@ public class RepoListPresenter extends BasePresenter {
     @Override
     protected void onViewAttached(BaseView view) {
         repoListSubscription = repoListObservable
-                .sample(5, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RepoListObserver());

@@ -9,6 +9,7 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -110,7 +111,8 @@ public class SandboxModule {
                                 Observable.just(repos).concatWith(local);
                     }
 
-                });
+                })
+                .sample(5, TimeUnit.SECONDS);
 
     }
 
