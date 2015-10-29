@@ -27,53 +27,31 @@ public abstract class RxTestCase extends TestCase {
     protected static class TestObserver<T> implements Observer<T> {
 
         private final T[] expected;
+        private final RxTestCase testCase;
 
-        private final Thread mainThread;
         private int itemCounter;
         private int onCompletedCallCounter;
 
-        private Object lock;
-        private List<Thread> computationThreads;
-
-        protected TestObserver(T[] expected) {
+        protected TestObserver(T[] expected, RxTestCase testCase) {
 
             this.expected = expected;
+            this.testCase = testCase;
 
             itemCounter = 0;
             onCompletedCallCounter = 0;
-            mainThread = Thread.currentThread();
 
         }
 
         @Override
         public void onNext(T t) {
             assertEquals(expected[itemCounter], t);
-            checkThreads();
+            testCase.onObservedValue(t);
             itemCounter++;
-        }
-
-        private void checkThreads() {
-
-            if (computationThreads == null) {
-                return;
-            }
-
-            if (computationThreads.isEmpty() && lock != null) {
-                fail();
-            }
-
-            final Thread expected = Thread.currentThread();
-
-            assertNotSame(expected, mainThread);
-            for (Thread thread : computationThreads) {
-                assertNotSame(expected, thread);
-            }
-
         }
 
         @Override
         public void onError(Throwable e) {
-            checkThreads();
+            testCase.onObservedError(e);
         }
 
         @Override
@@ -81,23 +59,16 @@ public abstract class RxTestCase extends TestCase {
             onCompletedCallCounter++;
             assertEquals(expected.length, itemCounter);
             assertFalse(onCompletedCallCounter > 1);
-            checkThreads();
-            if (lock != null) {
-                synchronized (lock) {
-                    lock.notifyAll();
-                }
-            }
-        }
-
-        public void setLock(Object lock) {
-            this.lock = lock;
-        }
-
-        public void setComputationThreads(List<Thread> computationThreads) {
-            this.computationThreads = computationThreads;
+            testCase.onObservedFinish();
         }
 
     }
+
+    protected abstract void onObservedFinish();
+
+    protected abstract void onObservedError(Throwable e);
+
+    protected abstract <T> void onObservedValue(T t);
 
     @NonNull
     protected Observable<String> createObservable() {
@@ -105,7 +76,7 @@ public abstract class RxTestCase extends TestCase {
     }
 
     protected <T> RxTestCase.TestObserver<T> createObserver(T[] expected) {
-        return new TestObserver<>(expected);
+        return new TestObserver<>(expected, this);
     }
 
     public abstract void testRx() throws Exception;

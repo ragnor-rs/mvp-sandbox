@@ -8,8 +8,6 @@ import io.reist.sandbox.core.rx.Subscriber;
  */
 public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T> {
 
-    protected static final boolean LOGGING_ENABLED = false;
-
     protected final String onSubscribeName = getClass().getName();
 
     private Subscriber<T> subscriber;
@@ -46,9 +44,7 @@ public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T
     }
 
     protected void log(String str) {
-        if (LOGGING_ENABLED) {
-            System.out.println(onSubscribeName + ": " + str);
-        }
+        Observable.log(onSubscribeName, str);
     }
 
 }

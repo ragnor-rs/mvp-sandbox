@@ -9,7 +9,7 @@ import io.reist.sandbox.core.rx.impl.origins.ArrayOnSubscribe;
 import io.reist.sandbox.core.rx.impl.origins.JustOnSubscribe;
 import io.reist.sandbox.core.rx.impl.wrappers.ConcatWithOnSubscribe;
 import io.reist.sandbox.core.rx.impl.wrappers.FirstOnSubscribe;
-import io.reist.sandbox.core.rx.impl.wrappers.ForEachOnSubscribe;
+import io.reist.sandbox.core.rx.impl.wrappers.ForEachObserver;
 import io.reist.sandbox.core.rx.impl.wrappers.MapOnSubscribe;
 import io.reist.sandbox.core.rx.impl.wrappers.SampleOnSubscribe;
 import io.reist.sandbox.core.rx.impl.wrappers.SwitchMapOnSubscribe;
@@ -21,6 +21,8 @@ public final class Observable<T> extends Subscriber<T> {
 
     public static final Scheduler DEFAULT_SCHEDULER = Schedulers.immediate();
 
+    public static final boolean LOGGING_ENABLED = false;
+
     private Scheduler.Worker backgroundWorker;
     private Scheduler.Worker mainWorker;
 
@@ -30,6 +32,12 @@ public final class Observable<T> extends Subscriber<T> {
 
     protected Observable(Observable.OnSubscribe<T> onSubscribe) {
         this.onSubscribe = onSubscribe;
+    }
+
+    public static void log(String tag, String str) {
+        if (LOGGING_ENABLED) {
+            System.out.println(tag + ": " + str);
+        }
     }
 
     public final Subscription subscribe(final Observer<T> observer) {
@@ -142,8 +150,8 @@ public final class Observable<T> extends Subscriber<T> {
         return new Observable<>(new ConcatWithOnSubscribe<>(this, alternative));
     }
 
-    public final Observable<T> forEach(Action1<T> action) {
-        return new Observable<>(new ForEachOnSubscribe<>(this, action));
+    public final void forEach(Action1<T> action) {
+        subscribe(new ForEachObserver<>(this, action));
     }
 
     public final <R> Observable<R> map(Func1<T, R> func) {

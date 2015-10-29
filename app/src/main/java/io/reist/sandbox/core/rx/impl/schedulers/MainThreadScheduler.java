@@ -12,8 +12,6 @@ import io.reist.sandbox.core.rx.Subscription;
  */
 public class MainThreadScheduler extends Scheduler {
 
-    private static final String TAG = MainThreadScheduler.class.getName();
-
     @Override
     public Worker createWorker() {
         return register(new MainThreadWorker(this));

@@ -13,8 +13,12 @@ public abstract class RetrofitListOnSubscribe<I> extends OriginOnSubscribe<List<
 
     @Override
     public List<I> call() throws IOException {
-        return getReadCall().execute().body();
+        List<I> list = getReadCall().execute().body();
+        cache(list);
+        return list;
     }
+
+    protected abstract void cache(List<I> list);
 
     @Override
     public boolean isCompleted() {

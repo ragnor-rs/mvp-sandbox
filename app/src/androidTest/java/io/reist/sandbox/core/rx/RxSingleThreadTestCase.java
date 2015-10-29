@@ -6,6 +6,15 @@ package io.reist.sandbox.core.rx;
 public class RxSingleThreadTestCase extends RxTestCase {
 
     @Override
+    protected void onObservedFinish() {}
+
+    @Override
+    protected void onObservedError(Throwable e) {}
+
+    @Override
+    protected <T> void onObservedValue(T t) {}
+
+    @Override
     public void testRx() throws Exception {
         createObservable()
                 .subscribe(createObserver(STRING_VALUES));
@@ -24,8 +33,7 @@ public class RxSingleThreadTestCase extends RxTestCase {
                         i++;
                     }
 
-                })
-                .subscribe(createObserver(STRING_VALUES));
+                });
     }
 
     @Override
@@ -53,6 +61,7 @@ public class RxSingleThreadTestCase extends RxTestCase {
 
     @Override
     public void testFirst() throws Exception {
+        final String[] expected = expectedForFirst();
         createObservable()
                 .first()
                 .forEach(new Action1<String>() {
@@ -61,13 +70,12 @@ public class RxSingleThreadTestCase extends RxTestCase {
 
                     @Override
                     public void call(String s) {
-                        assertEquals(STRING_VALUES[i], s);
+                        assertEquals(expected[i], s);
                         assertEquals(0, i);
                         i++;
                     }
 
-                })
-                .subscribe(createObserver(expectedForFirst()));
+                });
     }
 
     @Override
@@ -77,18 +85,19 @@ public class RxSingleThreadTestCase extends RxTestCase {
 
         createObservable()
                 .sample(PERIOD_VALUE, PERIOD_UNIT)
-                .forEach(new Action1<String>() {
+                .map(new Func1<String, String>() {
 
                     private long startTime = -1;
 
                     @Override
-                    public void call(String s) {
+                    public String call(String s) {
                         final long now = System.currentTimeMillis();
                         if (startTime != -1) {
                             final long realPeriod = now - startTime;
                             assertTrue(Math.abs(realPeriod - expectedPeriod) < 0.1 * expectedPeriod);
                         }
                         startTime = now;
+                        return s;
                     }
 
                 })

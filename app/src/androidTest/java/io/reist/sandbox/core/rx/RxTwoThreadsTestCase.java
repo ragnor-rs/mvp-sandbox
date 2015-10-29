@@ -17,11 +17,12 @@ public class RxTwoThreadsTestCase extends RxTestCase {
     @Override
     public void testRx() throws Exception {
         createObservable()
-                .forEach(new Action1<String>() {
+                .map(new Func1<String, String>() {
 
                     @Override
-                    public void call(String s) {
+                    public String call(String s) {
                         checkThreads();
+                        return s;
                     }
 
                 })
@@ -33,6 +34,17 @@ public class RxTwoThreadsTestCase extends RxTestCase {
     @Override
     public void testForEach() throws Exception {
         createObservable()
+                .map(new Func1<String, String>() {
+
+                    @Override
+                    public String call(String s) {
+                        checkThreads();
+                        return s;
+                    }
+
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
                 .forEach(new Action1<String>() {
 
                     private int i = 0;
@@ -43,14 +55,11 @@ public class RxTwoThreadsTestCase extends RxTestCase {
                         assertEquals(STRING_VALUES[i], s);
                         i++;
 
-                        checkThreads();
+                        onObservedFinish();
 
                     }
 
-                })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.io())
-                .subscribe(createObserver(STRING_VALUES));
+                });
     }
 
     @Override
@@ -60,15 +69,8 @@ public class RxTwoThreadsTestCase extends RxTestCase {
 
                     @Override
                     public Integer call(String s) {
-                        return s.length();
-                    }
-
-                })
-                .forEach(new Action1<Integer>() {
-
-                    @Override
-                    public void call(Integer i) {
                         checkThreads();
+                        return s.length();
                     }
 
                 })
@@ -83,11 +85,12 @@ public class RxTwoThreadsTestCase extends RxTestCase {
                 .concatWith(
                         Observable.from(MORE_STRING_VALUES)
                 )
-                .forEach(new Action1<String>() {
+                .map(new Func1<String, String>() {
 
                     @Override
-                    public void call(String i) {
+                    public String call(String s) {
                         checkThreads();
+                        return s;
                     }
 
                 })
@@ -98,8 +101,20 @@ public class RxTwoThreadsTestCase extends RxTestCase {
 
     @Override
     public void testFirst() throws Exception {
+        final String[] expected = expectedForFirst();
         createObservable()
                 .first()
+                .map(new Func1<String, String>() {
+
+                    @Override
+                    public String call(String s) {
+                        checkThreads();
+                        return s;
+                    }
+
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
                 .forEach(new Action1<String>() {
 
                     private int i = 0;
@@ -107,26 +122,21 @@ public class RxTwoThreadsTestCase extends RxTestCase {
                     @Override
                     public void call(String s) {
 
-                        assertEquals(STRING_VALUES[i], s);
+                        assertEquals(expected[i], s);
                         assertEquals(0, i);
                         i++;
 
-                        checkThreads();
+                        onObservedFinish();
 
                     }
 
-                })
-                .forEach(new Action1<String>() {
+                });
+    }
 
-                    @Override
-                    public void call(String i) {
-                        checkThreads();
-                    }
-
-                })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.io())
-                .subscribe(createObserver(expectedForFirst()));
+    private void unlock() {
+        synchronized (lock) {
+            lock.notifyAll();
+        }
     }
 
     @Override
@@ -136,12 +146,12 @@ public class RxTwoThreadsTestCase extends RxTestCase {
 
         createObservable()
                 .sample(PERIOD_VALUE, PERIOD_UNIT)
-                .forEach(new Action1<String>() {
+                .map(new Func1<String, String>() {
 
                     private long startTime = -1;
 
                     @Override
-                    public void call(String s) {
+                    public String call(String s) {
 
                         final long now = System.currentTimeMillis();
                         if (startTime != -1) {
@@ -151,6 +161,8 @@ public class RxTwoThreadsTestCase extends RxTestCase {
                         startTime = now;
 
                         checkThreads();
+
+                        return s;
 
                     }
 
@@ -177,11 +189,12 @@ public class RxTwoThreadsTestCase extends RxTestCase {
                     }
 
                 })
-                .forEach(new Action1<String>() {
+                .map(new Func1<String, String>() {
 
                     @Override
-                    public void call(String i) {
+                    public String call(String s) {
                         checkThreads();
+                        return s;
                     }
 
                 })
@@ -200,11 +213,12 @@ public class RxTwoThreadsTestCase extends RxTestCase {
         Observable
                 .just(STRING_VALUES[0])
                 .concatWith(Observable.from(remainingValues))
-                .forEach(new Action1<String>() {
+                .map(new Func1<String, String>() {
 
                     @Override
-                    public void call(String i) {
+                    public String call(String s) {
                         checkThreads();
+                        return s;
                     }
 
                 })
@@ -233,11 +247,12 @@ public class RxTwoThreadsTestCase extends RxTestCase {
                     }
 
                 })
-                .forEach(new Action1<String>() {
+                .map(new Func1<String, String>() {
 
                     @Override
-                    public void call(String i) {
+                    public String call(String s) {
                         checkThreads();
+                        return s;
                     }
 
                 })
@@ -248,11 +263,34 @@ public class RxTwoThreadsTestCase extends RxTestCase {
     }
 
     @Override
-    protected <T> RxTestCase.TestObserver<T> createObserver(T[] expected) {
-        final TestObserver<T> observer = super.createObserver(expected);
-        observer.setLock(lock);
-        observer.setComputationThreads(computationThreads);
-        return observer;
+    protected void onObservedFinish() {
+        checkThreadsFromObserver();
+        new Thread() {
+
+            @Override
+            public void run() {
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    fail();
+                }
+
+                unlock();
+
+            }
+
+        }.start();
+    }
+
+    @Override
+    protected void onObservedError(Throwable e) {
+        checkThreadsFromObserver();
+    }
+
+    @Override
+    protected <T> void onObservedValue(T t) {
+        checkThreadsFromObserver();
     }
 
     @Override
@@ -268,6 +306,7 @@ public class RxTwoThreadsTestCase extends RxTestCase {
             lock.wait();
         }
         assertEquals(1, computationThreads.size());
+        computationThreads.clear();
         mainThread = null;
     }
 
@@ -277,6 +316,14 @@ public class RxTwoThreadsTestCase extends RxTestCase {
             computationThreads.add(computationThread);
         }
         assertNotSame(mainThread, computationThread);
+    }
+
+    protected void checkThreadsFromObserver() {
+        final Thread expected = Thread.currentThread();
+        assertNotSame(expected, mainThread);
+        for (Thread thread : computationThreads) {
+            assertNotSame(expected, thread);
+        }
     }
 
 }

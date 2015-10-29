@@ -1,7 +1,5 @@
 package io.reist.sandbox.core.rx.impl.schedulers;
 
-import android.util.Log;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -9,6 +7,8 @@ import io.reist.sandbox.core.rx.Action0;
 import io.reist.sandbox.core.rx.Observable;
 import io.reist.sandbox.core.rx.Scheduler;
 import io.reist.sandbox.core.rx.Subscription;
+
+import static io.reist.sandbox.core.rx.Observable.log;
 
 /**
  * Created by Reist on 10/24/15.
@@ -36,15 +36,15 @@ public class NewThreadScheduler extends Scheduler {
 
             @Override
             public void run() {
-                Log.e(TAG, "--- " + this + " STARTED  ---");
-                Action0 action;
+                log(TAG, "--- " + this + " STARTED  ---");
                 try {
+                    Action0 action;
                     while ((action = queue.take()) != null) {
                         action.call();
                     }
-                    Log.e(TAG, "--- " + this + " DIED ---");
+                    log(TAG, "--- " + this + " DIED ---");
                 } catch (InterruptedException | Observable.StopThreadException e) {
-                    Log.e(TAG, "--- " + this + " INTERRUPTED  ---");
+                    log(TAG, "--- " + this + " INTERRUPTED  ---");
                 }
             }
 
@@ -52,14 +52,14 @@ public class NewThreadScheduler extends Scheduler {
 
         protected NewThreadWorker(Scheduler scheduler) {
             super(scheduler);
-            Log.e(TAG, "--- " + thread + " STARTING ---");
+            log(TAG, "--- " + thread + " STARTING ---");
             thread.start();
         }
 
         @Override
         public void unsubscribe() {
             super.unsubscribe();
-            Log.e(TAG, "--- " + thread + " STOPPING ---");
+            log(TAG, "--- " + thread + " STOPPING ---");
             thread.interrupt();
             thread = null;
         }
