@@ -23,8 +23,6 @@ public class SwitchMapOnSubscribe<S, D> extends WrapperOnSubscribe<S, D> {
 
         final Observable<D> result = func.call(s);
 
-        log("--- BEGIN ---");
-
         e = null;
 
         result.first().subscribe(new Observer<D>() {
@@ -47,8 +45,6 @@ public class SwitchMapOnSubscribe<S, D> extends WrapperOnSubscribe<S, D> {
         if (e != null) {
             throw new RuntimeException(e);
         }
-
-        log("--- END ---");
 
     }
 

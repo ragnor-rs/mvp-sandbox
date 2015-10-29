@@ -28,8 +28,7 @@ public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T
     protected abstract void emit() throws Exception;
 
     protected final void doOnNext(T t) {
-        final String message = "emitted " + t;
-        log(message);
+        log("emitted " + t);
         subscriber.onNext(t);
     }
 
