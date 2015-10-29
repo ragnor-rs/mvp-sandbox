@@ -15,22 +15,6 @@ public class RxTwoThreadsTestCase extends RxTestCase {
     private final List<Thread> computationThreads = new ArrayList<>();
 
     @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        mainThread = Thread.currentThread();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        synchronized (lock) {
-            lock.wait();
-        }
-        assertEquals(1, computationThreads.size());
-        mainThread = null;
-    }
-
-    @Override
     public void testRx() throws Exception {
         createObservable()
                 .forEach(new Action1<String>() {
@@ -44,14 +28,6 @@ public class RxTwoThreadsTestCase extends RxTestCase {
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.io())
                 .subscribe(createObserver(STRING_VALUES));
-    }
-
-    protected void checkThreads() {
-        final Thread computationThread = Thread.currentThread();
-        if (!computationThreads.contains(computationThread)) {
-            computationThreads.add(computationThread);
-        }
-        assertNotSame(mainThread, computationThread);
     }
 
     @Override
@@ -216,6 +192,29 @@ public class RxTwoThreadsTestCase extends RxTestCase {
     }
 
     @Override
+    public void testJustConcatWith() throws Exception {
+
+        String[] remainingValues = new String[STRING_VALUES.length - 1];
+        System.arraycopy(STRING_VALUES, 1, remainingValues, 0, remainingValues.length);
+
+        Observable
+                .just(STRING_VALUES[0])
+                .concatWith(Observable.from(remainingValues))
+                .forEach(new Action1<String>() {
+
+                    @Override
+                    public void call(String i) {
+                        checkThreads();
+                    }
+
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
+                .subscribe(createObserver(STRING_VALUES));
+
+    }
+
+    @Override
     public void testCache() throws Exception {
 
         final Observable<String> local = Observable.from(RxTestCase.STRING_VALUES);
@@ -254,6 +253,30 @@ public class RxTwoThreadsTestCase extends RxTestCase {
         observer.setLock(lock);
         observer.setComputationThreads(computationThreads);
         return observer;
+    }
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        mainThread = Thread.currentThread();
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        synchronized (lock) {
+            lock.wait();
+        }
+        assertEquals(1, computationThreads.size());
+        mainThread = null;
+    }
+
+    protected void checkThreads() {
+        final Thread computationThread = Thread.currentThread();
+        if (!computationThreads.contains(computationThread)) {
+            computationThreads.add(computationThread);
+        }
+        assertNotSame(mainThread, computationThread);
     }
 
 }

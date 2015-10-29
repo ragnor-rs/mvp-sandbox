@@ -11,6 +11,8 @@ public class SwitchMapOnSubscribe<S, D> extends WrapperOnSubscribe<S, D> {
 
     private final Func1<S, Observable<D>> func;
 
+    private Throwable e;
+
     public SwitchMapOnSubscribe(Observable<S> source, Func1<S, Observable<D>> func) {
         super(source);
         this.func = func;
@@ -18,8 +20,13 @@ public class SwitchMapOnSubscribe<S, D> extends WrapperOnSubscribe<S, D> {
 
     @Override
     public void onNext(S s) {
+
         final Observable<D> result = func.call(s);
+
         System.out.println(onSubscribeName + ": --- BEGIN --- ");
+
+        e = null;
+
         result.first().subscribe(new Observer<D>() {
 
             @Override
@@ -29,14 +36,20 @@ public class SwitchMapOnSubscribe<S, D> extends WrapperOnSubscribe<S, D> {
 
             @Override
             public void onError(Throwable e) {
-                doOnError(e);
+                SwitchMapOnSubscribe.this.e = e;
             }
 
             @Override
             public void onCompleted() {}
 
         }).unsubscribe();
+
+        if (e != null) {
+            throw new RuntimeException(e);
+        }
+
         System.out.println(onSubscribeName + ": --- END --- ");
+
     }
 
 }

@@ -16,7 +16,7 @@ public abstract class WrapperOnSubscribe<S, D> extends AbstractOnSubscribe<D> im
     }
 
     @Override
-    protected final void emit() throws InterruptedException {
+    protected final void emit() throws Exception {
         source.subscribe(this).unsubscribe();
     }
 

@@ -10,6 +10,8 @@ public class ConcatWithOnSubscribe<T> extends WrapperOnSubscribe<T, T> {
 
     private final Observable<T> alternative;
 
+    private Throwable e;
+
     public ConcatWithOnSubscribe(Observable<T> source, Observable<T> alternative) {
         super(source);
         this.alternative = alternative;
@@ -22,6 +24,9 @@ public class ConcatWithOnSubscribe<T> extends WrapperOnSubscribe<T, T> {
 
     @Override
     public void onCompleted() {
+
+        e = null;
+
         alternative.subscribe(new Observer<T>() {
 
             @Override
@@ -31,15 +36,18 @@ public class ConcatWithOnSubscribe<T> extends WrapperOnSubscribe<T, T> {
 
             @Override
             public void onError(Throwable e) {
-                doOnError(e);
+                ConcatWithOnSubscribe.this.e = e;
             }
 
             @Override
-            public void onCompleted() {
-                doOnCompleted();
-            }
+            public void onCompleted() {}
 
         }).unsubscribe();
+
+        if (e != null) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

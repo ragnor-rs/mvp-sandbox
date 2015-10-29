@@ -9,7 +9,7 @@ import io.reist.sandbox.core.rx.impl.AbstractOnSubscribe;
 public abstract class OriginOnSubscribe<T> extends AbstractOnSubscribe<T> {
 
     @Override
-    protected void emit() {
+    protected void emit() throws Exception {
         while (!isCompleted()) {
             doOnNext(getEmittingFunction().call());
         }

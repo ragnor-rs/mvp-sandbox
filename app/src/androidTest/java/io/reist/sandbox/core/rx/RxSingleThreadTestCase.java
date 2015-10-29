@@ -118,7 +118,8 @@ public class RxSingleThreadTestCase extends RxTestCase {
 
     }
 
-    public void testJustConcatWith() {
+    @Override
+    public void testJustConcatWith() throws Exception {
 
         String[] remainingValues = new String[STRING_VALUES.length - 1];
         System.arraycopy(STRING_VALUES, 1, remainingValues, 0, remainingValues.length);
@@ -126,7 +127,7 @@ public class RxSingleThreadTestCase extends RxTestCase {
         Observable
                 .just(STRING_VALUES[0])
                 .concatWith(Observable.from(remainingValues))
-                .subscribe(new TestObserver<>(STRING_VALUES));
+                .subscribe(createObserver(STRING_VALUES));
 
     }
 
@@ -149,7 +150,7 @@ public class RxSingleThreadTestCase extends RxTestCase {
                     }
 
                 })
-                .subscribe(new RxTestCase.TestObserver<>(expected));
+                .subscribe(createObserver(expected));
 
     }
 

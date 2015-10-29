@@ -53,14 +53,22 @@ public abstract class RxTestCase extends TestCase {
         }
 
         private void checkThreads() {
+
             if (computationThreads == null) {
                 return;
             }
+
+            if (computationThreads.isEmpty() && lock != null) {
+                fail();
+            }
+
             final Thread expected = Thread.currentThread();
+
             assertNotSame(expected, mainThread);
             for (Thread thread : computationThreads) {
                 assertNotSame(expected, thread);
             }
+
         }
 
         @Override
@@ -115,6 +123,8 @@ public abstract class RxTestCase extends TestCase {
     public abstract void testSwitchMap() throws Exception;
 
     public abstract void testCache() throws Exception;
+
+    public abstract void testJustConcatWith() throws Exception;
 
     @NonNull
     protected static Integer[] expectedForMap() {

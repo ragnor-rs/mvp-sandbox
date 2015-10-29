@@ -23,7 +23,7 @@ public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T
         }
     }
 
-    protected abstract void emit() throws InterruptedException;
+    protected abstract void emit() throws Exception;
 
     protected final void doOnNext(T t) {
         System.out.println(onSubscribeName + ": emitted " + t);
