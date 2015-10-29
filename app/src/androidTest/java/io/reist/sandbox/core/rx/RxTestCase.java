@@ -161,9 +161,9 @@ public abstract class RxTestCase extends TestCase {
     protected static String[] expectedForCache() {
         List<String> expectedList = new ArrayList<>();
         int pointerToAlternative = 0;
-        for (String s : RxTestCase.STRING_VALUES) {
-            if (RxTestCase.checkSwitchCondition(s)) {
-                expectedList.add(RxTestCase.MORE_STRING_VALUES[pointerToAlternative]);
+        for (String s : STRING_VALUES) {
+            if (checkSwitchCondition(s)) {
+                expectedList.add(MORE_STRING_VALUES[pointerToAlternative]);
                 pointerToAlternative++;
             } else {
                 expectedList.add(s);

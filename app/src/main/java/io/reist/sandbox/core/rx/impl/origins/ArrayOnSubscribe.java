@@ -1,4 +1,4 @@
-package io.reist.sandbox.core.rx.impl;
+package io.reist.sandbox.core.rx.impl.origins;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -7,7 +7,7 @@ import io.reist.sandbox.core.rx.Func0;
 /**
  * Created by Reist on 10/23/15.
  */
-public class ArrayOnSubscribe<I> extends CompatOnSubscribe<I> {
+public class ArrayOnSubscribe<I> extends OriginOnSubscribe<I> {
 
     private final AtomicInteger pointer = new AtomicInteger();
 

@@ -118,6 +118,18 @@ public class RxSingleThreadTestCase extends RxTestCase {
 
     }
 
+    public void testJustConcatWith() {
+
+        String[] remainingValues = new String[STRING_VALUES.length - 1];
+        System.arraycopy(STRING_VALUES, 1, remainingValues, 0, remainingValues.length);
+
+        Observable
+                .just(STRING_VALUES[0])
+                .concatWith(Observable.from(remainingValues))
+                .subscribe(new TestObserver<>(STRING_VALUES));
+
+    }
+
     @Override
     public void testCache() throws Exception {
 

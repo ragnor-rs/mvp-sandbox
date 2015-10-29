@@ -140,6 +140,14 @@ public class RxTwoThreadsTestCase extends RxTestCase {
                     }
 
                 })
+                .forEach(new Action1<String>() {
+
+                    @Override
+                    public void call(String i) {
+                        checkThreads();
+                    }
+
+                })
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.io())
                 .subscribe(createObserver(expectedForFirst()));

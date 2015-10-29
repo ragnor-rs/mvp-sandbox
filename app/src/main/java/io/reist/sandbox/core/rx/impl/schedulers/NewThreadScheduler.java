@@ -1,4 +1,4 @@
-package io.reist.sandbox.core.rx.impl;
+package io.reist.sandbox.core.rx.impl.schedulers;
 
 import android.os.Handler;
 import android.os.Looper;

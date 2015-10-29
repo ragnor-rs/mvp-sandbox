@@ -1,11 +1,11 @@
-package io.reist.sandbox.core.rx.impl;
+package io.reist.sandbox.core.rx.impl.origins;
 
 import io.reist.sandbox.core.rx.Func0;
 
 /**
  * Created by Reist on 10/26/15.
  */
-public class JustOnSubscribe<T> extends CompatOnSubscribe<T> {
+public class JustOnSubscribe<T> extends OriginOnSubscribe<T> {
 
     private final T t;
 

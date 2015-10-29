@@ -1,4 +1,4 @@
-package io.reist.sandbox.core.rx.impl;
+package io.reist.sandbox.core.rx.impl.schedulers;
 
 import io.reist.sandbox.core.rx.Action0;
 import io.reist.sandbox.core.rx.Scheduler;

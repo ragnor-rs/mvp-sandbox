@@ -1,8 +1,8 @@
 package io.reist.sandbox.core.rx;
 
-import io.reist.sandbox.core.rx.impl.ImmediateScheduler;
-import io.reist.sandbox.core.rx.impl.NewThreadScheduler;
-import io.reist.sandbox.core.rx.impl.SingleThreadScheduler;
+import io.reist.sandbox.core.rx.impl.schedulers.ImmediateScheduler;
+import io.reist.sandbox.core.rx.impl.schedulers.NewThreadScheduler;
+import io.reist.sandbox.core.rx.impl.schedulers.SingleThreadScheduler;
 
 /**
  * Created by Reist on 10/23/15.

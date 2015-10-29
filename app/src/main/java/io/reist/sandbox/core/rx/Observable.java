@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reist.sandbox.core.rx.impl.ArrayOnSubscribe;
-import io.reist.sandbox.core.rx.impl.ConcatWithOnSubscribe;
-import io.reist.sandbox.core.rx.impl.FirstOnSubscribe;
-import io.reist.sandbox.core.rx.impl.ForEachOnSubscribe;
-import io.reist.sandbox.core.rx.impl.JustOnSubscribe;
-import io.reist.sandbox.core.rx.impl.MapOnSubscribe;
-import io.reist.sandbox.core.rx.impl.SampleOnSubscribe;
-import io.reist.sandbox.core.rx.impl.SwitchMapOnSubscribe;
+import io.reist.sandbox.core.rx.impl.origins.ArrayOnSubscribe;
+import io.reist.sandbox.core.rx.impl.origins.JustOnSubscribe;
+import io.reist.sandbox.core.rx.impl.wrappers.ConcatWithOnSubscribe;
+import io.reist.sandbox.core.rx.impl.wrappers.FirstOnSubscribe;
+import io.reist.sandbox.core.rx.impl.wrappers.ForEachOnSubscribe;
+import io.reist.sandbox.core.rx.impl.wrappers.MapOnSubscribe;
+import io.reist.sandbox.core.rx.impl.wrappers.SampleOnSubscribe;
+import io.reist.sandbox.core.rx.impl.wrappers.SwitchMapOnSubscribe;
 
 /**
  * Created by Reist on 10/14/15.
@@ -26,7 +26,7 @@ public final class Observable<T> extends Subscriber<T> {
 
     private final List<Observer<T>> observers = Collections.synchronizedList(new ArrayList<Observer<T>>());
 
-    private final OnSubscribe<T> onSubscribe;
+    public final OnSubscribe<T> onSubscribe;
 
     protected Observable(Observable.OnSubscribe<T> onSubscribe) {
         this.onSubscribe = onSubscribe;
@@ -48,7 +48,11 @@ public final class Observable<T> extends Subscriber<T> {
 
             @Override
             public void call() {
-                onSubscribe.call(Observable.this);
+                try {
+                    onSubscribe.call(Observable.this);
+                } catch (InterruptedException e) {
+                    onCompleted();
+                }
             }
 
         });
@@ -83,20 +87,16 @@ public final class Observable<T> extends Subscriber<T> {
 
     @Override
     public final void onNext(final T value) {
-        try {
-            mainWorker.schedule(new Action0() {
+        mainWorker.schedule(new Action0() {
 
-                @Override
-                public void call() {
-                    for (Observer<T> observer : observers) {
-                        observer.onNext(value);
-                    }
+            @Override
+            public void call() {
+                for (Observer<T> observer : observers) {
+                    observer.onNext(value);
                 }
+            }
 
-            });
-        } catch (Exception e) {
-            onError(e);
-        }
+        });
     }
 
     @Override
@@ -108,6 +108,7 @@ public final class Observable<T> extends Subscriber<T> {
                 for (Observer<T> observer : observers) {
                     observer.onCompleted();
                 }
+                observers.clear();
             }
 
         });
@@ -161,9 +162,11 @@ public final class Observable<T> extends Subscriber<T> {
 
     @Override
     public void unsubscribe() {
-        observers.clear();
+        throw new UnsupportedOperationException();
     }
 
     public interface OnSubscribe<T> extends Action1<Subscriber<T>> {}
+
+    public static class InterruptedException extends RuntimeException {}
 
 }
