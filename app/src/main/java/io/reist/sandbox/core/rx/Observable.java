@@ -62,9 +62,6 @@ public final class Observable<T> extends Subscriber<T> {
             @Override
             public void unsubscribe() {
                 observers.remove(observer);
-                if (observers.isEmpty()) {
-                    backgroundWorker.unsubscribe();
-                }
             }
 
         };

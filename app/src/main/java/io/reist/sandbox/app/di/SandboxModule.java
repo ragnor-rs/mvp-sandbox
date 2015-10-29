@@ -19,10 +19,8 @@ import io.reist.sandbox.app.mvp.model.DbOpenHelper;
 import io.reist.sandbox.core.di.BaseModule;
 import io.reist.sandbox.core.mvp.model.remote.retrofit.NestedFieldNameAdapter;
 import io.reist.sandbox.core.rx.Action1;
-import io.reist.sandbox.core.rx.AndroidSchedulers;
 import io.reist.sandbox.core.rx.Func1;
 import io.reist.sandbox.core.rx.Observable;
-import io.reist.sandbox.core.rx.Schedulers;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteGetResolver;
@@ -112,9 +110,7 @@ public class SandboxModule {
                                 Observable.just(repos).concatWith(local);
                     }
 
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                });
 
     }
 

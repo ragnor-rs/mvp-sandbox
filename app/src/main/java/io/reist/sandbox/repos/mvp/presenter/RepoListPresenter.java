@@ -13,8 +13,10 @@ import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.core.mvp.presenter.BasePresenter;
 import io.reist.sandbox.core.mvp.view.BaseView;
+import io.reist.sandbox.core.rx.AndroidSchedulers;
 import io.reist.sandbox.core.rx.Observable;
 import io.reist.sandbox.core.rx.Observer;
+import io.reist.sandbox.core.rx.Schedulers;
 import io.reist.sandbox.core.rx.Subscription;
 import io.reist.sandbox.repos.di.ReposFragmentComponent;
 import io.reist.sandbox.repos.mvp.model.Repo;
@@ -38,6 +40,8 @@ public class RepoListPresenter extends BasePresenter {
     protected void onViewAttached(BaseView view) {
         repoListSubscription = repoListObservable
                 .sample(1, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RepoListObserver());
     }
 

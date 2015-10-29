@@ -8,6 +8,8 @@ import io.reist.sandbox.core.rx.Subscriber;
  */
 public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T> {
 
+    protected static final boolean LOGGING_ENABLED = false;
+
     protected final String onSubscribeName = getClass().getName();
 
     private Subscriber<T> subscriber;
@@ -26,7 +28,8 @@ public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T
     protected abstract void emit() throws Exception;
 
     protected final void doOnNext(T t) {
-        System.out.println(onSubscribeName + ": emitted " + t);
+        final String message = "emitted " + t;
+        log(message);
         subscriber.onNext(t);
     }
 
@@ -34,13 +37,19 @@ public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T
         if (e instanceof Observable.InterruptedException) {
             return;
         }
-        System.out.println(onSubscribeName + ": thrown " + e);
+        log("thrown " + e);
         subscriber.onError(e);
     }
 
     protected final void doOnCompleted() {
-        System.out.println(onSubscribeName + ": completed");
+        log("completed");
         subscriber.onCompleted();
+    }
+
+    protected void log(String str) {
+        if (LOGGING_ENABLED) {
+            System.out.println(onSubscribeName + ": " + str);
+        }
     }
 
 }
