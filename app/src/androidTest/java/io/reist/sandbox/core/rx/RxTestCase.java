@@ -9,7 +9,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Reist on 10/26/15.
@@ -20,21 +19,18 @@ public abstract class RxTestCase extends TestCase {
     protected static final String[] MORE_STRING_VALUES = new String[] {"one_remote", "two_remote", "three_remote"};
     protected static final String[] MORE_ALTERNATIVE_STRINGS = new String[] {"I", "II", "III"};
 
-    protected static final long PERIOD_VALUE = 1;
-    protected static final TimeUnit PERIOD_UNIT = TimeUnit.SECONDS;
+    protected static final int ELEMENTS_TO_TAKE = 2;
+
+    static {
+        assertTrue(STRING_VALUES.length > ELEMENTS_TO_TAKE);
+        assertTrue(MORE_STRING_VALUES.length > ELEMENTS_TO_TAKE);
+        assertTrue(MORE_ALTERNATIVE_STRINGS.length > ELEMENTS_TO_TAKE);
+    }
 
     private boolean anItemObserved;
     private int onCompletedCallCounter;
     private final List<Throwable> errors = new ArrayList<>();
     private Subscription subscription;
-
-    protected static void sleep() {
-        try {
-            Thread.sleep(TimeUnit.MILLISECONDS.convert(PERIOD_VALUE, PERIOD_UNIT));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public void setUp() throws Exception {
@@ -57,7 +53,7 @@ public abstract class RxTestCase extends TestCase {
             writer.append("\n---\n");
             fail(writer.toString());
         }
-        assertTrue("anItemObserved", anItemObserved);
+        assertTrue("anItemObserved == false", anItemObserved);
         assertTrue("onCompletedCallCounter == 0", onCompletedCallCounter > 0);
     }
 
@@ -115,8 +111,16 @@ public abstract class RxTestCase extends TestCase {
         subscription = doTestConcatWith();
     }
 
+    public final void testTake() throws Exception {
+        subscription = doTestTake();
+    }
+
     public final void testFirst() throws Exception {
         subscription = doTestFirst();
+    }
+
+    public final void testLast() throws Exception {
+        subscription = doTestLast();
     }
 
     public final void testSwitchMap() throws Exception {
@@ -139,7 +143,11 @@ public abstract class RxTestCase extends TestCase {
 
     public abstract Subscription doTestConcatWith() throws Exception;
 
+    public abstract Subscription doTestTake() throws Exception;
+
     public abstract Subscription doTestFirst() throws Exception;
+
+    public abstract Subscription doTestLast() throws Exception;
 
     public abstract Subscription doTestSwitchMap() throws Exception;
 
@@ -194,8 +202,30 @@ public abstract class RxTestCase extends TestCase {
     }
 
     @NonNull
+    protected static String[] expectedForTake() {
+        String[] expected = new String[ELEMENTS_TO_TAKE];
+        System.arraycopy(STRING_VALUES, 0, expected, 0, ELEMENTS_TO_TAKE);
+        return expected;
+    }
+
+    @NonNull
     protected static String[] expectedForFirst() {
-        return new String[] { STRING_VALUES[0] };
+        final String firstValue = STRING_VALUES[0];
+        String[] expected = new String[ELEMENTS_TO_TAKE];
+        for (int i = 0; i < expected.length; i++) {
+            expected[i] = firstValue;
+        }
+        return expected;
+    }
+
+    @NonNull
+    protected static String[] expectedForLast() {
+        final String lastValue = STRING_VALUES[STRING_VALUES.length - 1];
+        String[] expected = new String[ELEMENTS_TO_TAKE];
+        for (int i = 0; i < expected.length; i++) {
+            expected[i] = lastValue;
+        }
+        return expected;
     }
 
     public static boolean checkSwitchCondition(String s) {

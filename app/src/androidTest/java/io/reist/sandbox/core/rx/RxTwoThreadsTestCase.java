@@ -115,16 +115,40 @@ public class RxTwoThreadsTestCase extends RxTestCase {
     }
 
     @Override
+    public Subscription doTestTake() throws Exception {
+        return createObservable()
+                .take(ELEMENTS_TO_TAKE)
+                .doOnNext(this.<String>createThreadTestAction())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
+                .subscribe(createObserver(expectedForTake()));
+    }
+
+
+    @Override
     public Subscription doTestFirst() throws Exception {
         final String[] expected = expectedForFirst();
         return createObservable()
                 .first()
-                .doOnNext(createForEachAction(expected))
+                .take(ELEMENTS_TO_TAKE)
                 .doOnNext(this.<String>createThreadTestAction())
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.io())
                 .subscribe(createObserver(expected));
     }
+
+    @Override
+    public Subscription doTestLast() throws Exception {
+        final String[] expected = expectedForLast();
+        return createObservable()
+                .last()
+                .take(ELEMENTS_TO_TAKE)
+                .doOnNext(this.<String>createThreadTestAction())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
+                .subscribe(createObserver(expected));
+    }
+
 
     @Override
     public Subscription doTestSwitchMap() throws Exception {
