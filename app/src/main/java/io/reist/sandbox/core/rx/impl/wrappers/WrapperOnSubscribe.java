@@ -2,12 +2,12 @@ package io.reist.sandbox.core.rx.impl.wrappers;
 
 import io.reist.sandbox.core.rx.Observable;
 import io.reist.sandbox.core.rx.Observer;
-import io.reist.sandbox.core.rx.impl.AbstractOnSubscribe;
+import io.reist.sandbox.core.rx.impl.StoppableOnSubscribe;
 
 /**
  * Created by Reist on 10/28/15.
  */
-public abstract class WrapperOnSubscribe<S, D> extends AbstractOnSubscribe<D> implements Observer<S> {
+public abstract class WrapperOnSubscribe<S, D> extends StoppableOnSubscribe<D> implements Observer<S> {
 
     private final Observable<S> source;
 

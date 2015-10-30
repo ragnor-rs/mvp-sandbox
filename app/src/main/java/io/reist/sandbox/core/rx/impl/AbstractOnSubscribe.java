@@ -22,11 +22,17 @@ public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T
         try {
             emit();
             doOnCompleted();
-        } catch (Observable.StopObservableException e) {
-            doOnCompleted();
         } catch (Exception e) {
-            doOnError(e);
+            if (isCriticalException(e)) {
+                doOnError(e);
+            } else {
+                doOnCompleted();
+            }
         }
+    }
+
+    protected boolean isCriticalException(Exception e) {
+        return true;
     }
 
     protected abstract void emit() throws Exception;
