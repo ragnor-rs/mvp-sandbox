@@ -170,11 +170,6 @@ public abstract class RxTestCase extends TestCase {
     }
 
     @NonNull
-    protected static long expectedForSample() {
-        return TimeUnit.MILLISECONDS.convert(PERIOD_VALUE, PERIOD_UNIT);
-    }
-
-    @NonNull
     protected static String[] expectedForConcatWith() {
         String[] expected = new String[STRING_VALUES.length + MORE_STRING_VALUES.length];
         List<String> strings = new ArrayList<>();
