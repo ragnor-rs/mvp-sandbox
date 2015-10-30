@@ -46,11 +46,27 @@ public class RxSingleThreadTestCase extends RxTestCase {
     }
 
     @Override
+    public Subscription doTestTake() throws Exception {
+        return createObservable()
+                .take(ELEMENTS_TO_TAKE)
+                .subscribe(createObserver(expectedForTake()));
+    }
+
+    @Override
     public Subscription doTestFirst() throws Exception {
         final String[] expected = expectedForFirst();
         return createObservable()
-                .take(1)
-                .doOnNext(createForEachAction(expected))
+                .first()
+                .take(ELEMENTS_TO_TAKE)
+                .subscribe(createObserver(expected));
+    }
+
+    @Override
+    public Subscription doTestLast() throws Exception {
+        final String[] expected = expectedForLast();
+        return createObservable()
+                .last()
+                .take(ELEMENTS_TO_TAKE)
                 .subscribe(createObserver(expected));
     }
 
