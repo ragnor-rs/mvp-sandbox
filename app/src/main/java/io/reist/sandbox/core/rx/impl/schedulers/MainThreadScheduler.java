@@ -40,7 +40,7 @@ public class MainThreadScheduler extends Scheduler {
         }
 
         @Override
-        public void unsubscribe() {
+        public synchronized void unsubscribe() {
             super.unsubscribe();
             handler = null;
         }

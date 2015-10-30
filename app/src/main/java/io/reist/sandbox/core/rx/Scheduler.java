@@ -32,7 +32,7 @@ public abstract class Scheduler {
         public abstract Subscription schedule(Action0 action);
 
         @Override
-        public void unsubscribe() {
+        public synchronized void unsubscribe() {
             parent.unregister(this);
         }
 

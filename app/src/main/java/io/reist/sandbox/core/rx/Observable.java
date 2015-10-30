@@ -21,7 +21,7 @@ public final class Observable<T> extends Subscriber<T> {
 
     public static final Scheduler DEFAULT_SCHEDULER = Schedulers.immediate();
 
-    public static final boolean LOGGING_ENABLED = false;
+    public static final boolean LOGGING_ENABLED = true;
 
     private Scheduler.Worker backgroundWorker;
     private Scheduler.Worker mainWorker;
@@ -119,6 +119,7 @@ public final class Observable<T> extends Subscriber<T> {
                     observer.onCompleted();
                 }
                 observers.clear();
+                backgroundWorker.unsubscribe();
             }
 
         });
