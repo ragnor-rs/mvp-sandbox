@@ -13,13 +13,13 @@ import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.core.mvp.presenter.BasePresenter;
 import io.reist.sandbox.core.mvp.view.BaseView;
-import io.reist.sandbox.core.rx.AndroidSchedulers;
-import io.reist.sandbox.core.rx.Observable;
-import io.reist.sandbox.core.rx.Observer;
-import io.reist.sandbox.core.rx.Schedulers;
-import io.reist.sandbox.core.rx.Subscription;
 import io.reist.sandbox.repos.di.ReposFragmentComponent;
 import io.reist.sandbox.repos.mvp.model.Repo;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 @Singleton
 public class RepoListPresenter extends BasePresenter {
@@ -41,7 +41,8 @@ public class RepoListPresenter extends BasePresenter {
     @Override
     protected void onViewAttached(BaseView view) {
         repoListSubscription = repoListObservable
-                .subscribeOn(Schedulers.newThread())
+                .last()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RepoListObserver());
     }
@@ -63,6 +64,7 @@ public class RepoListPresenter extends BasePresenter {
 
         @Override
         public void onError(Throwable e) {
+            Log.e(TAG, "Observed error", e);
             Toast.makeText(getContext(), R.string.github_repo_list_error, Toast.LENGTH_LONG).show();
         }
 

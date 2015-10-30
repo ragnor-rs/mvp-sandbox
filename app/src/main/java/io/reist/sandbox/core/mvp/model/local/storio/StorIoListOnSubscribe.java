@@ -7,12 +7,13 @@ import com.pushtorefresh.storio.sqlite.operations.get.PreparedGet;
 
 import java.util.List;
 
-import io.reist.sandbox.core.rx.impl.origins.OriginOnSubscribe;
+import io.reist.sandbox.core.rx.impl.AbstractOnSubscribe;
+import rx.functions.Func0;
 
 /**
  * Created by Reist on 10/23/15.
  */
-public abstract class StorIoListOnSubscribe<I> extends OriginOnSubscribe<List<I>> {
+public abstract class StorIoListOnSubscribe<I> extends AbstractOnSubscribe<List<I>> implements Func0<List<I>> {
 
     private final StorIOSQLite storIoSqLite;
 
@@ -20,14 +21,14 @@ public abstract class StorIoListOnSubscribe<I> extends OriginOnSubscribe<List<I>
         this.storIoSqLite = storIoSqLite;
     }
 
-    @Override
-    public boolean isCompleted() {
-        return false;
-    }
-
     @NonNull
     protected PreparedGet.Builder preparedGetBuilder() {
         return storIoSqLite.get();
+    }
+
+    @Override
+    protected final void emit() throws Exception {
+        doOnNext(call());
     }
 
 }

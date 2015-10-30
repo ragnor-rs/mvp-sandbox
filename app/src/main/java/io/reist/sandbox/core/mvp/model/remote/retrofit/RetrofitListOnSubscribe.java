@@ -3,26 +3,27 @@ package io.reist.sandbox.core.mvp.model.remote.retrofit;
 import java.io.IOException;
 import java.util.List;
 
-import io.reist.sandbox.core.rx.impl.origins.OriginOnSubscribe;
+import io.reist.sandbox.core.rx.impl.AbstractOnSubscribe;
 import retrofit.Call;
+import rx.functions.Func0;
 
 /**
  * Created by Reist on 10/23/15.
  */
-public abstract class RetrofitListOnSubscribe<I> extends OriginOnSubscribe<List<I>> {
+public abstract class RetrofitListOnSubscribe<I> extends AbstractOnSubscribe<List<I>> implements Func0<List<I>> {
 
     @Override
-    public List<I> call() throws IOException {
-        List<I> list = getReadCall().execute().body();
-        cache(list);
-        return list;
+    protected final void emit() throws Exception {
+        doOnNext(call());
     }
 
-    protected abstract void cache(List<I> list);
-
     @Override
-    public boolean isCompleted() {
-        return false;
+    public final List<I> call() {
+        try {
+            return getReadCall().execute().body();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected abstract Call<List<I>> getReadCall();

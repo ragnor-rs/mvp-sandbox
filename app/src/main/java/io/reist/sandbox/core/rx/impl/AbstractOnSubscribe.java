@@ -1,25 +1,27 @@
 package io.reist.sandbox.core.rx.impl;
 
-import io.reist.sandbox.core.rx.Observable;
-import io.reist.sandbox.core.rx.Subscriber;
+import android.util.Log;
+
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by Reist on 10/29/15.
  */
 public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T> {
 
+    private static final boolean LOGGING_ENABLED = true;
+
     protected final String onSubscribeName = getClass().getName();
 
-    private Subscriber<T> subscriber;
+    private Subscriber<? super T> subscriber;
 
     @Override
-    public final void call(Subscriber<T> subscriber) {
+    public void call(Subscriber<? super T> subscriber) {
         this.subscriber = subscriber;
         try {
             emit();
             doOnCompleted();
-        } catch (Observable.StopThreadException e) {
-            throw e;
         } catch (Exception e) {
             doOnError(e);
         }
@@ -32,8 +34,12 @@ public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T
         subscriber.onNext(t);
     }
 
+    protected void log(String s) {
+        log(s, null);
+    }
+
     protected final void doOnError(Throwable e) {
-        log("thrown " + e);
+        log("thrown error", e);
         subscriber.onError(e);
     }
 
@@ -42,8 +48,14 @@ public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T
         subscriber.onCompleted();
     }
 
-    protected void log(String str) {
-        Observable.log(onSubscribeName, str);
+    protected void log(String str, Throwable throwable) {
+        if (LOGGING_ENABLED) {
+            if (throwable == null) {
+                Log.i(onSubscribeName, str);
+            } else {
+                Log.e(onSubscribeName, str, throwable);
+            }
+        }
     }
 
 }
