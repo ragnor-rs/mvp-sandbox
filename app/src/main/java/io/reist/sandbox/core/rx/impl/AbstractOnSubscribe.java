@@ -23,13 +23,21 @@ public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T
             emit();
             doOnCompleted();
         } catch (Exception e) {
-            doOnError(e);
+            if (isCriticalException(e)) {
+                doOnError(e);
+            } else {
+                doOnCompleted();
+            }
         }
+    }
+
+    protected boolean isCriticalException(Exception e) {
+        return true;
     }
 
     protected abstract void emit() throws Exception;
 
-    protected final void doOnNext(T t) {
+    protected void doOnNext(T t) {
         log("emitted " + t);
         subscriber.onNext(t);
     }
@@ -38,12 +46,12 @@ public abstract class AbstractOnSubscribe<T> implements Observable.OnSubscribe<T
         log(s, null);
     }
 
-    protected final void doOnError(Throwable e) {
+    protected void doOnError(Throwable e) {
         log("thrown error", e);
         subscriber.onError(e);
     }
 
-    protected final void doOnCompleted() {
+    protected void doOnCompleted() {
         log("completed");
         subscriber.onCompleted();
     }
