@@ -9,7 +9,6 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -19,8 +18,6 @@ import dagger.Provides;
 import io.reist.sandbox.app.mvp.model.DbOpenHelper;
 import io.reist.sandbox.core.di.BaseModule;
 import io.reist.sandbox.core.mvp.model.remote.retrofit.NestedFieldNameAdapter;
-import io.reist.sandbox.core.rx.Func1;
-import io.reist.sandbox.core.rx.Observable;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteGetResolver;
@@ -30,14 +27,19 @@ import io.reist.sandbox.repos.mvp.model.remote.retrofit.GitHubApi;
 import io.reist.sandbox.repos.mvp.model.remote.retrofit.RetrofitRepoListOnSubscribe;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 @Module(includes = BaseModule.class)
 public class SandboxModule {
 
-    private static final String GIT_HUB_BASE_URL = "https://api.github.com";
+    private static final String GIT_HUB_BASE_URL = "http://private-ccfc02-crackywacky.apiary-mock.com";
 
     public static final String LOCAL_SERVICE = "local";
     public static final String REMOTE_SERVICE = "remote";
+
+    private static final String TAG = SandboxModule.class.getName();
 
     @Provides @Singleton
     DbOpenHelper dbOpenHelper(Context context) {
@@ -74,7 +76,24 @@ public class SandboxModule {
         GitHubApi gitHubApi = retrofit.create(GitHubApi.class);
 
         return Observable
-                .create(new RetrofitRepoListOnSubscribe(gitHubApi, storIoSqLite));
+                .create(new RetrofitRepoListOnSubscribe(gitHubApi))
+                .doOnNext(new Action1<List<Repo>>() {
+
+                    @Override
+                    public void call(List<Repo> repos) {
+
+                        if (repos == null) {
+                            return;
+                        }
+
+                        storIoSqLite.put()
+                                .objects(repos)
+                                .prepare()
+                                .executeAsBlocking();
+
+                    }
+
+                });
 
     }
 
@@ -89,18 +108,14 @@ public class SandboxModule {
             @Named(REMOTE_SERVICE) final Observable<List<Repo>> remote
     ) {
 
-        return local
-                .switchMap(new Func1<List<Repo>, Observable<List<Repo>>>() {
+        return Observable.concat(local, remote).takeFirst(new Func1<List<Repo>, Boolean>() {
 
-                    @Override
-                    public Observable<List<Repo>> call(List<Repo> repos) {
-                        return repos == null || repos.isEmpty() ?
-                                remote :
-                                Observable.just(repos).concatWith(local);
-                    }
+            @Override
+            public Boolean call(List<Repo> repos) {
+                return !repos.isEmpty();
+            }
 
-                })
-                .sample(5, TimeUnit.SECONDS);
+        });
 
     }
 

@@ -4,10 +4,16 @@ import android.support.annotation.NonNull;
 
 import junit.framework.TestCase;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import rx.Observable;
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * Created by Reist on 10/26/15.
@@ -21,81 +27,129 @@ public abstract class RxTestCase extends TestCase {
     protected static final long PERIOD_VALUE = 1;
     protected static final TimeUnit PERIOD_UNIT = TimeUnit.SECONDS;
 
-    /**
-     * Created by Reist on 10/26/15.
-     */
-    protected static class TestObserver<T> implements Observer<T> {
+    private boolean anItemObserved;
+    private int onCompletedCallCounter;
+    private final List<Throwable> errors = new ArrayList<>();
+    private Subscription subscription;
 
-        private final T[] expected;
-        private final RxTestCase testCase;
-
-        private int itemCounter;
-        private int onCompletedCallCounter;
-
-        protected TestObserver(T[] expected, RxTestCase testCase) {
-
-            this.expected = expected;
-            this.testCase = testCase;
-
-            itemCounter = 0;
-            onCompletedCallCounter = 0;
-
+    protected static void sleep() {
+        try {
+            Thread.sleep(TimeUnit.MILLISECONDS.convert(PERIOD_VALUE, PERIOD_UNIT));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-
-        @Override
-        public void onNext(T t) {
-            assertEquals(expected[itemCounter], t);
-            testCase.onObservedValue(t);
-            itemCounter++;
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            testCase.onObservedError(e);
-        }
-
-        @Override
-        public void onCompleted() {
-            onCompletedCallCounter++;
-            assertEquals(expected.length, itemCounter);
-            assertFalse(onCompletedCallCounter > 1);
-            testCase.onObservedFinish();
-        }
-
     }
 
-    protected abstract void onObservedFinish();
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        errors.clear();
+        anItemObserved = false;
+        onCompletedCallCounter = 0;
+    }
 
-    protected abstract void onObservedError(Throwable e);
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
+        subscription.unsubscribe();
+        if (!errors.isEmpty()) {
+            StringWriter writer = new StringWriter();
+            writer.append("\n\n---\n\n");
+            for (Throwable e : errors) {
+                e.printStackTrace(new PrintWriter(writer));
+            }
+            writer.append("\n---\n");
+            fail(writer.toString());
+        }
+        assertTrue("anItemObserved", anItemObserved);
+        assertTrue("onCompletedCallCounter == 0", onCompletedCallCounter > 0);
+    }
 
-    protected abstract <T> void onObservedValue(T t);
+    protected void onObservedError(Throwable e) {
+        errors.add(e);
+    }
+
+    protected void onObservedFinish() {
+        onCompletedCallCounter++;
+    }
+
+    protected <T> void onObservedValue(T expected, T t) {
+        assertEquals(expected, t);
+        anItemObserved = true;
+    }
 
     @NonNull
-    protected Observable<String> createObservable() {
+    protected final Observable<String> createObservable() {
         return Observable.from(STRING_VALUES);
     }
 
-    protected <T> RxTestCase.TestObserver<T> createObserver(T[] expected) {
+    @NonNull
+    protected final <T> TestObserver<T> createObserver(T[] expected) {
         return new TestObserver<>(expected, this);
     }
 
-    public abstract void testRx() throws Exception;
+    @NonNull
+    protected final <T> Action1<T> createForEachAction(final T[] expected) {
+        return new Action1<T>() {
 
-    public abstract void testForEach() throws Exception;
+            private int itemCounter = 0;
 
-    public abstract void testMap() throws Exception;
+            @Override
+            public void call(T t) {
+                assertEquals(expected[itemCounter], t);
+                itemCounter++;
+            }
 
-    public abstract void testSample() throws Exception;
+        };
+    }
 
-    public abstract void testConcatWith() throws Exception;
+    public final void testRx() throws Exception {
+        subscription = doTestRx();
+    }
 
-    public abstract void testFirst() throws Exception;
+    public final void testDoNext() throws Exception {
+        subscription = doTestDoNext();
+    }
 
-    public abstract void testSwitchMap() throws Exception;
+    public final void testMap() throws Exception {
+        subscription = doTestMap();
+    }
 
-    public abstract void testCache() throws Exception;
+    public final void testConcatWith() throws Exception {
+        subscription = doTestConcatWith();
+    }
 
-    public abstract void testJustConcatWith() throws Exception;
+    public final void testFirst() throws Exception {
+        subscription = doTestFirst();
+    }
+
+    public final void testSwitchMap() throws Exception {
+        subscription = doTestSwitchMap();
+    }
+
+    public final void testCache() throws Exception {
+        subscription = doTestCache();
+    }
+
+    public final void testJustConcatWith() throws Exception {
+        subscription = doTestJustConcatWith();
+    }
+
+    public abstract Subscription doTestRx() throws Exception;
+
+    public abstract Subscription doTestDoNext() throws Exception;
+
+    public abstract Subscription doTestMap() throws Exception;
+
+    public abstract Subscription doTestConcatWith() throws Exception;
+
+    public abstract Subscription doTestFirst() throws Exception;
+
+    public abstract Subscription doTestSwitchMap() throws Exception;
+
+    public abstract Subscription doTestCache() throws Exception;
+
+    public abstract Subscription doTestJustConcatWith() throws Exception;
 
     @NonNull
     protected static Integer[] expectedForMap() {
@@ -107,6 +161,7 @@ public abstract class RxTestCase extends TestCase {
         return expected;
     }
 
+    @NonNull
     protected static long expectedForSample() {
         return TimeUnit.MILLISECONDS.convert(PERIOD_VALUE, PERIOD_UNIT);
     }
@@ -124,15 +179,11 @@ public abstract class RxTestCase extends TestCase {
     @NonNull
     protected static String[] expectedForSwitchMap() {
         List<String> expectedList = new ArrayList<>();
-        int pointerToAlternative1 = 0;
-        int pointerToAlternative2 = 0;
         for (String s : STRING_VALUES) {
             if (checkSwitchCondition(s)) {
-                expectedList.add(MORE_STRING_VALUES[pointerToAlternative1]);
-                pointerToAlternative1++;
+                expectedList.add(MORE_STRING_VALUES[0]);
             } else {
-                expectedList.add(MORE_ALTERNATIVE_STRINGS[pointerToAlternative2]);
-                pointerToAlternative2++;
+                expectedList.add(MORE_ALTERNATIVE_STRINGS[0]);
             }
         }
         return expectedList.toArray(new String[expectedList.size()]);
@@ -141,11 +192,9 @@ public abstract class RxTestCase extends TestCase {
     @NonNull
     protected static String[] expectedForCache() {
         List<String> expectedList = new ArrayList<>();
-        int pointerToAlternative = 0;
         for (String s : STRING_VALUES) {
             if (checkSwitchCondition(s)) {
-                expectedList.add(MORE_STRING_VALUES[pointerToAlternative]);
-                pointerToAlternative++;
+                expectedList.add(MORE_STRING_VALUES[0]);
             } else {
                 expectedList.add(s);
             }

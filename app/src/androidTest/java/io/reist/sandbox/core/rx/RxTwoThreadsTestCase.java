@@ -3,8 +3,14 @@ package io.reist.sandbox.core.rx;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
 /**
- * Created by Reist on 10/26/15.
+ * Created by Reist on 10/23/15.
  */
 public class RxTwoThreadsTestCase extends RxTestCase {
 
@@ -15,247 +21,137 @@ public class RxTwoThreadsTestCase extends RxTestCase {
     private final List<Thread> computationThreads = new ArrayList<>();
 
     @Override
-    public void testRx() throws Exception {
-        createObservable()
-                .map(new Func1<String, String>() {
+    public void setUp() throws Exception {
+        super.setUp();
+        mainThread = Thread.currentThread();
+    }
 
-                    @Override
-                    public String call(String s) {
-                        checkThreads();
-                        return s;
-                    }
+    @Override
+    public void tearDown() throws Exception {
+        synchronized (lock) {
+            lock.wait();
+        }
+        super.tearDown();
+    }
 
-                })
+    @Override
+    protected void onObservedError(Throwable e) {
+        super.onObservedError(e);
+        synchronized (lock) {
+            lock.notify();
+        }
+    }
+
+    @Override
+    protected void onObservedFinish() {
+        super.onObservedFinish();
+        assertNotSame(mainThread, Thread.currentThread());
+        synchronized (lock) {
+            lock.notify();
+        }
+    }
+
+    @Override
+    protected <T> void onObservedValue(T expected, T t) {
+        super.onObservedValue(expected, t);
+        assertNotSame(mainThread, Thread.currentThread());
+    }
+
+    private <T> Action1<T> createThreadTestAction() {
+        return new Action1<T>() {
+
+            @Override
+            public void call(T t) {
+                final Thread thread = Thread.currentThread();
+                if (!computationThreads.contains(thread)) {
+                    computationThreads.add(thread);
+                }
+                assertNotSame(mainThread, thread);
+            }
+
+        };
+    }
+
+    @Override
+    public Subscription doTestRx() throws Exception {
+        return createObservable()
+                .doOnNext(this.<String>createThreadTestAction())
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.io())
                 .subscribe(createObserver(STRING_VALUES));
     }
 
     @Override
-    public void testForEach() throws Exception {
-        createObservable()
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String s) {
-                        checkThreads();
-                        return s;
-                    }
-
-                })
+    public Subscription doTestDoNext() throws Exception {
+        return createObservable()
+                .doOnNext(createForEachAction(STRING_VALUES))
+                .doOnNext(this.<String>createThreadTestAction())
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.io())
-                .forEach(new Action1<String>() {
-
-                    private int i = 0;
-
-                    @Override
-                    public void call(String s) {
-
-                        assertEquals(STRING_VALUES[i], s);
-                        i++;
-
-                        onObservedFinish();
-
-                    }
-
-                });
+                .subscribe(createObserver(STRING_VALUES));
     }
 
     @Override
-    public void testMap() throws Exception {
-        createObservable()
+    public Subscription doTestMap() throws Exception {
+        return createObservable()
                 .map(new Func1<String, Integer>() {
 
                     @Override
                     public Integer call(String s) {
-                        checkThreads();
                         return s.length();
                     }
 
                 })
+                .doOnNext(this.<Integer>createThreadTestAction())
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.io())
                 .subscribe(createObserver(expectedForMap()));
     }
 
     @Override
-    public void testConcatWith() throws Exception {
-        createObservable()
+    public Subscription doTestConcatWith() throws Exception {
+        return createObservable()
                 .concatWith(
                         Observable.from(MORE_STRING_VALUES)
                 )
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String s) {
-                        checkThreads();
-                        return s;
-                    }
-
-                })
+                .doOnNext(this.<String>createThreadTestAction())
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.io())
                 .subscribe(createObserver(expectedForConcatWith()));
     }
 
     @Override
-    public void testFirst() throws Exception {
+    public Subscription doTestFirst() throws Exception {
         final String[] expected = expectedForFirst();
-        createObservable()
+        return createObservable()
                 .first()
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String s) {
-                        checkThreads();
-                        return s;
-                    }
-
-                })
+                .doOnNext(createForEachAction(expected))
+                .doOnNext(this.<String>createThreadTestAction())
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.io())
-                .forEach(new Action1<String>() {
-
-                    private int i = 0;
-
-                    @Override
-                    public void call(String s) {
-
-                        assertEquals(expected[i], s);
-                        assertEquals(0, i);
-                        i++;
-
-                        onObservedFinish();
-
-                    }
-
-                });
-    }
-
-    private void unlock() {
-        synchronized (lock) {
-            lock.notifyAll();
-        }
+                .subscribe(createObserver(expected));
     }
 
     @Override
-    public void testSample() throws Exception {
-
-        final long expectedPeriod = expectedForSample();
-
-        createObservable()
-                .sample(PERIOD_VALUE, PERIOD_UNIT)
-                .map(new Func1<String, String>() {
-
-                    private long startTime = -1;
-
-                    @Override
-                    public String call(String s) {
-
-                        final long now = System.currentTimeMillis();
-                        if (startTime != -1) {
-                            final long realPeriod = now - startTime;
-                            assertTrue(Math.abs(realPeriod - expectedPeriod) < 0.1 * expectedPeriod);
-                        }
-                        startTime = now;
-
-                        checkThreads();
-
-                        return s;
-
-                    }
-
-                })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.io())
-                .subscribe(createObserver(STRING_VALUES));
-
-    }
-
-    @Override
-    public void testSwitchMap() throws Exception {
+    public Subscription doTestSwitchMap() throws Exception {
 
         final Observable<String> source = createObservable();
         final Observable<String> output1 = Observable.from(MORE_STRING_VALUES);
         final Observable<String> output2 = Observable.from(MORE_ALTERNATIVE_STRINGS);
 
-        source
+        final String[] expected = expectedForSwitchMap();
+
+        return source
                 .switchMap(new Func1<String, Observable<String>>() {
 
                     @Override
                     public Observable<String> call(String s) {
-                        return checkSwitchCondition(s) ? output1 : output2;
+                        return (checkSwitchCondition(s) ? output1 : output2).take(1);
                     }
 
-                })
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String s) {
-                        checkThreads();
-                        return s;
-                    }
 
                 })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.io())
-                .subscribe(createObserver(expectedForSwitchMap()));
-
-    }
-
-    @Override
-    public void testJustConcatWith() throws Exception {
-
-        String[] remainingValues = new String[STRING_VALUES.length - 1];
-        System.arraycopy(STRING_VALUES, 1, remainingValues, 0, remainingValues.length);
-
-        Observable
-                .just(STRING_VALUES[0])
-                .concatWith(Observable.from(remainingValues))
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String s) {
-                        checkThreads();
-                        return s;
-                    }
-
-                })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.io())
-                .subscribe(createObserver(STRING_VALUES));
-
-    }
-
-    @Override
-    public void testCache() throws Exception {
-
-        final Observable<String> local = Observable.from(RxTestCase.STRING_VALUES);
-        final Observable<String> remote = Observable.from(RxTestCase.MORE_STRING_VALUES);
-
-        String[] expected = expectedForCache();
-
-        local
-                .switchMap(new Func1<String, Observable<String>>() {
-
-                    @Override
-                    public Observable<String> call(String s) {
-                        return RxTestCase.checkSwitchCondition(s) ?
-                                remote :
-                                Observable.just(s).concatWith(local);
-                    }
-
-                })
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String s) {
-                        checkThreads();
-                        return s;
-                    }
-
-                })
+                .doOnNext(this.<String>createThreadTestAction())
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.io())
                 .subscribe(createObserver(expected));
@@ -263,67 +159,43 @@ public class RxTwoThreadsTestCase extends RxTestCase {
     }
 
     @Override
-    protected void onObservedFinish() {
-        checkThreadsFromObserver();
-        new Thread() {
+    public Subscription doTestJustConcatWith() throws Exception {
 
-            @Override
-            public void run() {
+        String[] remainingValues = new String[STRING_VALUES.length - 1];
+        System.arraycopy(STRING_VALUES, 1, remainingValues, 0, remainingValues.length);
 
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    fail();
-                }
+        return Observable
+                .just(STRING_VALUES[0])
+                .concatWith(Observable.from(remainingValues))
+                .doOnNext(this.<String>createThreadTestAction())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
+                .subscribe(createObserver(STRING_VALUES));
 
-                unlock();
-
-            }
-
-        }.start();
     }
 
     @Override
-    protected void onObservedError(Throwable e) {
-        checkThreadsFromObserver();
-    }
+    public Subscription doTestCache() throws Exception {
 
-    @Override
-    protected <T> void onObservedValue(T t) {
-        checkThreadsFromObserver();
-    }
+        final Observable<String> local = Observable.from(RxTestCase.STRING_VALUES);
+        final Observable<String> remote = Observable.from(RxTestCase.MORE_STRING_VALUES);
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        mainThread = Thread.currentThread();
-    }
+        String[] expected = expectedForCache();
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        synchronized (lock) {
-            lock.wait();
-        }
-        assertEquals(1, computationThreads.size());
-        computationThreads.clear();
-        mainThread = null;
-    }
+        return local
+                .switchMap(new Func1<String, Observable<String>>() {
 
-    protected void checkThreads() {
-        final Thread computationThread = Thread.currentThread();
-        if (!computationThreads.contains(computationThread)) {
-            computationThreads.add(computationThread);
-        }
-        assertNotSame(mainThread, computationThread);
-    }
+                    @Override
+                    public Observable<String> call(String s) {
+                        return RxTestCase.checkSwitchCondition(s) ? remote.take(1) : Observable.just(s);
+                    }
 
-    protected void checkThreadsFromObserver() {
-        final Thread expected = Thread.currentThread();
-        assertNotSame(expected, mainThread);
-        for (Thread thread : computationThreads) {
-            assertNotSame(expected, thread);
-        }
+                })
+                .doOnNext(this.<String>createThreadTestAction())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.io())
+                .subscribe(createObserver(expected));
+
     }
 
 }
