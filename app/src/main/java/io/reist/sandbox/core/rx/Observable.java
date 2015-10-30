@@ -180,7 +180,7 @@ public final class Observable<T> extends Subscriber<T> {
     }
 
     public Observable<T> takeFirst(Func1<T, Boolean> predicate) {
-        return new Observable<>(new LastOnSubscribe<>(this, predicate));
+        return new Observable<>(new TakeOnSubscribe<>(this, predicate));
     }
 
     public Observable<T> take(int i) {
