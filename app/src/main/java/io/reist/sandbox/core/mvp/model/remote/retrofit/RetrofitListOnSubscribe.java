@@ -3,9 +3,9 @@ package io.reist.sandbox.core.mvp.model.remote.retrofit;
 import java.io.IOException;
 import java.util.List;
 
+import io.reist.sandbox.core.rx.Func0;
 import io.reist.sandbox.core.rx.impl.AbstractOnSubscribe;
 import retrofit.Call;
-import rx.functions.Func0;
 
 /**
  * Created by Reist on 10/23/15.

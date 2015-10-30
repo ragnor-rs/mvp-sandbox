@@ -3,16 +3,16 @@ package io.reist.sandbox.core.rx;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reist.sandbox.core.rx.impl.origins.ArrayOnSubscribe;
 import io.reist.sandbox.core.rx.impl.origins.JustOnSubscribe;
 import io.reist.sandbox.core.rx.impl.wrappers.ConcatWithOnSubscribe;
+import io.reist.sandbox.core.rx.impl.wrappers.DoOnNextOnSubscribe;
 import io.reist.sandbox.core.rx.impl.wrappers.FirstOnSubscribe;
-import io.reist.sandbox.core.rx.impl.wrappers.ForEachObserver;
+import io.reist.sandbox.core.rx.impl.wrappers.LastOnSubscribe;
 import io.reist.sandbox.core.rx.impl.wrappers.MapOnSubscribe;
-import io.reist.sandbox.core.rx.impl.wrappers.SampleOnSubscribe;
 import io.reist.sandbox.core.rx.impl.wrappers.SwitchMapOnSubscribe;
+import io.reist.sandbox.core.rx.impl.wrappers.TakeOnSubscribe;
 
 /**
  * Created by Reist on 10/14/15.
@@ -150,16 +150,12 @@ public final class Observable<T> extends Subscriber<T> {
         return new Observable<>(new ConcatWithOnSubscribe<>(this, alternative));
     }
 
-    public final void forEach(Action1<T> action) {
-        subscribe(new ForEachObserver<>(this, action));
+    public final Observable<T> doOnNext(Action1<T> action) {
+        return new Observable<>(new DoOnNextOnSubscribe<>(this, action));
     }
 
     public final <R> Observable<R> map(Func1<T, R> func) {
         return new Observable<>(new MapOnSubscribe<>(this, func));
-    }
-
-    public final Observable<T> sample(long period, TimeUnit unit) {
-        return new Observable<>(new SampleOnSubscribe<>(this, TimeUnit.MILLISECONDS.convert(period, unit)));
     }
 
     public final <R> Observable<R> switchMap(Func1<T, Observable<R>> observableEmitter) {
@@ -175,7 +171,23 @@ public final class Observable<T> extends Subscriber<T> {
         throw new UnsupportedOperationException();
     }
 
-    public interface OnSubscribe<T> extends Action1<Subscriber<T>> {}
+    public final Observable<T> last() {
+        return new Observable<>(new LastOnSubscribe<>(this));
+    }
+
+    public static <R> Observable<R> concat(Observable<R> o1, Observable<R> o2) {
+        return new Observable<>(new ConcatWithOnSubscribe<>(o1, o2));
+    }
+
+    public Observable<T> takeFirst(Func1<T, Boolean> predicate) {
+        return new Observable<>(new LastOnSubscribe<>(this, predicate));
+    }
+
+    public Observable<T> take(int i) {
+        return new Observable<>(new TakeOnSubscribe<>(this, i));
+    }
+
+    public interface OnSubscribe<T> extends Action1<Subscriber<? super T>> {}
 
     public static class StopObservableException extends RuntimeException {}
 

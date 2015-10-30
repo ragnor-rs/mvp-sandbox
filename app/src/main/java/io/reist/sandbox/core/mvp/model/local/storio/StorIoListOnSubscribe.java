@@ -7,8 +7,8 @@ import com.pushtorefresh.storio.sqlite.operations.get.PreparedGet;
 
 import java.util.List;
 
+import io.reist.sandbox.core.rx.Func0;
 import io.reist.sandbox.core.rx.impl.AbstractOnSubscribe;
-import rx.functions.Func0;
 
 /**
  * Created by Reist on 10/23/15.

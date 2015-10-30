@@ -2,8 +2,8 @@ package io.reist.sandbox.core.rx.impl;
 
 import android.util.Log;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reist.sandbox.core.rx.Observable;
+import io.reist.sandbox.core.rx.Subscriber;
 
 /**
  * Created by Reist on 10/29/15.

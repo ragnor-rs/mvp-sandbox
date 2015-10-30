@@ -1,7 +1,5 @@
 package io.reist.sandbox.core.rx;
 
-import rx.Observer;
-
 /**
  * Created by Reist on 10/26/15.
  */

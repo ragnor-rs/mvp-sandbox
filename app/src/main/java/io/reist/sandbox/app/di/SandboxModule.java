@@ -18,6 +18,9 @@ import dagger.Provides;
 import io.reist.sandbox.app.mvp.model.DbOpenHelper;
 import io.reist.sandbox.core.di.BaseModule;
 import io.reist.sandbox.core.mvp.model.remote.retrofit.NestedFieldNameAdapter;
+import io.reist.sandbox.core.rx.Action1;
+import io.reist.sandbox.core.rx.Func1;
+import io.reist.sandbox.core.rx.Observable;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteGetResolver;
@@ -27,9 +30,6 @@ import io.reist.sandbox.repos.mvp.model.remote.retrofit.GitHubApi;
 import io.reist.sandbox.repos.mvp.model.remote.retrofit.RetrofitRepoListOnSubscribe;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 @Module(includes = BaseModule.class)
 public class SandboxModule {

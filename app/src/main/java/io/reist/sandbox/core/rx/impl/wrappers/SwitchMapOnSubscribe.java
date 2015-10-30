@@ -25,7 +25,7 @@ public class SwitchMapOnSubscribe<S, D> extends WrapperOnSubscribe<S, D> {
 
         e = null;
 
-        result.first().subscribe(new Observer<D>() {
+        result.subscribe(new Observer<D>() {
 
             @Override
             public void onNext(D d) {

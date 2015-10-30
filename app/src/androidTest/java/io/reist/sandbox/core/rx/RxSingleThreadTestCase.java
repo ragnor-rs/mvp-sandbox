@@ -1,9 +1,5 @@
 package io.reist.sandbox.core.rx;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Func1;
-
 /**
  * Created by Reist on 10/23/15.
  */

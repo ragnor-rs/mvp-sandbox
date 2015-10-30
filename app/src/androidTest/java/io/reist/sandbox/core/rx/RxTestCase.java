@@ -11,10 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
-
 /**
  * Created by Reist on 10/26/15.
  */
@@ -159,11 +155,6 @@ public abstract class RxTestCase extends TestCase {
             expected[i] = s.length();
         }
         return expected;
-    }
-
-    @NonNull
-    protected static long expectedForSample() {
-        return TimeUnit.MILLISECONDS.convert(PERIOD_VALUE, PERIOD_UNIT);
     }
 
     @NonNull
