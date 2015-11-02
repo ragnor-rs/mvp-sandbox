@@ -6,7 +6,7 @@ import io.reist.sandbox.repos.mvp.model.Repo;
 import retrofit.Call;
 import retrofit.http.GET;
 import retrofit.http.POST;
-import retrofit.http.Part;
+import retrofit.http.Path;
 
 /**
  * Created by Reist on 10/14/15.
@@ -17,7 +17,7 @@ public interface GitHubApi {
     Call<List<Repo>> listRepos();
 
     @GET("/repos/{id}")
-    Call<Repo> repoById(@Part("id") Long id);
+    Call<Repo> repoById(@Path("id") Long id);
 
     @POST("/repos/edit")
     Call<Boolean> save(Repo repo);

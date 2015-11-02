@@ -25,9 +25,6 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     RecyclerView mRecyclerView;
 
     @Inject
-    LinearLayoutManager mLayoutManager;
-
-    @Inject
     RepoListPresenter presenter;
 
     public RepoListFragment() {
@@ -43,6 +40,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         mRecyclerView.setHasFixedSize(true);
 
         // setView a linear layout manager
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         return view;
