@@ -1,11 +1,13 @@
 package io.reist.sandbox.repos.mvp.model.remote.retrofit;
 
+import java.io.IOException;
 import java.util.List;
 
+import io.reist.sandbox.core.mvp.model.remote.retrofit.RetrofitOnSubscribe;
 import io.reist.sandbox.core.mvp.model.remote.retrofit.RetrofitService;
+import io.reist.sandbox.core.rx.Observable;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoService;
-import rx.Observable;
 
 public class RetrofitRepoService extends RetrofitService<Repo> implements RepoService {
 
@@ -17,12 +19,12 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
 
     @Override
     public Observable<List<Repo>> list() {
-        return gitHubApi.listRepos();
+        return Observable.create(new RetrofitOnSubscribe<>(gitHubApi.listRepos()));
     }
 
     @Override
     public Observable<Repo> byId(Long id) {
-        return gitHubApi.repoById(id);
+        return Observable.create(new RetrofitOnSubscribe<>(gitHubApi.repoById(id)));
     }
 
     @Override
@@ -32,7 +34,11 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
 
     @Override
     public boolean save(Repo repo) {
-        return gitHubApi.save(repo);
+        try {
+            return gitHubApi.save(repo).execute().body();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

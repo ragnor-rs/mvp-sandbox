@@ -55,7 +55,6 @@ dependencies {
     // Network layer
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
-    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
 
     // Database layer
     compile 'com.pushtorefresh.storio:sqlite:1.5.0'

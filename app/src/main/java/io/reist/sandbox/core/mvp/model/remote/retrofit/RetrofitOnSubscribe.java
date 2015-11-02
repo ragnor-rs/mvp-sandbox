@@ -1,13 +1,5 @@
 package io.reist.sandbox.core.mvp.model.remote.retrofit;
 
-import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
-
-import java.io.IOException;
-import java.util.List;
-
-import io.reist.sandbox.core.mvp.model.local.storio.StorIoListOnSubscribe;
-import io.reist.sandbox.core.rx.Func0;
-import io.reist.sandbox.core.rx.Observable;
 import io.reist.sandbox.core.rx.impl.AbstractOnSubscribe;
 import retrofit.Call;
 

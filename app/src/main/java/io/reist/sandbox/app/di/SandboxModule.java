@@ -23,9 +23,6 @@ import dagger.Provides;
 import io.reist.sandbox.app.mvp.model.DbOpenHelper;
 import io.reist.sandbox.core.di.BaseModule;
 import io.reist.sandbox.core.mvp.model.remote.retrofit.NestedFieldNameAdapter;
-import io.reist.sandbox.core.rx.Action1;
-import io.reist.sandbox.core.rx.Func1;
-import io.reist.sandbox.core.rx.Observable;
 import io.reist.sandbox.repos.mvp.model.CachedRepoService;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoService;
@@ -89,7 +86,6 @@ public class SandboxModule {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(GIT_HUB_BASE_URL)
                 .client(httpClient)
                 .build();

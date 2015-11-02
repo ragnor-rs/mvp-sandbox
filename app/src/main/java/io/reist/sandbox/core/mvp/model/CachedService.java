@@ -2,9 +2,9 @@ package io.reist.sandbox.core.mvp.model;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
+import io.reist.sandbox.core.rx.Action1;
+import io.reist.sandbox.core.rx.Func1;
+import io.reist.sandbox.core.rx.Observable;
 
 /**
  * Created by Reist on 11/2/15.

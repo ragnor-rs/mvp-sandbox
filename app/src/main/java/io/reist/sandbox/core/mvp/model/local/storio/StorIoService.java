@@ -12,8 +12,8 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 import java.util.List;
 
 import io.reist.sandbox.core.mvp.model.BaseService;
-import rx.Observable;
-import rx.functions.Func1;
+import io.reist.sandbox.core.rx.Func1;
+import io.reist.sandbox.core.rx.Observable;
 
 /**
  * Created by Reist on 10/23/15.
@@ -38,16 +38,16 @@ public abstract class StorIoService<T> implements BaseService<T> {
 
     @NonNull
     protected final Observable<T> unique(Class<T> entityClass, String tableName, Long id) {
-        return preparedGetBuilder(entityClass)
-                .withQuery(
-                        Query.builder()
-                                .table(tableName)
-                                .where("id = ?")
-                                .whereArgs(id)
-                                .build()
+        return toObservable(
+                    preparedGetBuilder(entityClass)
+                    .withQuery(
+                            Query.builder()
+                                    .table(tableName)
+                                    .where("id = ?")
+                                    .whereArgs(id)
+                                    .build()
+                    )
                 )
-                .prepare()
-                .createObservable()
                 .map(new Func1<List<T>, T>() {
 
                     @Override
@@ -58,6 +58,10 @@ public abstract class StorIoService<T> implements BaseService<T> {
                     }
 
                 });
+    }
+
+    protected static <T> Observable<List<T>> toObservable(PreparedGetListOfObjects.CompleteBuilder<T> builder) {
+        return Observable.create(new StorIoListOnSubscribe<>(builder.prepare()));
     }
 
     @Override

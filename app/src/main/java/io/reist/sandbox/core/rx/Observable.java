@@ -180,7 +180,7 @@ public final class Observable<T> extends Subscriber<T> {
         return new Observable<>(new ConcatWithOnSubscribe<>(o1, o2));
     }
 
-    public Observable<T> takeFirst(Func1<T, Boolean> predicate) {
+    public final Observable<T> first(Func1<T, Boolean> predicate) {
         return new Observable<>(new TakeOnSubscribe<>(this, predicate));
     }
 
