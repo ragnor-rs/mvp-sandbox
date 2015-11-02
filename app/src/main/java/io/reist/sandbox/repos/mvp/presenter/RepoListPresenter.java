@@ -13,7 +13,6 @@ import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.core.mvp.presenter.BasePresenter;
 import io.reist.sandbox.core.mvp.view.BaseView;
-import io.reist.sandbox.repos.di.ReposFragmentComponent;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoService;
 import rx.Observer;
@@ -55,15 +54,13 @@ public class RepoListPresenter extends BasePresenter {
 
         @Override
         public void onNext(List<Repo> repos) {
-            Log.i(TAG, "--- " + Thread.currentThread() + " OBSERVED ---");
-            RepoListAdapter adapter = new RepoListAdapter(repos);
-            ((ReposFragmentComponent) getComponent()).inject(adapter);
-            mRecyclerView.setAdapter(adapter);
+            mRecyclerView.setAdapter(new RepoListAdapter(repos));
+            Log.i(TAG, "--- OBSERVED ON " + Thread.currentThread() + " ---");
         }
 
         @Override
         public void onError(Throwable e) {
-            Log.e(TAG, "Observed error", e);
+            Log.e(TAG, "Error fetching data", e);
             Toast.makeText(getContext(), R.string.github_repo_list_error, Toast.LENGTH_LONG).show();
         }
 

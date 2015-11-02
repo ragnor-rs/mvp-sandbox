@@ -19,7 +19,7 @@ public abstract class CachedService<T> implements BaseService<T> {
         this.remote = remote;
     }
 
-    protected Observable<List<T>> createRemoteListObservable() {
+    protected Observable<List<T>> remoteListWithSave() {
         return remote
                 .list()
                 .doOnNext(new Action1<List<T>>() {
@@ -32,7 +32,7 @@ public abstract class CachedService<T> implements BaseService<T> {
                 });
     }
 
-    protected Observable<T> createRemoteObservable(Long id) {
+    protected Observable<T> remoteByIdWithSave(Long id) {
         return remote
                 .byId(id)
                 .doOnNext(new Action1<T>() {
@@ -47,7 +47,7 @@ public abstract class CachedService<T> implements BaseService<T> {
 
     @Override
     public final Observable<List<T>> list() {
-        return Observable.concat(createRemoteListObservable(), local.list())
+        return Observable.concat(local.list().first(), remoteListWithSave().first())
                 .first(new Func1<List<T>, Boolean>() {
 
                     @Override
@@ -60,7 +60,7 @@ public abstract class CachedService<T> implements BaseService<T> {
 
     @Override
     public final Observable<T> byId(Long id) {
-        return Observable.concat(local.byId(id), createRemoteObservable(id))
+        return Observable.concat(local.byId(id).first(), remoteByIdWithSave(id).first())
                 .first(new Func1<T, Boolean>() {
 
                     @Override
@@ -73,12 +73,12 @@ public abstract class CachedService<T> implements BaseService<T> {
 
     @Override
     public final int save(List<T> list) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public final boolean save(T t) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
 }

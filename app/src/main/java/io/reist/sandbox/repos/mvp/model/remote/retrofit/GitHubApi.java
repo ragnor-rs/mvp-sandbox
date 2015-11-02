@@ -5,7 +5,7 @@ import java.util.List;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import retrofit.http.GET;
 import retrofit.http.POST;
-import retrofit.http.Part;
+import retrofit.http.Path;
 import rx.Observable;
 
 /**
@@ -17,7 +17,7 @@ public interface GitHubApi {
     Observable<List<Repo>> listRepos();
 
     @GET("/repos/{id}")
-    Observable<Repo> repoById(@Part("id") Long id);
+    Observable<Repo> repoById(@Path("id") Long id);
 
     @POST("/repos/edit")
     boolean save(Repo repo);

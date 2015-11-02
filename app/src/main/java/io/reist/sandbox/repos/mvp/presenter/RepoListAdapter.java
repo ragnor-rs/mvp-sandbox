@@ -1,5 +1,6 @@
 package io.reist.sandbox.repos.mvp.presenter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,15 +21,14 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHo
 
     private final List<Repo> repos;
 
-    @Inject
-    LayoutInflater layoutInflater;
-
     public RepoListAdapter(List<Repo> repos) {
         this.repos = repos;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final Context context = parent.getContext();
+        final LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = layoutInflater.inflate(R.layout.github_repo_item, parent, false);
         return new ViewHolder(v);
     }
