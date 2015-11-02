@@ -17,7 +17,6 @@ import io.reist.sandbox.core.rx.AndroidSchedulers;
 import io.reist.sandbox.core.rx.Observer;
 import io.reist.sandbox.core.rx.Schedulers;
 import io.reist.sandbox.core.rx.Subscription;
-import io.reist.sandbox.repos.di.ReposFragmentComponent;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoService;
 
