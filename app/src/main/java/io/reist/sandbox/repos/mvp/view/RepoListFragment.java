@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 import io.reist.sandbox.R;
 import io.reist.sandbox.core.mvp.view.BaseFragment;
 import io.reist.sandbox.core.mvp.view.BaseView;
@@ -44,6 +45,11 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         return view;
+    }
+
+    @OnClick(R.id.create_repo_button)
+    void onCreateRepoClicked(){
+        presenter.createRepo();
     }
 
     @Override

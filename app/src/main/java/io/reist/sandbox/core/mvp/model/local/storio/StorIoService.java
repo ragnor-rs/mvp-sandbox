@@ -1,6 +1,7 @@
 package io.reist.sandbox.core.mvp.model.local.storio;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import io.reist.sandbox.core.mvp.model.BaseService;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
@@ -61,26 +63,38 @@ public abstract class StorIoService<T> implements BaseService<T> {
     }
 
     @Override
-    public final int save(List<T> list) {
-
-        final PutResults<T> putResults = preparedPutBuilder()
+    public final Observable<Integer> save(List<T> list) {
+        return preparedPutBuilder()
                 .objects(list)
                 .prepare()
-                .executeAsBlocking();
-
-        return putResults.numberOfUpdates() + putResults.numberOfInserts();
+                .createObservable()
+                .map(new Func1<PutResults<T>, Integer>() {
+                    @Override
+                    public Integer call(PutResults<T> results) {
+                        return results.numberOfInserts() + results.numberOfUpdates();
+                    }
+                });
 
     }
 
     @Override
-    public final boolean save(T t) {
-
-        final PutResult putResult = preparedPutBuilder()
+    public final Observable<Boolean> save(T t) {
+        return preparedPutBuilder()
                 .object(t)
                 .prepare()
-                .executeAsBlocking();
-
-        return putResult.wasInserted() || putResult.wasUpdated();
+                .createObservable()
+                .doOnNext(new Action1<PutResult>() {
+                    @Override
+                    public void call(PutResult putResult) {
+                        Log.i("DensTest", "saved to db");
+                    }
+                })
+                .map(new Func1<PutResult, Boolean>() {
+                    @Override
+                    public Boolean call(PutResult putResult) {
+                        return putResult.wasInserted();
+                    }
+                });
 
     }
 

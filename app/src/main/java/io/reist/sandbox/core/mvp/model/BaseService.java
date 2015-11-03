@@ -13,8 +13,8 @@ public interface BaseService<T> {
 
     Observable<T> byId(Long id);
 
-    int save(List<T> list);
+    Observable<Integer> save(List<T> list);
 
-    boolean save(T t);
+    Observable<Boolean> save(T t);
 
 }
