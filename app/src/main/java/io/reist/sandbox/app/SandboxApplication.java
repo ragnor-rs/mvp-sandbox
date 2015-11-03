@@ -18,6 +18,9 @@ public class SandboxApplication extends BaseApplication {
             .baseModule(new BaseModule(this))
             .build();
 
+    /**
+     * Util method for creating new view component
+     */
     @Override
     public Object buildComponentFor(BaseView view) {
 

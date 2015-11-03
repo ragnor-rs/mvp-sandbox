@@ -7,6 +7,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import io.reist.sandbox.core.BaseApplication;
 import io.reist.sandbox.core.mvp.view.BaseView;
 
+/**
+ * ComponentCache let you to create and destroy components manually
+ * thereby providing custom scopes for yor view.
+ * In other words this is scope manager for your views.
+ */
 public class ComponentCache {
 
     private final AtomicLong idSequence = new AtomicLong();
@@ -19,6 +24,11 @@ public class ComponentCache {
         this.baseApplication = baseApplication;
     }
 
+    /**
+     * Retrieves component from cache for given view or
+     * creates a new component
+     * @param view - BaseView with provides an identifier to retrieve component from cache
+     */
     public Object getComponentFor(BaseView view) {
 
         Long componentId = view.getComponentId();
@@ -39,6 +49,10 @@ public class ComponentCache {
 
     }
 
+    /**
+     * Destroys component for the given view.
+     * If there's no component for the view nothing will happen.
+     */
     public void invalidateComponentFor(BaseView view) {
         Long componentId = view.getComponentId();
         if (componentId == null) {

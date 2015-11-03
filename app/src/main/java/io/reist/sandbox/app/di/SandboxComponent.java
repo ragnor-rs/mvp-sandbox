@@ -9,6 +9,9 @@ import io.reist.sandbox.repos.di.ReposFragmentComponent;
 @Component(modules = SandboxModule.class)
 public interface SandboxComponent {
 
+    /**
+     * Creates new component
+     */
     ReposFragmentComponent reposFragmentComponent();
 
 }
