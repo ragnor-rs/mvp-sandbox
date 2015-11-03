@@ -18,8 +18,6 @@ import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoService;
 import rx.Observer;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 @Singleton
 public class RepoListPresenter extends BasePresenter {
@@ -38,11 +36,7 @@ public class RepoListPresenter extends BasePresenter {
 
     @Override
     protected void onViewAttached(BaseView view) {
-        subscriptions.add(repoService.list()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new RepoListObserver())
-        );
+        subscribe(repoService.list(), new RepoListObserver());
     }
 
     @Override
@@ -50,7 +44,7 @@ public class RepoListPresenter extends BasePresenter {
     }
 
     public void createRepo() {
-//        getView().showProgress(); //cur how do i get RepoListView here?
+//        getView().showProgress(); //todo parametrise Presenter to push ui updates
         Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
         Random rand = new Random();
         Repo object = new Repo();
@@ -60,12 +54,7 @@ public class RepoListPresenter extends BasePresenter {
         object.name = "name_" + object.id;
         object.url = "url";
 
-        subscriptions.add(
-                repoService.save(object)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new AddRepoSubscriber())
-        );
+        subscribe(repoService.save(object), new AddRepoSubscriber());
     }
 
     private class RepoListObserver implements Observer<List<Repo>> {
@@ -102,7 +91,7 @@ public class RepoListPresenter extends BasePresenter {
 
         @Override
         public void onCompleted() {
-            Log.i("DensTest", "success add repo subscriber");
+            Log.i(TAG, "success add repo subscriber");
             Toast.makeText(getContext(), R.string.github_repo_saved_successfully, Toast.LENGTH_LONG).show();
         }
     }

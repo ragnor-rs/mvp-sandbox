@@ -20,7 +20,6 @@ public interface GitHubApi {
     @GET("/repos/{id}")
     Observable<Repo> repoById(@Path("id") Long id);
 
-    //cur Observable<ofWhat?>
     @POST("/repos")
     Observable<Boolean> save(
             @Body Repo repo

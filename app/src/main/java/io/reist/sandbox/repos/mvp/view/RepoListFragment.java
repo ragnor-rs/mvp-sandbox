@@ -48,7 +48,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     }
 
     @OnClick(R.id.create_repo_button)
-    void onCreateRepoClicked(){
+    void onCreateRepoClicked() {
         presenter.createRepo();
     }
 

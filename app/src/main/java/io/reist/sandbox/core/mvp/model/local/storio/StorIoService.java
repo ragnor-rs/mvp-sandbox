@@ -1,7 +1,6 @@
 package io.reist.sandbox.core.mvp.model.local.storio;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
@@ -14,7 +13,6 @@ import java.util.List;
 
 import io.reist.sandbox.core.mvp.model.BaseService;
 import rx.Observable;
-import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
@@ -83,16 +81,10 @@ public abstract class StorIoService<T> implements BaseService<T> {
                 .object(t)
                 .prepare()
                 .createObservable()
-                .doOnNext(new Action1<PutResult>() {
-                    @Override
-                    public void call(PutResult putResult) {
-                        Log.i("DensTest", "saved to db");
-                    }
-                })
                 .map(new Func1<PutResult, Boolean>() {
                     @Override
                     public Boolean call(PutResult putResult) {
-                        return putResult.wasInserted();
+                        return putResult.wasInserted() || putResult.wasUpdated();
                     }
                 });
 
