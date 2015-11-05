@@ -12,5 +12,6 @@
     <string name="create_repo">Create repo</string>
     <string name="github_repo_saving_list_error">Saving repo error</string>
     <string name="github_repo_saved_successfully">Repo saved successfully</string>
+    <string name="loading">Loading...</string>
 
 </resources>

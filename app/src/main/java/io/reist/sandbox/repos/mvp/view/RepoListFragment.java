@@ -1,5 +1,6 @@
 package io.reist.sandbox.repos.mvp.view;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,20 +14,21 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
 import io.reist.sandbox.core.mvp.view.BaseFragment;
-import io.reist.sandbox.core.mvp.view.BaseView;
 import io.reist.sandbox.repos.di.ReposFragmentComponent;
 import io.reist.sandbox.repos.mvp.presenter.RepoListPresenter;
 
 /**
  * Created by Reist on 10/13/15.
  */
-public class RepoListFragment extends BaseFragment<RepoListPresenter> implements BaseView {
+public class RepoListFragment extends BaseFragment<RepoListPresenter> implements RepoListPresenter.View {
 
     @Bind(R.id.daggertest_repo_recycler_view)
     RecyclerView mRecyclerView;
 
     @Inject
     RepoListPresenter presenter;
+
+    private ProgressDialog loaderDialog;
 
     public RepoListFragment() {
         super(R.layout.github_fragment);
@@ -44,6 +46,9 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        loaderDialog = new ProgressDialog(getActivity());
+        loaderDialog.setMessage(getContext().getString(R.string.loading));
+
         return view;
     }
 
@@ -60,6 +65,17 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     @Override
     protected RepoListPresenter getPresenter() {
         return presenter;
+    }
+
+    @Override
+    public void showLoader(boolean show) {
+        if (show) {
+            loaderDialog.show();
+        } else {
+            if (loaderDialog.isShowing()){
+                loaderDialog.dismiss();
+            }
+        }
     }
 
 }
