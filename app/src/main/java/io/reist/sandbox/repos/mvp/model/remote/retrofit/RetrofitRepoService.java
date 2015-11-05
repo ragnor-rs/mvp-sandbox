@@ -26,12 +26,12 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
     }
 
     @Override
-    public int save(List<Repo> list) {
+    public Observable<Integer> save(List<Repo> list) { //cur this is not what we really get form api
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean save(Repo repo) {
+    public Observable<Boolean> save(Repo repo) {
         return gitHubApi.save(repo);
     }
 

@@ -8,6 +8,7 @@ import rx.functions.Func1;
 
 /**
  * Created by Reist on 11/2/15.
+ * Combines local and remote services
  */
 public abstract class CachedService<T> implements BaseService<T> {
 
@@ -45,6 +46,10 @@ public abstract class CachedService<T> implements BaseService<T> {
                 });
     }
 
+    /**
+     * @return - data from local or remote service.
+     * The data is provided by the one emitted first
+     */
     @Override
     public final Observable<List<T>> list() {
         return Observable.concat(local.list().first(), remoteListWithSave().first())
@@ -58,6 +63,10 @@ public abstract class CachedService<T> implements BaseService<T> {
                 });
     }
 
+    /**
+     * @return - data from local or remote service.
+     * The data is provided by the one emitted first
+     */
     @Override
     public final Observable<T> byId(Long id) {
         return Observable.concat(local.byId(id).first(), remoteByIdWithSave(id).first())
@@ -71,14 +80,24 @@ public abstract class CachedService<T> implements BaseService<T> {
                 });
     }
 
+    /**
+     * Puts data to local and then to remote services sequentially
+     * @param list - to save
+     * @return num of updated items
+     */
     @Override
-    public final int save(List<T> list) {
-        throw new UnsupportedOperationException();
+    public final Observable<Integer> save(List<T> list) { //cur we are getting num of updated items, but what about rest response?
+        return Observable.concat(local.save(list), remote.save(list));
     }
 
+    /**
+     * Puts data to local and then to remote services sequentially
+     * @param t - object to save
+     * @return boolean - whether data saved successfully
+     */
     @Override
-    public final boolean save(T t) {
-        throw new UnsupportedOperationException();
+    public final Observable<Boolean> save(T t) {
+        return Observable.concat(local.save(t), remote.save(t));
     }
 
 }

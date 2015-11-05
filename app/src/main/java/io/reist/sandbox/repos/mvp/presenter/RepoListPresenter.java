@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,9 +17,7 @@ import io.reist.sandbox.core.mvp.view.BaseView;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoService;
 import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import rx.Subscriber;
 
 @Singleton
 public class RepoListPresenter extends BasePresenter {
@@ -30,8 +29,6 @@ public class RepoListPresenter extends BasePresenter {
     @Bind(R.id.daggertest_repo_recycler_view)
     RecyclerView mRecyclerView;
 
-    private Subscription repoListSubscription;
-
     @Inject
     public RepoListPresenter(RepoService repoService) {
         this.repoService = repoService;
@@ -39,15 +36,25 @@ public class RepoListPresenter extends BasePresenter {
 
     @Override
     protected void onViewAttached(BaseView view) {
-        repoListSubscription = repoService.list()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new RepoListObserver());
+        subscribe(repoService.list(), new RepoListObserver());
     }
 
     @Override
     protected void onViewDetached() {
-        repoListSubscription.unsubscribe();
+    }
+
+    public void createRepo() {
+//        getView().showProgress(); //todo parametrise Presenter to push ui updates
+        Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
+        Random rand = new Random();
+        Repo object = new Repo();
+
+        object.id = rand.nextLong();
+        object.author = "author";
+        object.name = "name_" + object.id;
+        object.url = "url";
+
+        subscribe(repoService.save(object), new AddRepoSubscriber());
     }
 
     private class RepoListObserver implements Observer<List<Repo>> {
@@ -61,12 +68,31 @@ public class RepoListPresenter extends BasePresenter {
         @Override
         public void onError(Throwable e) {
             Log.e(TAG, "Error fetching data", e);
-            Toast.makeText(getContext(), R.string.github_repo_list_error, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.github_repo_loading_list_error, Toast.LENGTH_LONG).show();
         }
 
         @Override
-        public void onCompleted() {}
+        public void onCompleted() {
+        }
 
     }
 
+    private class AddRepoSubscriber extends Subscriber<Boolean> {
+        @Override
+        public void onNext(Boolean success) {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.e(TAG, "Error saving data", e);
+            Toast.makeText(getContext(), R.string.github_repo_saving_list_error, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onCompleted() {
+            Log.i(TAG, "success add repo subscriber");
+            Toast.makeText(getContext(), R.string.github_repo_saved_successfully, Toast.LENGTH_LONG).show();
+        }
+    }
 }

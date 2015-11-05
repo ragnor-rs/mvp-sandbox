@@ -61,26 +61,32 @@ public abstract class StorIoService<T> implements BaseService<T> {
     }
 
     @Override
-    public final int save(List<T> list) {
-
-        final PutResults<T> putResults = preparedPutBuilder()
+    public final Observable<Integer> save(List<T> list) {
+        return preparedPutBuilder()
                 .objects(list)
                 .prepare()
-                .executeAsBlocking();
-
-        return putResults.numberOfUpdates() + putResults.numberOfInserts();
+                .createObservable()
+                .map(new Func1<PutResults<T>, Integer>() {
+                    @Override
+                    public Integer call(PutResults<T> results) {
+                        return results.numberOfInserts() + results.numberOfUpdates();
+                    }
+                });
 
     }
 
     @Override
-    public final boolean save(T t) {
-
-        final PutResult putResult = preparedPutBuilder()
+    public final Observable<Boolean> save(T t) {
+        return preparedPutBuilder()
                 .object(t)
                 .prepare()
-                .executeAsBlocking();
-
-        return putResult.wasInserted() || putResult.wasUpdated();
+                .createObservable()
+                .map(new Func1<PutResult, Boolean>() {
+                    @Override
+                    public Boolean call(PutResult putResult) {
+                        return putResult.wasInserted() || putResult.wasUpdated();
+                    }
+                });
 
     }
 
