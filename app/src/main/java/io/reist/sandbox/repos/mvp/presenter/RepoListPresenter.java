@@ -13,14 +13,14 @@ import javax.inject.Singleton;
 import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.core.mvp.presenter.BasePresenter;
-import io.reist.sandbox.core.mvp.view.BaseView;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoService;
+import io.reist.sandbox.repos.mvp.view.RepoListView;
 import rx.Observer;
 import rx.Subscriber;
 
 @Singleton
-public class RepoListPresenter extends BasePresenter<RepoListPresenter.View> {
+public class RepoListPresenter extends BasePresenter<RepoListView> {
 
     private static final String TAG = RepoListPresenter.class.getName();
 
@@ -97,7 +97,4 @@ public class RepoListPresenter extends BasePresenter<RepoListPresenter.View> {
 
     }
 
-    public interface View extends BaseView {
-        void showLoader(boolean show);
-    }
 }

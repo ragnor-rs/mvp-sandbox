@@ -152,12 +152,13 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         return view;
     }
 
+    @SuppressWarnings("unchecked") //todo setView should be checked call
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         ButterKnife.bind(getPresenter(), view);
-        getPresenter().setView(this); //todo unchecked call
+        getPresenter().setView(this);
     }
 
     @Override
@@ -167,13 +168,14 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         stateSaved = true;
     }
 
+    @SuppressWarnings("unchecked") //todo setView should be type safe call
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (!stateSaved) {
             getComponentCache().invalidateComponentFor(this);
         }
-        getPresenter().setView(null); //todo unchecked call
+        getPresenter().setView(null);
     }
 
     /// --- ///

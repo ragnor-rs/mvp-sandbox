@@ -20,7 +20,7 @@ import io.reist.sandbox.repos.mvp.presenter.RepoListPresenter;
 /**
  * Created by Reist on 10/13/15.
  */
-public class RepoListFragment extends BaseFragment<RepoListPresenter> implements RepoListPresenter.View {
+public class RepoListFragment extends BaseFragment<RepoListPresenter> implements RepoListView {
 
     @Bind(R.id.daggertest_repo_recycler_view)
     RecyclerView mRecyclerView;
