@@ -5,7 +5,7 @@ import java.util.List;
 import rx.Observable;
 
 /**
- * Created by Reist on 11/2/15.
+ * Created by Reist on 12/2/15.
  */
 public interface BaseService<T> {
 
