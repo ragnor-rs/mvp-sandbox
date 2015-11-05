@@ -157,7 +157,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         ButterKnife.bind(getPresenter(), view);
-        getPresenter().setView(this);
+        getPresenter().setView(this); //todo unchecked call
     }
 
     @Override
@@ -173,7 +173,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         if (!stateSaved) {
             getComponentCache().invalidateComponentFor(this);
         }
-        getPresenter().setView(null);
+        getPresenter().setView(null); //todo unchecked call
     }
 
     /// --- ///
