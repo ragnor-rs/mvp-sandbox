@@ -5,15 +5,12 @@ import android.support.annotation.NonNull;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
 import com.pushtorefresh.storio.sqlite.operations.put.PreparedPut;
-import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
-import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
 import io.reist.sandbox.core.mvp.model.BaseService;
 import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * Created by Reist on 10/23/15.
@@ -48,16 +45,9 @@ public abstract class StorIoService<T> implements BaseService<T> {
                 )
                 .prepare()
                 .createObservable()
-                .map(new Func1<List<T>, T>() {
-
-                    @Override
-                    public T call(List<T> list) {
-                        return list == null || list.isEmpty() ?
-                                null :
-                                list.get(0);
-                    }
-
-                });
+                .map(list -> list == null || list.isEmpty() ?
+                        null :
+                        list.get(0));
     }
 
     @Override
@@ -66,12 +56,7 @@ public abstract class StorIoService<T> implements BaseService<T> {
                 .objects(list)
                 .prepare()
                 .createObservable()
-                .map(new Func1<PutResults<T>, Integer>() {
-                    @Override
-                    public Integer call(PutResults<T> results) {
-                        return results.numberOfInserts() + results.numberOfUpdates();
-                    }
-                });
+                .map(results -> results.numberOfInserts() + results.numberOfUpdates());
 
     }
 
@@ -81,12 +66,7 @@ public abstract class StorIoService<T> implements BaseService<T> {
                 .object(t)
                 .prepare()
                 .createObservable()
-                .map(new Func1<PutResult, Boolean>() {
-                    @Override
-                    public Boolean call(PutResult putResult) {
-                        return putResult.wasInserted() || putResult.wasUpdated();
-                    }
-                });
+                .map(putResult -> putResult.wasInserted() || putResult.wasUpdated());
 
     }
 

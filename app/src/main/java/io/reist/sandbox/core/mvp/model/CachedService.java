@@ -3,8 +3,6 @@ package io.reist.sandbox.core.mvp.model;
 import java.util.List;
 
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 /**
  * Created by Reist on 11/2/15.
@@ -23,27 +21,13 @@ public abstract class CachedService<T> implements BaseService<T> {
     protected Observable<List<T>> remoteListWithSave() {
         return remote
                 .list()
-                .doOnNext(new Action1<List<T>>() {
-
-                    @Override
-                    public void call(List<T> list) {
-                        local.save(list);
-                    }
-
-                });
+                .doOnNext(local::save);
     }
 
     protected Observable<T> remoteByIdWithSave(Long id) {
         return remote
                 .byId(id)
-                .doOnNext(new Action1<T>() {
-
-                    @Override
-                    public void call(T t) {
-                        local.save(t);
-                    }
-
-                });
+                .doOnNext(local::save);
     }
 
     /**
@@ -53,14 +37,7 @@ public abstract class CachedService<T> implements BaseService<T> {
     @Override
     public final Observable<List<T>> list() {
         return Observable.concat(local.list().first(), remoteListWithSave().first())
-                .first(new Func1<List<T>, Boolean>() {
-
-                    @Override
-                    public Boolean call(List<T> list) {
-                        return !list.isEmpty();
-                    }
-
-                });
+                .first(list -> !list.isEmpty());
     }
 
     /**
@@ -70,14 +47,7 @@ public abstract class CachedService<T> implements BaseService<T> {
     @Override
     public final Observable<T> byId(Long id) {
         return Observable.concat(local.byId(id).first(), remoteByIdWithSave(id).first())
-                .first(new Func1<T, Boolean>() {
-
-                    @Override
-                    public Boolean call(T t) {
-                        return t != null;
-                    }
-
-                });
+                .first(t -> t != null);
     }
 
     /**
