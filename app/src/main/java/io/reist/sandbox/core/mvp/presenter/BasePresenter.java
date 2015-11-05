@@ -12,19 +12,19 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by Reist on 10/15/15.
  */
-public abstract class BasePresenter {
+public abstract class BasePresenter<V extends BaseView> {
 
     private CompositeSubscription subscriptions;
-    private BaseView view;
+    private V view;
 
-    public final void setView(BaseView view) {
+    public final void setView(V view) {
         this.view = view;
         if (view == null) {
             subscriptions.unsubscribe();
             onViewDetached();
         } else {
             subscriptions = new CompositeSubscription();
-            onViewAttached(view);
+            onViewAttached();
         }
     }
 
@@ -37,11 +37,12 @@ public abstract class BasePresenter {
         );
     }
 
-    protected abstract void onViewAttached(BaseView view);
+    protected abstract void onViewAttached();
 
-    protected abstract void onViewDetached();
+    protected void onViewDetached() {
+    }
 
-    public final BaseView getView() {
+    public final V getView() {
         return view;
     }
 
