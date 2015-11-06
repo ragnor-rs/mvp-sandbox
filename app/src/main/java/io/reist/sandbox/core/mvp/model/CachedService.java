@@ -21,18 +21,18 @@ public abstract class CachedService<T> implements BaseService<T> {
     protected Observable<List<T>> remoteListWithSave() {
         return remote
                 .list()
-                .doOnNext(local::save);
+                .doOnNext(list -> local.save(list).subscribe());
     }
 
     protected Observable<T> remoteByIdWithSave(Long id) {
         return remote
                 .byId(id)
-                .doOnNext(local::save);
+                .doOnNext(item -> local.save(item).subscribe());
     }
 
     /**
      * @return - data from local or remote service.
-     * The data is provided by the one emitted first
+     * The data is provided by the observer, which emitted first
      */
     @Override
     public final Observable<List<T>> list() {
@@ -52,6 +52,7 @@ public abstract class CachedService<T> implements BaseService<T> {
 
     /**
      * Puts data to local and then to remote services sequentially
+     *
      * @param list - to save
      * @return num of updated items
      */
@@ -62,6 +63,7 @@ public abstract class CachedService<T> implements BaseService<T> {
 
     /**
      * Puts data to local and then to remote services sequentially
+     *
      * @param t - object to save
      * @return boolean - whether data saved successfully
      */
