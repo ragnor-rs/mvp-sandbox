@@ -12,13 +12,13 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
-import io.reist.sandbox.core.mvp.model.BaseService;
+import io.reist.sandbox.core.mvp.model.AbstractBaseService;
 import rx.Observable;
 
 /**
  * Created by Reist on 10/23/15.
  */
-public abstract class StorIoService<T> implements BaseService<T> {
+public abstract class StorIoService<T> extends AbstractBaseService<T> {
 
     private final StorIOSQLite storIoSqLite;
 
@@ -52,28 +52,6 @@ public abstract class StorIoService<T> implements BaseService<T> {
                 .map(list -> list == null || list.isEmpty() ?
                         null :
                         list.get(0));
-    }
-
-    @RxLogObservable
-    @Override
-    public final Observable<Integer> save(List<T> list) {
-        return preparedPutBuilder()
-                .objects(list)
-                .prepare()
-                .createObservable()
-                .map(results -> results.numberOfInserts() + results.numberOfUpdates());
-
-    }
-
-    @RxLogObservable
-    @Override
-    public final Observable<Boolean> save(T t) {
-        return preparedPutBuilder()
-                .object(t)
-                .prepare()
-                .createObservable()
-                .map(putResult -> putResult.wasInserted() || putResult.wasUpdated());
-
     }
 
     @Override

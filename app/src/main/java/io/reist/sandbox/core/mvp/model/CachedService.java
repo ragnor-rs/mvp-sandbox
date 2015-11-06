@@ -10,7 +10,7 @@ import rx.Observable;
  * Created by Reist on 11/2/15.
  * Combines local and remote services
  */
-public abstract class CachedService<T> implements BaseService<T> {
+public abstract class CachedService<T> extends AbstractBaseService<T> {
 
     private final BaseService<T> local;
     private final BaseService<T> remote;
