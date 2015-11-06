@@ -27,4 +27,8 @@ public class Repo {
     @StorIOSQLiteColumn(name = ReposTable.COLUMN_AUTHOR)
     public String author;
 
+    @Override
+    public String toString() {
+        return id + "_" + name;
+    }
 }

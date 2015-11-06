@@ -1,5 +1,6 @@
 package io.reist.sandbox.repos.mvp.model.local.storio;
 
+import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 
@@ -16,6 +17,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
         super(storIoSqLite);
     }
 
+    @RxLogObservable
     @Override
     public Observable<List<Repo>> list() {
         return preparedGetBuilder(Repo.class)
@@ -24,6 +26,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 .createObservable();
     }
 
+    @RxLogObservable
     @Override
     public Observable<Repo> byId(Long id) {
         return unique(Repo.class, ReposTable.TABLE_NAME, id);

@@ -2,20 +2,23 @@ package io.reist.sandbox.core.mvp.model.local.storio;
 
 import android.support.annotation.NonNull;
 
+import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
 import com.pushtorefresh.storio.sqlite.operations.put.PreparedPut;
+import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
+import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
-import io.reist.sandbox.core.mvp.model.BaseService;
+import io.reist.sandbox.core.mvp.model.AbstractBaseService;
 import rx.Observable;
 
 /**
  * Created by Reist on 10/23/15.
  */
-public abstract class StorIoService<T> implements BaseService<T> {
+public abstract class StorIoService<T> extends AbstractBaseService<T> {
 
     private final StorIOSQLite storIoSqLite;
 
@@ -33,6 +36,7 @@ public abstract class StorIoService<T> implements BaseService<T> {
         return storIoSqLite.put();
     }
 
+    @RxLogObservable
     @NonNull
     protected final Observable<T> unique(Class<T> entityClass, String tableName, Long id) {
         return preparedGetBuilder(entityClass)
@@ -51,22 +55,26 @@ public abstract class StorIoService<T> implements BaseService<T> {
     }
 
     @Override
-    public final Observable<Integer> save(List<T> list) {
-        return preparedPutBuilder()
+    public final int saveSync(List<T> list) {
+
+        final PutResults<T> putResults = preparedPutBuilder()
                 .objects(list)
                 .prepare()
-                .createObservable()
-                .map(results -> results.numberOfInserts() + results.numberOfUpdates());
+                .executeAsBlocking();
+
+        return putResults.numberOfUpdates() + putResults.numberOfInserts();
 
     }
 
     @Override
-    public final Observable<Boolean> save(T t) {
-        return preparedPutBuilder()
+    public final boolean saveSync(T t) {
+
+        final PutResult putResult = preparedPutBuilder()
                 .object(t)
                 .prepare()
-                .createObservable()
-                .map(putResult -> putResult.wasInserted() || putResult.wasUpdated());
+                .executeAsBlocking();
+
+        return putResult.wasInserted() || putResult.wasUpdated();
 
     }
 

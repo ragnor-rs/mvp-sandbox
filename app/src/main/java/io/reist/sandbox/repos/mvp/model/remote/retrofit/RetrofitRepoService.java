@@ -1,5 +1,7 @@
 package io.reist.sandbox.repos.mvp.model.remote.retrofit;
 
+import com.fernandocejas.frodo.annotation.RxLogObservable;
+
 import java.util.List;
 
 import io.reist.sandbox.core.mvp.model.remote.retrofit.RetrofitService;
@@ -15,24 +17,38 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
         this.gitHubApi = gitHubApi;
     }
 
+    @RxLogObservable
     @Override
     public Observable<List<Repo>> list() {
         return gitHubApi.listRepos();
     }
 
+    @RxLogObservable
     @Override
     public Observable<Repo> byId(Long id) {
         return gitHubApi.repoById(id);
     }
 
+    @RxLogObservable
     @Override
     public Observable<Integer> save(List<Repo> list) { //cur this is not what we really get form api
         throw new UnsupportedOperationException();
     }
 
+    @RxLogObservable
     @Override
     public Observable<Boolean> save(Repo repo) {
         return gitHubApi.save(repo);
+    }
+
+    @Override
+    public int saveSync(List<Repo> list) {
+        throw new UnsupportedOperationException("you cannot save make api calls synchronously");
+    }
+
+    @Override
+    public boolean saveSync(Repo repo) {
+        throw new UnsupportedOperationException("you cannot save make api calls synchronously");
     }
 
 }
