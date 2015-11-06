@@ -13,4 +13,3 @@ in MVP (Model, View, Presenter).
 
 This application has two dagger2 scopes. One is common scope which is implemented by creating component in Application.class.
 And the other one is handled manually by creating and destroying components for current view via ComponentCache.
-
