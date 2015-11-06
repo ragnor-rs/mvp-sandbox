@@ -2,6 +2,7 @@ package io.reist.sandbox.core.mvp.model.local.storio;
 
 import android.support.annotation.NonNull;
 
+import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
 import com.pushtorefresh.storio.sqlite.operations.put.PreparedPut;
@@ -35,6 +36,7 @@ public abstract class StorIoService<T> implements BaseService<T> {
         return storIoSqLite.put();
     }
 
+    @RxLogObservable
     @NonNull
     protected final Observable<T> unique(Class<T> entityClass, String tableName, Long id) {
         return preparedGetBuilder(entityClass)
@@ -52,6 +54,7 @@ public abstract class StorIoService<T> implements BaseService<T> {
                         list.get(0));
     }
 
+    @RxLogObservable
     @Override
     public final Observable<Integer> save(List<T> list) {
         return preparedPutBuilder()
@@ -62,6 +65,7 @@ public abstract class StorIoService<T> implements BaseService<T> {
 
     }
 
+    @RxLogObservable
     @Override
     public final Observable<Boolean> save(T t) {
         return preparedPutBuilder()
