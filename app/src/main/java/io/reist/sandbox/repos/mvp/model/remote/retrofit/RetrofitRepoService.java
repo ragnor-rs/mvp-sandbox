@@ -6,10 +6,9 @@ import java.util.List;
 
 import io.reist.sandbox.core.mvp.model.remote.retrofit.RetrofitService;
 import io.reist.sandbox.repos.mvp.model.Repo;
-import io.reist.sandbox.repos.mvp.model.RepoService;
 import rx.Observable;
 
-public class RetrofitRepoService extends RetrofitService<Repo> implements RepoService {
+public class RetrofitRepoService extends RetrofitService<Repo> {
 
     private final GitHubApi gitHubApi;
 

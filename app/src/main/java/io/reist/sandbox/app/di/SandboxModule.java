@@ -22,10 +22,10 @@ import dagger.Module;
 import dagger.Provides;
 import io.reist.sandbox.app.mvp.model.DbOpenHelper;
 import io.reist.sandbox.core.di.BaseModule;
+import io.reist.sandbox.core.mvp.model.BaseService;
 import io.reist.sandbox.core.mvp.model.remote.retrofit.NestedFieldNameAdapter;
 import io.reist.sandbox.repos.mvp.model.CachedRepoService;
 import io.reist.sandbox.repos.mvp.model.Repo;
-import io.reist.sandbox.repos.mvp.model.RepoService;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLiteGetResolver;
 import io.reist.sandbox.repos.mvp.model.RepoStorIOSQLitePutResolver;
@@ -97,19 +97,19 @@ public class SandboxModule {
     }
 
     @Provides @Singleton @Named(SandboxModule.LOCAL_SERVICE)
-    RepoService localRepoService(StorIOSQLite storIoSqLite) {
+    BaseService<Repo> localRepoService(StorIOSQLite storIoSqLite) {
         return new StorIoRepoService(storIoSqLite);
     }
 
     @Provides @Singleton @Named(SandboxModule.REMOTE_SERVICE)
-    RepoService remoteRepoService(GitHubApi gitHubApi) {
+    BaseService<Repo> remoteRepoService(GitHubApi gitHubApi) {
         return new RetrofitRepoService(gitHubApi);
     }
 
     @Provides @Singleton
-    RepoService repoService(
-            @Named(SandboxModule.LOCAL_SERVICE) RepoService local,
-            @Named(SandboxModule.REMOTE_SERVICE) RepoService remote
+    BaseService<Repo> repoService(
+            @Named(SandboxModule.LOCAL_SERVICE) BaseService<Repo> local,
+            @Named(SandboxModule.REMOTE_SERVICE) BaseService<Repo> remote
     ) {
         return new CachedRepoService(local, remote);
     }
