@@ -21,13 +21,13 @@ public abstract class CachedService<T> implements BaseService<T> {
     protected Observable<List<T>> remoteListWithSave() {
         return remote
                 .list()
-                .doOnNext(list -> local.save(list).subscribe());
+                .doOnNext(local::saveSync);
     }
 
     protected Observable<T> remoteByIdWithSave(Long id) {
         return remote
                 .byId(id)
-                .doOnNext(item -> local.save(item).subscribe());
+                .doOnNext(local::saveSync);
     }
 
     /**
@@ -70,6 +70,16 @@ public abstract class CachedService<T> implements BaseService<T> {
     @Override
     public final Observable<Boolean> save(T t) {
         return Observable.concat(local.save(t), remote.save(t));
+    }
+
+    @Override
+    public int saveSync(List<T> list) {
+        return local.saveSync(list);
+    }
+
+    @Override
+    public boolean saveSync(T t) {
+        return local.saveSync(t);// && remote.saveSync(t); //todo remote.saveSync unsupported
     }
 
 }

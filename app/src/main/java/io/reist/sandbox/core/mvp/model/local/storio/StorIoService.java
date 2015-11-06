@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
 import com.pushtorefresh.storio.sqlite.operations.put.PreparedPut;
+import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
+import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
@@ -67,6 +69,30 @@ public abstract class StorIoService<T> implements BaseService<T> {
                 .prepare()
                 .createObservable()
                 .map(putResult -> putResult.wasInserted() || putResult.wasUpdated());
+
+    }
+
+    @Override
+    public final int saveSync(List<T> list) {
+
+        final PutResults<T> putResults = preparedPutBuilder()
+                .objects(list)
+                .prepare()
+                .executeAsBlocking();
+
+        return putResults.numberOfUpdates() + putResults.numberOfInserts();
+
+    }
+
+    @Override
+    public final boolean saveSync(T t) {
+
+        final PutResult putResult = preparedPutBuilder()
+                .object(t)
+                .prepare()
+                .executeAsBlocking();
+
+        return putResult.wasInserted() || putResult.wasUpdated();
 
     }
 

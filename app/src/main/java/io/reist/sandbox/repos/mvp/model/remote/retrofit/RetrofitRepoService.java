@@ -35,4 +35,14 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
         return gitHubApi.save(repo);
     }
 
+    @Override
+    public int saveSync(List<Repo> list) {
+        throw new UnsupportedOperationException("you cannot save make api calls synchronously");
+    }
+
+    @Override
+    public boolean saveSync(Repo repo) {
+        throw new UnsupportedOperationException("you cannot save make api calls synchronously");
+    }
+
 }
