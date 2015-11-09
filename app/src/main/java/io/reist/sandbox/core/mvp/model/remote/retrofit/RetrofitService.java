@@ -1,8 +1,9 @@
 package io.reist.sandbox.core.mvp.model.remote.retrofit;
 
-import io.reist.sandbox.core.mvp.model.BaseService;
+import io.reist.sandbox.core.mvp.model.AbstractBaseService;
 
 /**
  * Created by Reist on 11/2/15.
  */
-public abstract class RetrofitService<T> implements BaseService<T> {}
+public abstract class RetrofitService<T> extends AbstractBaseService<T> {
+}
