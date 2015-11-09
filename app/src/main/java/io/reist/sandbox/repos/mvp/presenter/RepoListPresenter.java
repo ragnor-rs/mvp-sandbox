@@ -12,6 +12,7 @@ import javax.inject.Singleton;
 
 import butterknife.Bind;
 import io.reist.sandbox.R;
+import io.reist.sandbox.app.mvp.model.ResponseModel;
 import io.reist.sandbox.core.mvp.presenter.BasePresenter;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoService;
@@ -45,7 +46,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         Random rand = new Random();
         Repo object = new Repo();
 
-        object.id = new Long(rand.nextInt(100));
+        object.id = Long.valueOf(rand.nextInt(100));
         object.author = "author";
         object.name = "name_" + object.id;
         object.url = "url";
@@ -53,11 +54,11 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         subscribe(repoService.save(object), new AddRepoSubscriber());
     }
 
-    private class RepoListObserver implements Observer<List<Repo>> {
+    private class RepoListObserver implements Observer<ResponseModel<List<Repo>>> {
 
         @Override
-        public void onNext(List<Repo> repos) {
-            mRecyclerView.setAdapter(new RepoListAdapter(repos));
+        public void onNext(ResponseModel<List<Repo>> response) {
+            mRecyclerView.setAdapter(new RepoListAdapter(response.data));
             Log.i(TAG, "--- OBSERVED ON " + Thread.currentThread() + " ---");
             getView().showLoader(false);
         }

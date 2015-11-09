@@ -6,6 +6,7 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
+import io.reist.sandbox.app.mvp.model.ResponseModel;
 import io.reist.sandbox.core.mvp.model.local.storio.StorIoService;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoService;
@@ -19,17 +20,18 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
 
     @RxLogObservable
     @Override
-    public Observable<List<Repo>> list() {
+    public Observable<ResponseModel<List<Repo>>> list() {
         return preparedGetBuilder(Repo.class)
                 .withQuery(Query.builder().table(ReposTable.TABLE_NAME).build())
                 .prepare()
-                .createObservable();
+                .createObservable()
+                .map(ResponseModel::new);
     }
 
     @RxLogObservable
     @Override
-    public Observable<Repo> byId(Long id) {
-        return unique(Repo.class, ReposTable.TABLE_NAME, id);
+    public Observable<ResponseModel<Repo>> byId(Long id) {
+        return unique(Repo.class, ReposTable.TABLE_NAME, id).map(ResponseModel::new);
     }
 
 }

@@ -4,6 +4,7 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 
 import java.util.List;
 
+import io.reist.sandbox.app.mvp.model.ResponseModel;
 import rx.Observable;
 
 /**
@@ -21,17 +22,17 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     }
 
     @RxLogObservable
-    protected Observable<List<T>> remoteListWithSave() {
+    protected Observable<ResponseModel<List<T>>> remoteListWithSave() {
         return remote
                 .list()
-                .doOnNext(local::saveSync);
+                .doOnNext(response -> local.saveSync(response.data));
     }
 
     @RxLogObservable
-    protected Observable<T> remoteByIdWithSave(Long id) {
+    protected Observable<ResponseModel<T>> remoteByIdWithSave(Long id) {
         return remote
                 .byId(id)
-                .doOnNext(local::saveSync);
+                .doOnNext(response -> local.saveSync(response.data));
     }
 
     /**
@@ -40,9 +41,9 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
      */
     @RxLogObservable
     @Override
-    public final Observable<List<T>> list() {
+    public final Observable<ResponseModel<List<T>>> list() {
         return Observable.merge(local.list(), remoteListWithSave())
-                .filter(list -> !list.isEmpty());
+                .filter(response -> response.data != null);
     }
 
     /**
@@ -51,9 +52,9 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
      */
     @RxLogObservable
     @Override
-    public final Observable<T> byId(Long id) {
-        return Observable.concat(local.byId(id).first(), remoteByIdWithSave(id).first())
-                .first(t -> t != null);
+    public final Observable<ResponseModel<T>> byId(Long id) {
+        return Observable.concat(local.byId(id), remoteByIdWithSave(id))
+                .filter(t -> t != null);
     }
 
     /**
