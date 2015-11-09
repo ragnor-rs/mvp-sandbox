@@ -1,5 +1,7 @@
 package io.reist.sandbox.core.mvp.model.remote.retrofit;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -8,7 +10,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.annotations.SerializedName;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -29,38 +33,61 @@ public class NestedFieldNameAdapter implements JsonDeserializer<Object> {
 
     @Override
     public Object deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        Object o = defaultGson.fromJson(json, typeOfT);
-        Class rootClass = (Class) ((ParameterizedType) typeOfT).getRawType();
-        if (rootClass.equals(List.class)) {
-            JsonArray jsonArray = json.getAsJsonArray();
-            for (int i = 0; i < jsonArray.size(); i++) {
-                Object entity = ((List) o).get(i);
-                if (entity == null) {
-                    continue;
+        return fill(
+                defaultGson.fromJson(json, typeOfT),
+                json,
+                (Class) ((ParameterizedType) typeOfT).getRawType()
+        );
+    }
+
+    @Nullable
+    private Object fill(Object o, JsonElement json, Class<?> rootClass) {
+        if (!json.isJsonPrimitive()) {
+            if (List.class.isAssignableFrom(rootClass) || rootClass.isArray()) {
+                JsonArray jsonArray = json.getAsJsonArray();
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    Object entity = rootClass.isArray() ?
+                            Array.get(o, i) :
+                            ((List) o).get(i);
+                    if (entity == null) {
+                        continue;
+                    }
+                    JsonObject entityJson = jsonArray.get(i).getAsJsonObject();
+                    injectNestedFields(entityJson, entity);
                 }
-                JsonObject entityJson = jsonArray.get(i).getAsJsonObject();
-                injectNestedFields(entityJson, entity);
+            } else if (o != null) {
+                injectNestedFields(json.getAsJsonObject(), o);
             }
-        } else if (o != null) {
-            injectNestedFields(json.getAsJsonObject(), o);
         }
         return o;
     }
 
-    private void injectNestedFields(JsonObject entityJson, Object entity) {
+    private void injectNestedFields(JsonObject jsonObject, Object entity) {
         Class entityClass = entity.getClass();
         Field[] fields = entityClass.getFields();
         for (Field f : fields) {
 
-            NestedFieldName annotation = f.getAnnotation(NestedFieldName.class);
-            if (annotation == null) {
+            String fieldName = f.getName();
+
+            NestedFieldName nestedFieldName = f.getAnnotation(NestedFieldName.class);
+            if (nestedFieldName == null) {
+                try {
+                    Object o = f.get(entity);
+                    if (o != null) {
+                        SerializedName serializedName = f.getAnnotation(SerializedName.class);
+                        JsonElement json = jsonObject.get(serializedName != null ? serializedName.value() : fieldName);
+                        fill(o, json, o.getClass());
+                    }
+                } catch (IllegalAccessException e) {
+                    throw new JsonParseException(e);
+                }
                 continue;
             }
-            String path = annotation.value();
+            String path = nestedFieldName.value();
 
             JsonElement fieldElement = null;
             String[] pathSegments = path.split("\\.");
-            JsonObject parentJson = entityJson;
+            JsonObject parentJson = jsonObject;
             for (String segment : pathSegments) {
                 if (fieldElement != null) {
                     parentJson = fieldElement.getAsJsonObject();
