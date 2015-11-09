@@ -12,9 +12,9 @@ import javax.inject.Singleton;
 
 import butterknife.Bind;
 import io.reist.sandbox.R;
+import io.reist.sandbox.core.mvp.model.BaseService;
 import io.reist.sandbox.core.mvp.presenter.BasePresenter;
 import io.reist.sandbox.repos.mvp.model.Repo;
-import io.reist.sandbox.repos.mvp.model.RepoService;
 import io.reist.sandbox.repos.mvp.view.RepoListView;
 import rx.Observer;
 import rx.Subscriber;
@@ -24,13 +24,13 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
 
     private static final String TAG = RepoListPresenter.class.getName();
 
-    private final RepoService repoService;
+    private final BaseService<Repo> repoService;
 
     @Bind(R.id.daggertest_repo_recycler_view)
     RecyclerView mRecyclerView;
 
     @Inject
-    public RepoListPresenter(RepoService repoService) {
+    public RepoListPresenter(BaseService<Repo> repoService) {
         this.repoService = repoService;
     }
 

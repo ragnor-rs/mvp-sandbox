@@ -8,10 +8,9 @@ import java.util.List;
 
 import io.reist.sandbox.core.mvp.model.local.storio.StorIoService;
 import io.reist.sandbox.repos.mvp.model.Repo;
-import io.reist.sandbox.repos.mvp.model.RepoService;
 import rx.Observable;
 
-public class StorIoRepoService extends StorIoService<Repo> implements RepoService {
+public class StorIoRepoService extends StorIoService<Repo> {
 
     public StorIoRepoService(StorIOSQLite storIoSqLite) {
         super(storIoSqLite);
