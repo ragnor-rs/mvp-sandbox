@@ -41,8 +41,8 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     @RxLogObservable
     @Override
     public final Observable<List<T>> list() {
-        return Observable.concat(local.list().first(), remoteListWithSave().first())
-                .first(list -> !list.isEmpty());
+        return Observable.merge(local.list(), remoteListWithSave())
+                .filter(list -> !list.isEmpty());
     }
 
     /**
