@@ -2,6 +2,7 @@ package io.reist.sandbox.core.mvp.model;
 
 import java.util.List;
 
+import io.reist.sandbox.app.mvp.model.ResponseModel;
 import rx.Observable;
 
 /**
@@ -9,9 +10,9 @@ import rx.Observable;
  */
 public interface BaseService<T> {
 
-    Observable<List<T>> list();
+    Observable<ResponseModel<List<T>>> list();
 
-    Observable<T> byId(Long id);
+    Observable<ResponseModel<T>> byId(Long id);
 
     Observable<Integer> save(List<T> list);
 

@@ -4,6 +4,7 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 
 import java.util.List;
 
+import io.reist.sandbox.app.mvp.model.ResponseModel;
 import io.reist.sandbox.core.mvp.model.remote.retrofit.RetrofitService;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoService;
@@ -19,13 +20,13 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
 
     @RxLogObservable
     @Override
-    public Observable<List<Repo>> list() {
+    public Observable<ResponseModel<List<Repo>>> list() {
         return gitHubApi.listRepos();
     }
 
     @RxLogObservable
     @Override
-    public Observable<Repo> byId(Long id) {
+    public Observable<ResponseModel<Repo>> byId(Long id) {
         return gitHubApi.repoById(id);
     }
 

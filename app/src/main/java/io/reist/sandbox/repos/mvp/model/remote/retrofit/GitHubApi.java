@@ -2,6 +2,7 @@ package io.reist.sandbox.repos.mvp.model.remote.retrofit;
 
 import java.util.List;
 
+import io.reist.sandbox.app.mvp.model.ResponseModel;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -15,10 +16,10 @@ import rx.Observable;
 public interface GitHubApi {
 
     @GET("/repos")
-    Observable<List<Repo>> listRepos();
+    Observable<ResponseModel<List<Repo>>> listRepos();
 
     @GET("/repos/{id}")
-    Observable<Repo> repoById(@Path("id") Long id);
+    Observable<ResponseModel<Repo>> repoById(@Path("id") Long id);
 
     @POST("/repos")
     Observable<Boolean> save(
