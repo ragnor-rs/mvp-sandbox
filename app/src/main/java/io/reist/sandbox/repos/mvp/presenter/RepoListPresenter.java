@@ -45,7 +45,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         Random rand = new Random();
         Repo object = new Repo();
 
-        object.id = rand.nextLong();
+        object.id = new Long(rand.nextInt(100));
         object.author = "author";
         object.name = "name_" + object.id;
         object.url = "url";

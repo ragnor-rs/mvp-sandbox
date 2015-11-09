@@ -29,6 +29,6 @@ public class Repo {
 
     @Override
     public String toString() {
-        return id + "_" + name;
+        return name;
     }
 }
