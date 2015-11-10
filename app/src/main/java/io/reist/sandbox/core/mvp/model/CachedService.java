@@ -42,7 +42,6 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     @RxLogObservable
     @Override
     public final Observable<ResponseModel<List<T>>> list() {
-
         return Observable.merge(
                 local.list(),
                 remoteListWithSave().onErrorResumeNext((t) -> {
@@ -51,6 +50,7 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
                     return Observable.just(responseWithError);
                 }))
                 .filter(response -> response.getData() != null && !response.getData().isEmpty() || !response.isSuccessful());
+
     }
 
     /**
