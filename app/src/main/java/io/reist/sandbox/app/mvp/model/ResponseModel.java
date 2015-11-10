@@ -8,7 +8,9 @@ import com.google.gson.annotations.SerializedName;
 public class ResponseModel<T> {
 
     @SerializedName(ResponseJson.FIELD_DATA)
-    public T data;
+    private T data;
+
+    private Error error;
 
     public ResponseModel(T t) {
         data = t;
@@ -17,5 +19,28 @@ public class ResponseModel<T> {
     public ResponseModel() {
     }
 
+    public void setError(Error error) {
+        this.error = error;
+    }
+
+    public boolean isSuccessful() {
+        return error == null;
+    }
+
+    public Error getError() {
+        return error;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public static class Error {
+        private final String message;
+
+        public Error(String message) {
+            this.message = message;
+        }
+    }
 }
 

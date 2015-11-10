@@ -25,14 +25,14 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     protected Observable<ResponseModel<List<T>>> remoteListWithSave() {
         return remote
                 .list()
-                .doOnNext(response -> local.saveSync(response.data));
+                .doOnNext(response -> local.saveSync(response.getData()));
     }
 
     @RxLogObservable
     protected Observable<ResponseModel<T>> remoteByIdWithSave(Long id) {
         return remote
                 .byId(id)
-                .doOnNext(response -> local.saveSync(response.data));
+                .doOnNext(response -> local.saveSync(response.getData()));
     }
 
     /**
@@ -42,8 +42,15 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     @RxLogObservable
     @Override
     public final Observable<ResponseModel<List<T>>> list() {
-        return Observable.merge(local.list(), remoteListWithSave())
-                .filter(response -> response.data != null);
+
+        return Observable.merge(
+                local.list(),
+                remoteListWithSave().onErrorResumeNext((t) -> {
+                    ResponseModel<List<T>> responseWithError = new ResponseModel<>();
+                    responseWithError.setError(new ResponseModel.Error("network error occured"));
+                    return Observable.just(responseWithError);
+                }))
+                .filter(response -> response.getData() != null && !response.getData().isEmpty() || !response.isSuccessful());
     }
 
     /**

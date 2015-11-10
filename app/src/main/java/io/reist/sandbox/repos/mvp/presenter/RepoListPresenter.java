@@ -1,6 +1,5 @@
 package io.reist.sandbox.repos.mvp.presenter;
 
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,7 +9,6 @@ import java.util.Random;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.mvp.model.ResponseModel;
 import io.reist.sandbox.core.mvp.presenter.BasePresenter;
@@ -27,9 +25,6 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
 
     private final RepoService repoService;
 
-    @Bind(R.id.daggertest_repo_recycler_view)
-    RecyclerView mRecyclerView;
-
     @Inject
     public RepoListPresenter(RepoService repoService) {
         this.repoService = repoService;
@@ -38,6 +33,10 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
     @Override
     protected void onViewAttached() {
         getView().showLoader(true);
+        loadData();
+    }
+
+    public void loadData() {
         subscribe(repoService.list(), new RepoListObserver());
     }
 
@@ -58,9 +57,16 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
 
         @Override
         public void onNext(ResponseModel<List<Repo>> response) {
-            mRecyclerView.setAdapter(new RepoListAdapter(response.data));
             Log.i(TAG, "--- OBSERVED ON " + Thread.currentThread() + " ---");
-            getView().showLoader(false);
+            RepoListView view = getView();
+            if (response.isSuccessful()) {
+                Log.d(TAG, "successfully loaded " + response.getData().size() + " items");
+                view.displayData(response.getData());
+                view.showLoader(false);
+            } else {
+                Log.w(TAG, "network error occured");
+                view.displayNetworkError(response.getError());
+            }
         }
 
         @Override
