@@ -25,7 +25,8 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     protected Observable<ResponseModel<List<T>>> remoteListWithSave() {
         return remote
                 .list()
-                .doOnNext(response -> local.saveSync(response.getData()));
+                .doOnNext(response -> local.saveSync(response.getData()))
+                .filter(response -> !response.isSuccessful());
     }
 
     @RxLogObservable
@@ -36,32 +37,39 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     }
 
     /**
-     * @return - data from local or remote service.
-     * The data is provided by the observer, which emitted first
+     * @return - data from local service and initiates remote service.
+     * Remote service can end up with error (f.e. network error), which will be emitted wrapped in ResponseModel.Error
+     * On success remote service saves data to local service, which should emit updated data immediately
      */
     @RxLogObservable
     @Override
     public final Observable<ResponseModel<List<T>>> list() {
         return Observable.merge(
                 local.list(),
-                remoteListWithSave().onErrorResumeNext((t) -> {
-                    ResponseModel<List<T>> responseWithError = new ResponseModel<>();
-                    responseWithError.setError(new ResponseModel.Error("network error occured"));
-                    return Observable.just(responseWithError);
-                }))
+                remoteListWithSave()
+                        .onErrorResumeNext((t) -> {
+                            ResponseModel<List<T>> responseWithError = new ResponseModel<>();
+                            responseWithError.setError(new ResponseModel.Error("network error occured"));
+                            return Observable.just(responseWithError);
+                        }))
                 .filter(response -> response.getData() != null && !response.getData().isEmpty() || !response.isSuccessful());
-
     }
 
     /**
-     * @return - data from local or remote service.
-     * The data is provided by the one emitted first
+     * @see CachedService#list()
      */
     @RxLogObservable
     @Override
     public final Observable<ResponseModel<T>> byId(Long id) {
-        return Observable.concat(local.byId(id), remoteByIdWithSave(id))
-                .filter(t -> t != null);
+        return Observable.merge(
+                local.byId(id),
+                remoteByIdWithSave(id)
+                        .onErrorResumeNext((t) -> {
+                            ResponseModel<T> responseWithError = new ResponseModel<>();
+                            responseWithError.setError(new ResponseModel.Error("network error occured"));
+                            return Observable.just(responseWithError);
+                        }))
+                .filter(response -> response.getData() != null || !response.isSuccessful());
     }
 
     /**
