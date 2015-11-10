@@ -15,7 +15,7 @@ import io.reist.sandbox.R;
 /**
  * Created by defuera on 10/11/2015.
  */
-public class LoaderView extends FrameLayout { //cur is this right package for this class?
+public class LoaderView extends FrameLayout {
 
     @Bind(R.id.progress_bar)
     View progressBar;

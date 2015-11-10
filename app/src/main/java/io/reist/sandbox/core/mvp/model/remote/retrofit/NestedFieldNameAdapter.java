@@ -64,7 +64,7 @@ public class NestedFieldNameAdapter implements JsonDeserializer<Object> {
 
     private void injectNestedFields(JsonObject jsonObject, Object entity) {
         Class entityClass = entity.getClass();
-        Field[] fields = entityClass.getFields();
+        Field[] fields = entityClass.getDeclaredFields();
         for (Field f : fields) {
 
             String fieldName = f.getName();
@@ -72,7 +72,10 @@ public class NestedFieldNameAdapter implements JsonDeserializer<Object> {
             NestedFieldName nestedFieldName = f.getAnnotation(NestedFieldName.class);
             if (nestedFieldName == null) {
                 try {
+                    boolean accessible = f.isAccessible();
+                    if (!accessible) f.setAccessible(true); // todo access via getters
                     Object o = f.get(entity);
+                    if (!accessible) f.setAccessible(false);
                     if (o != null) {
                         SerializedName serializedName = f.getAnnotation(SerializedName.class);
                         JsonElement json = jsonObject.get(serializedName != null ? serializedName.value() : fieldName);
@@ -98,7 +101,10 @@ public class NestedFieldNameAdapter implements JsonDeserializer<Object> {
             Object v = defaultGson.fromJson(fieldElement, f.getType());
 
             try {
+                boolean accessible = f.isAccessible();
+                if (!accessible) f.setAccessible(true); // todo access via setters
                 f.set(entity, v);
+                if (!accessible) f.setAccessible(false);
             } catch (IllegalAccessException e) {
                 throw new JsonParseException(e);
             }

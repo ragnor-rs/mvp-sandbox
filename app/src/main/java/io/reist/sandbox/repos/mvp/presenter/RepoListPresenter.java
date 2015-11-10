@@ -58,13 +58,14 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         @Override
         public void onNext(ResponseModel<List<Repo>> response) {
             Log.i(TAG, "--- OBSERVED ON " + Thread.currentThread() + " ---");
-            if (response.isSuccesful()) {
-                Log.d(TAG, "successfully loaded " + response.data.size() + " items");
-                getView().displayData(response.data);
-                getView().showLoader(false);
+            RepoListView view = getView();
+            if (response.isSuccessful()) {
+                Log.d(TAG, "successfully loaded " + response.getData().size() + " items");
+                view.displayData(response.getData());
+                view.showLoader(false);
             } else {
                 Log.w(TAG, "network error occured");
-                getView().displayNetworkError(response.getError());
+                view.displayNetworkError(response.getError());
             }
         }
 
