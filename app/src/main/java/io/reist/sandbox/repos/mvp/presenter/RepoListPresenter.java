@@ -33,6 +33,10 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
     @Override
     protected void onViewAttached() {
         getView().showLoader(true);
+        loadData();
+    }
+
+    public void loadData() {
         subscribe(repoService.list(), new RepoListObserver());
     }
 

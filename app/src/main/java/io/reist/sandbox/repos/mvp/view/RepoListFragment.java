@@ -55,6 +55,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        loaderView.setOnRetryClickListener(v -> presenter.loadData());
         return view;
     }
 
@@ -85,6 +86,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         } else {
             Snackbar
                     .make(mRecyclerView, R.string.network_error, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.retry, v -> presenter.loadData())
                     .show();
         }
     }
