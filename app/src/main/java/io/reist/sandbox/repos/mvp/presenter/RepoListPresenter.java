@@ -1,6 +1,5 @@
 package io.reist.sandbox.repos.mvp.presenter;
 
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,7 +9,6 @@ import java.util.Random;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.mvp.model.ResponseModel;
 import io.reist.sandbox.core.mvp.presenter.BasePresenter;
@@ -26,9 +24,6 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
     private static final String TAG = RepoListPresenter.class.getName();
 
     private final RepoService repoService;
-
-    @Bind(R.id.daggertest_repo_recycler_view)
-    RecyclerView mRecyclerView;
 
     @Inject
     public RepoListPresenter(RepoService repoService) {
@@ -58,9 +53,15 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
 
         @Override
         public void onNext(ResponseModel<List<Repo>> response) {
-            mRecyclerView.setAdapter(new RepoListAdapter(response.data));
             Log.i(TAG, "--- OBSERVED ON " + Thread.currentThread() + " ---");
-            getView().showLoader(false);
+            if (response.isSuccesful()) {
+                Log.d(TAG, "successfully loaded " + response.data.size() + " items");
+                getView().displayData(response.data);
+                getView().showLoader(false);
+            } else {
+                Log.w(TAG, "network error occured");
+                getView().displayNetworkError(response.getError());
+            }
         }
 
         @Override

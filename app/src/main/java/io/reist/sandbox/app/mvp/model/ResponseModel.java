@@ -9,6 +9,7 @@ public class ResponseModel<T> {
 
     @SerializedName(ResponseJson.FIELD_DATA)
     public T data;
+    private Error error;
 
     public ResponseModel(T t) {
         data = t;
@@ -17,5 +18,24 @@ public class ResponseModel<T> {
     public ResponseModel() {
     }
 
+    public void addError(Error error) {
+        this.error = error;
+    }
+
+    public boolean isSuccesful() {
+        return error == null;
+    }
+
+    public Error getError() {
+        return error;
+    }
+
+    public static class Error {
+        private final String message;
+
+        public Error(String message) {
+            this.message = message;
+        }
+    }
 }
 

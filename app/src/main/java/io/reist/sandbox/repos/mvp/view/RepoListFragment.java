@@ -1,20 +1,26 @@
 package io.reist.sandbox.repos.mvp.view;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
+import io.reist.sandbox.app.mvp.model.ResponseModel;
+import io.reist.sandbox.app.mvp.view.widget.LoaderView;
 import io.reist.sandbox.core.mvp.view.BaseFragment;
 import io.reist.sandbox.repos.di.ReposFragmentComponent;
+import io.reist.sandbox.repos.mvp.model.Repo;
+import io.reist.sandbox.repos.mvp.presenter.RepoListAdapter;
 import io.reist.sandbox.repos.mvp.presenter.RepoListPresenter;
 
 /**
@@ -25,10 +31,13 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     @Bind(R.id.daggertest_repo_recycler_view)
     RecyclerView mRecyclerView;
 
+    @Bind(R.id.loader)
+    LoaderView loaderView;
+
     @Inject
     RepoListPresenter presenter;
 
-    private ProgressDialog loaderDialog;
+    private RepoListAdapter adapter;
 
     public RepoListFragment() {
         super(R.layout.github_fragment);
@@ -45,9 +54,6 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         // setView a linear layout manager
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        loaderDialog = new ProgressDialog(getActivity());
-        loaderDialog.setMessage(getContext().getString(R.string.loading));
 
         return view;
     }
@@ -69,13 +75,25 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
 
     @Override
     public void showLoader(boolean show) {
-        if (show) {
-            loaderDialog.show();
+        loaderView.showLoading(show);
+    }
+
+    @Override
+    public void displayNetworkError(ResponseModel.Error error) {
+        if (adapter == null || adapter.getItemCount() == 0) {
+            loaderView.showNetworkError();
         } else {
-            if (loaderDialog.isShowing()){
-                loaderDialog.dismiss();
-            }
+            Snackbar
+                    .make(mRecyclerView, R.string.network_error, Snackbar.LENGTH_INDEFINITE)
+                    .show();
         }
+    }
+
+    @Override
+    public void displayData(List<Repo> data) {
+        loaderView.hide();
+        adapter = new RepoListAdapter(data);
+        mRecyclerView.setAdapter(adapter);
     }
 
 }
