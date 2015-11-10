@@ -80,7 +80,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     }
 
     @Override
-    public void displayNetworkError(ResponseModel.Error error) {
+    public void displayError(ResponseModel.Error error) {
         if (adapter == null || adapter.getItemCount() == 0) {
             loaderView.showNetworkError();
         } else {

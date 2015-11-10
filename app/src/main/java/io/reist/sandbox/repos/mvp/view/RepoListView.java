@@ -12,7 +12,7 @@ import io.reist.sandbox.repos.mvp.model.Repo;
 public interface RepoListView extends BaseView {
     void showLoader(boolean show);
 
-    void displayNetworkError(ResponseModel.Error error);
+    void displayError(ResponseModel.Error error);
 
     void displayData(List<Repo> data);
 }

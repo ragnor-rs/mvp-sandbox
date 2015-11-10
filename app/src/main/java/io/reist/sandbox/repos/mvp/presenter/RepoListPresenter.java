@@ -65,7 +65,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
                 view.showLoader(false);
             } else {
                 Log.w(TAG, "network error occured");
-                view.displayNetworkError(response.getError());
+                view.displayError(response.getError());
             }
         }
 
