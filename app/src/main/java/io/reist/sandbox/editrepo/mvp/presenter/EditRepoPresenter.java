@@ -25,6 +25,7 @@ public class EditRepoPresenter extends BasePresenter<EditRepoView> {
     RepoService repoService;
     private Repo repo;
 
+    //todo since apiary not really working we cannot use remote service, since it provides incorrect data
     @Inject
     public EditRepoPresenter(@Named(SandboxModule.LOCAL_SERVICE) RepoService repoService) {
         this.repoService = repoService;
