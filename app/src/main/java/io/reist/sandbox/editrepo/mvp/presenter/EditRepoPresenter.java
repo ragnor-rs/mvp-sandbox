@@ -32,8 +32,8 @@ public class EditRepoPresenter extends BasePresenter<EditRepoView> {
 
     @Override
     protected void onViewAttached() {
-        long repoId = getView().getArguments().getLong(EXTRA_REPO_ID);
-        getView().showLoader(true);
+        long repoId = view().getArguments().getLong(EXTRA_REPO_ID);
+        view().showLoader(true);
         subscribe(repoService.byId(repoId), new Subscriber<ResponseModel<Repo>>() {
 
             @Override
@@ -44,18 +44,18 @@ public class EditRepoPresenter extends BasePresenter<EditRepoView> {
             @Override
             public void onError(Throwable e) {
                 ResponseModel.Error error = new ResponseModel.Error(getContext().getString(R.string.error_unexpected));
-                getView().displayError(error);
-                getView().showLoader(false);
+                view().displayError(error);
+                view().showLoader(false);
             }
 
             @Override
             public void onNext(ResponseModel<Repo> response) {
-                getView().showLoader(false);
+                view().showLoader(false);
                 if (!response.isSuccessful()) { //cur move to Subscriber wrapper?
-                    getView().displayError(response.getError());
+                    view().displayError(response.getError());
                 } else {
                     repo = response.getData();
-                    getView().displayData(response.getData());
+                    view().displayData(response.getData());
                 }
             }
         });
@@ -66,7 +66,6 @@ public class EditRepoPresenter extends BasePresenter<EditRepoView> {
         repo.author = author;
         repo.url = url;
 
-
         subscribe(repoService.save(repo), new Observer<Boolean>() {
 
             @Override
@@ -76,18 +75,33 @@ public class EditRepoPresenter extends BasePresenter<EditRepoView> {
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(getView().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(view().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNext(Boolean success) {
                 if (success)
-                    Toast.makeText(getView().getContext(), R.string.repo_saved, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view().getContext(), R.string.repo_saved, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public void deleteRepo() {
-//        subscribe(repoService.delete(repo));
+        subscribe(repoService.delete(repo.id), new Subscriber<Integer>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                view().back();
+            }
+        });
     }
 }

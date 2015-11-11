@@ -5,6 +5,7 @@ import java.util.List;
 import io.reist.sandbox.app.mvp.model.ResponseModel;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -26,4 +27,6 @@ public interface GitHubApi {
             @Body Repo repo
     );
 
+    @DELETE("/repos/{id}")
+    Observable<Integer> delete(Long id); //cur not implemented in apiary
 }

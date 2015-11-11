@@ -83,4 +83,9 @@ public class EditRepoFragment extends BaseFragment<EditRepoPresenter> implements
         repoContainer.setVisibility(show ? View.GONE : View.VISIBLE);
         loaderView.showLoading(show);
     }
+
+    @Override
+    public void back() {
+        getFragmentManager().popBackStackImmediate();
+    }
 }

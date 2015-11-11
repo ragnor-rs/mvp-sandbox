@@ -18,6 +18,8 @@ public interface BaseService<T> {
 
     Observable<Boolean> save(T t);
 
+    Observable<Integer> delete(Long id);
+
     int saveSync(List<T> list);
 
     boolean saveSync(T t);

@@ -42,7 +42,7 @@ public abstract class BasePresenter<V extends BaseView> {
     protected void onViewDetached() {
     }
 
-    public final V getView() {
+    public final V view() {
         return view;
     }
 
@@ -51,7 +51,7 @@ public abstract class BasePresenter<V extends BaseView> {
     }
 
     public final Object getComponent() {
-        return getView().getComponent();
+        return view().getComponent();
     }
 
 }

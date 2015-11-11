@@ -21,7 +21,7 @@ import rx.Observable;
  */
 public abstract class StorIoService<T> extends AbstractBaseService<T> {
 
-    private final StorIOSQLite storIoSqLite;
+    protected final StorIOSQLite storIoSqLite;
 
     public StorIoService(StorIOSQLite storIoSqLite) {
         this.storIoSqLite = storIoSqLite;

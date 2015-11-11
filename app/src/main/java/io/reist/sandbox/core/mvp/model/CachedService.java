@@ -97,13 +97,18 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     }
 
     @Override
+    public Observable<Integer> delete(Long id) {
+        return Observable.concat(local.delete(id), remote.delete(id));
+    }
+
+    @Override
     public int saveSync(List<T> list) {
         return local.saveSync(list);
     }
 
     @Override
     public boolean saveSync(T t) {
-        return local.saveSync(t);// && remote.saveSync(t); //todo remote.saveSync unsupported
+        return local.saveSync(t);
     }
 
 }
