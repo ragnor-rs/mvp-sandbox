@@ -20,6 +20,7 @@ import io.reist.sandbox.repos.mvp.model.Repo;
 public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHolder> {
 
     private final List<Repo> repos;
+    private ItemClickListener itemClickListener;
 
     public RepoListAdapter(List<Repo> repos) {
         this.repos = repos;
@@ -34,13 +35,23 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder c, int position) {
+    public void onBindViewHolder(ViewHolder c, final int position) {
         c.textView.setText(repos.get(position).name);
+        c.textView.setBackground(c.textView.getContext().getResources().getDrawable(R.drawable.list_item_clicked));
+        c.textView.setOnClickListener(v -> {
+            if (itemClickListener != null) {
+                itemClickListener.itemClicked(repos.get(position));
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return repos.size();
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -53,6 +64,11 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHo
             ButterKnife.bind(this, itemView);
         }
 
+    }
+
+    public interface ItemClickListener {
+
+        void itemClicked(Repo repo);
     }
 
 }

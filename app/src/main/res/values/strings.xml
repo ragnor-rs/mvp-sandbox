@@ -14,5 +14,7 @@
     <string name="github_repo_saved_successfully">Repo saved successfully</string>
     <string name="network_error">Network error, \nplease try again later</string>
     <string name="retry">Retry</string>
+    <string name="error_unexpected">Oops, something bad has happened. Try one more time</string>
+    <string name="save">Save</string>
 
 </resources>
