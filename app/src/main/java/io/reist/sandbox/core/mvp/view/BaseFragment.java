@@ -156,7 +156,6 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
         ButterKnife.bind(getPresenter(), view);
         getPresenter().setView(this);
     }
