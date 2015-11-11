@@ -61,6 +61,11 @@ public class EditRepoFragment extends BaseFragment<EditRepoPresenter> implements
                 repoUrl.getText().toString());
     }
 
+    @OnClick(R.id.delete)
+    void onDeleteButtonClick() {
+        presenter.deleteRepo();
+    }
+
     @Override
     public void displayError(ResponseModel.Error error) {
         loaderView.showNetworkError();

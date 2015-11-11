@@ -61,7 +61,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
             RepoListView view = getView();
             if (response.isSuccessful()) {
                 Log.d(TAG, "successfully loaded " + response.getData().size() + " items");
-                view.displayData(response.getData());
+                view.displayData(response.getData()); //cur need to check if view detached or crash can occure
                 view.showLoader(false);
             } else {
                 Log.w(TAG, "network error occured");
@@ -87,7 +87,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         @Override
         public void onNext(Boolean success) {
             Log.i(TAG, "success add repo subscriber");
-            Toast.makeText(getContext(), R.string.github_repo_saved_successfully, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.repo_saved, Toast.LENGTH_LONG).show();
             getView().showLoader(false);
         }
 

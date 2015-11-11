@@ -31,7 +31,8 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
     @RxLogObservable
     @Override
     public Observable<ResponseModel<Repo>> byId(Long id) {
-        return unique(Repo.class, ReposTable.TABLE_NAME, id).map(ResponseModel::new);
+        return unique(Repo.class, ReposTable.TABLE_NAME, id)
+                .map(ResponseModel<Repo>::new);
     }
 
 }
