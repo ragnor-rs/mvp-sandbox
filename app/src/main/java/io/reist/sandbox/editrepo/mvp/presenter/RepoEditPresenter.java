@@ -8,6 +8,7 @@ import javax.inject.Named;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.di.SandboxModule;
 import io.reist.sandbox.app.mvp.model.ResponseModel;
+import io.reist.sandbox.app.mvp.model.ResponseModelObserver;
 import io.reist.sandbox.core.mvp.presenter.BasePresenter;
 import io.reist.sandbox.editrepo.mvp.view.EditRepoView;
 import io.reist.sandbox.repos.mvp.model.Repo;
@@ -18,7 +19,7 @@ import rx.Subscriber;
 /**
  * Created by defuera on 10/11/2015.
  */
-public class EditRepoPresenter extends BasePresenter<EditRepoView> {
+public class RepoEditPresenter extends BasePresenter<EditRepoView> {
 
     public static final String EXTRA_REPO_ID = "io.reist.sandbox.extra_repo_id";
 
@@ -27,7 +28,7 @@ public class EditRepoPresenter extends BasePresenter<EditRepoView> {
 
     //todo since apiary not really working we cannot use remote service, since it provides incorrect data
     @Inject
-    public EditRepoPresenter(@Named(SandboxModule.LOCAL_SERVICE) RepoService repoService) {
+    public RepoEditPresenter(@Named(SandboxModule.LOCAL_SERVICE) RepoService repoService) {
         this.repoService = repoService;
     }
 
@@ -35,29 +36,19 @@ public class EditRepoPresenter extends BasePresenter<EditRepoView> {
     protected void onViewAttached() {
         long repoId = view().getArguments().getLong(EXTRA_REPO_ID);
         view().showLoader(true);
-        subscribe(repoService.byId(repoId), new Subscriber<ResponseModel<Repo>>() {
+        subscribe(repoService.byId(repoId), new ResponseModelObserver<Repo>() {
 
             @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                ResponseModel.Error error = new ResponseModel.Error(getContext().getString(R.string.error_unexpected));
+            protected void onFail(ResponseModel.Error error) {
+                view().showLoader(false);
                 view().displayError(error);
-                view().showLoader(false);
             }
 
             @Override
-            public void onNext(ResponseModel<Repo> response) {
+            protected void onSuccess(Repo data) {
                 view().showLoader(false);
-                if (!response.isSuccessful()) { //cur move to Subscriber wrapper?
-                    view().displayError(response.getError());
-                } else {
-                    repo = response.getData();
-                    view().displayData(response.getData());
-                }
+                repo = data;
+                view().displayData(data);
             }
         });
     }

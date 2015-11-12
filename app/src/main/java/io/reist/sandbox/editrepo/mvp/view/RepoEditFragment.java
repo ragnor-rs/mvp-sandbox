@@ -13,13 +13,13 @@ import io.reist.sandbox.app.mvp.model.ResponseModel;
 import io.reist.sandbox.app.mvp.view.widget.LoaderView;
 import io.reist.sandbox.core.mvp.view.BaseFragment;
 import io.reist.sandbox.editrepo.di.EditRepoComponent;
-import io.reist.sandbox.editrepo.mvp.presenter.EditRepoPresenter;
+import io.reist.sandbox.editrepo.mvp.presenter.RepoEditPresenter;
 import io.reist.sandbox.repos.mvp.model.Repo;
 
 /**
  * Created by defuera on 10/11/2015.
  */
-public class EditRepoFragment extends BaseFragment<EditRepoPresenter> implements EditRepoView {
+public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements EditRepoView {
 
     @Bind(R.id.repo_name)
     TextView repoName;
@@ -37,9 +37,9 @@ public class EditRepoFragment extends BaseFragment<EditRepoPresenter> implements
     ViewGroup repoContainer;
 
     @Inject
-    EditRepoPresenter presenter;
+    RepoEditPresenter presenter;
 
-    public EditRepoFragment() {
+    public RepoEditFragment() {
         super(R.layout.fragment_edit_repo);
     }
 
@@ -49,7 +49,7 @@ public class EditRepoFragment extends BaseFragment<EditRepoPresenter> implements
     }
 
     @Override
-    protected EditRepoPresenter getPresenter() {
+    protected RepoEditPresenter getPresenter() {
         return presenter;
     }
 
