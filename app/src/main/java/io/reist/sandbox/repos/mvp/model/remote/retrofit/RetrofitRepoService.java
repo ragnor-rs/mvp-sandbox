@@ -43,6 +43,11 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
     }
 
     @Override
+    public Observable<Integer> delete(Long id) {
+        return gitHubApi.delete(id);
+    }
+
+    @Override
     public int saveSync(List<Repo> list) {
         throw new UnsupportedOperationException("you cannot save make api calls synchronously");
     }

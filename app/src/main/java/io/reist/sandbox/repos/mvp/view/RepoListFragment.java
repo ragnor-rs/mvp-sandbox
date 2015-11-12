@@ -16,8 +16,11 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.mvp.model.ResponseModel;
+import io.reist.sandbox.app.mvp.view.MainActivity;
 import io.reist.sandbox.app.mvp.view.widget.LoaderView;
 import io.reist.sandbox.core.mvp.view.BaseFragment;
+import io.reist.sandbox.editrepo.mvp.presenter.EditRepoPresenter;
+import io.reist.sandbox.editrepo.mvp.view.EditRepoFragment;
 import io.reist.sandbox.repos.di.ReposFragmentComponent;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.presenter.RepoListAdapter;
@@ -95,6 +98,13 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     public void displayData(List<Repo> data) {
         loaderView.hide();
         adapter = new RepoListAdapter(data);
+        adapter.setItemClickListener(repo -> {
+            EditRepoFragment fragment = new EditRepoFragment();
+            Bundle bundle = new Bundle();
+            bundle.putLong(EditRepoPresenter.EXTRA_REPO_ID, repo.id);
+            fragment.setArguments(bundle);
+            ((MainActivity) getActivity()).showFragment(fragment, false);
+        });
         mRecyclerView.setAdapter(adapter);
     }
 

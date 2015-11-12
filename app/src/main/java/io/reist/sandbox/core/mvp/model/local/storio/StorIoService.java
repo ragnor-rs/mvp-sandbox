@@ -13,6 +13,7 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 import java.util.List;
 
 import io.reist.sandbox.core.mvp.model.AbstractBaseService;
+import io.reist.sandbox.repos.mvp.model.local.storio.ReposTable;
 import rx.Observable;
 
 /**
@@ -20,7 +21,7 @@ import rx.Observable;
  */
 public abstract class StorIoService<T> extends AbstractBaseService<T> {
 
-    private final StorIOSQLite storIoSqLite;
+    protected final StorIOSQLite storIoSqLite;
 
     public StorIoService(StorIOSQLite storIoSqLite) {
         this.storIoSqLite = storIoSqLite;
@@ -43,7 +44,7 @@ public abstract class StorIoService<T> extends AbstractBaseService<T> {
                 .withQuery(
                         Query.builder()
                                 .table(tableName)
-                                .where("id = ?")
+                                .where(ReposTable.COLUMN_ID + " = ?")
                                 .whereArgs(id)
                                 .build()
                 )

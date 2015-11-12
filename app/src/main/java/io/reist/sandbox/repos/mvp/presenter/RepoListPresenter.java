@@ -32,7 +32,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
 
     @Override
     protected void onViewAttached() {
-        getView().showLoader(true);
+        view().showLoader(true);
         loadData();
     }
 
@@ -41,7 +41,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
     }
 
     public void createRepo() {
-        getView().showLoader(true);
+        view().showLoader(true);
         Random rand = new Random();
         Repo object = new Repo();
 
@@ -58,10 +58,10 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         @Override
         public void onNext(ResponseModel<List<Repo>> response) {
             Log.i(TAG, "--- OBSERVED ON " + Thread.currentThread() + " ---");
-            RepoListView view = getView();
+            RepoListView view = view();
             if (response.isSuccessful()) {
                 Log.d(TAG, "successfully loaded " + response.getData().size() + " items");
-                view.displayData(response.getData());
+                view.displayData(response.getData()); //cur need to check if view detached or crash can occure
                 view.showLoader(false);
             } else {
                 Log.w(TAG, "network error occured");
@@ -73,7 +73,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         public void onError(Throwable e) {
             Log.e(TAG, "Error fetching data", e);
             Toast.makeText(getContext(), R.string.github_repo_loading_list_error, Toast.LENGTH_LONG).show();
-            getView().showLoader(false);
+            view().showLoader(false);
         }
 
         @Override
@@ -87,15 +87,15 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         @Override
         public void onNext(Boolean success) {
             Log.i(TAG, "success add repo subscriber");
-            Toast.makeText(getContext(), R.string.github_repo_saved_successfully, Toast.LENGTH_LONG).show();
-            getView().showLoader(false);
+            Toast.makeText(getContext(), R.string.repo_saved, Toast.LENGTH_LONG).show();
+            view().showLoader(false);
         }
 
         @Override
         public void onError(Throwable e) {
             Log.e(TAG, "Error saving data", e);
             Toast.makeText(getContext(), R.string.github_repo_saving_list_error, Toast.LENGTH_LONG).show();
-            getView().showLoader(false);
+            view().showLoader(false);
         }
 
         @Override

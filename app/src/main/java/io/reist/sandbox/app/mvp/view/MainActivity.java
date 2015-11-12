@@ -117,7 +117,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void showFragment(BaseFragment fragment, boolean remove) {
+    /**
+     * @param fragment - fragment to display
+     * @param remove   - boolean, stays for whether current fragment should be thrown away or stay in a back stack.
+     *                 false to stay in a back stack
+     */
+    public void showFragment(BaseFragment fragment, boolean remove) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment topmostFragment = findTopmostFragment(fragmentManager);
         if (topmostFragment != null && fragment.getName().equals(topmostFragment.getTag())) {
