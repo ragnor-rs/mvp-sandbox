@@ -11,11 +11,11 @@ import javax.inject.Singleton;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.mvp.model.ResponseModel;
+import io.reist.sandbox.app.mvp.model.ResponseModelObserver;
 import io.reist.sandbox.core.mvp.presenter.BasePresenter;
 import io.reist.sandbox.repos.mvp.model.Repo;
 import io.reist.sandbox.repos.mvp.model.RepoService;
 import io.reist.sandbox.repos.mvp.view.RepoListView;
-import rx.Observer;
 import rx.Subscriber;
 
 @Singleton
@@ -37,7 +37,20 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
     }
 
     public void loadData() {
-        subscribe(repoService.list(), new RepoListObserver());
+        subscribe(repoService.list(), new ResponseModelObserver<List<Repo>>(){
+
+            @Override
+            protected void onFail(ResponseModel.Error error) {
+                view().showLoader(false);
+                view().displayError(error);
+            }
+
+            @Override
+            protected void onSuccess(List<Repo> data) {
+                view().showLoader(false);
+                view().displayData(data); //cur need to check if view detached or crash can occure
+            }
+        });
     }
 
     public void createRepo() {
@@ -51,35 +64,6 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         object.url = "url";
 
         subscribe(repoService.save(object), new AddRepoSubscriber());
-    }
-
-    private class RepoListObserver implements Observer<ResponseModel<List<Repo>>> {
-
-        @Override
-        public void onNext(ResponseModel<List<Repo>> response) {
-            Log.i(TAG, "--- OBSERVED ON " + Thread.currentThread() + " ---");
-            RepoListView view = view();
-            if (response.isSuccessful()) {
-                Log.d(TAG, "successfully loaded " + response.getData().size() + " items");
-                view.displayData(response.getData()); //cur need to check if view detached or crash can occure
-                view.showLoader(false);
-            } else {
-                Log.w(TAG, "network error occured");
-                view.displayError(response.getError());
-            }
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            Log.e(TAG, "Error fetching data", e);
-            Toast.makeText(getContext(), R.string.github_repo_loading_list_error, Toast.LENGTH_LONG).show();
-            view().showLoader(false);
-        }
-
-        @Override
-        public void onCompleted() {
-        }
-
     }
 
     private class AddRepoSubscriber extends Subscriber<Boolean> {
