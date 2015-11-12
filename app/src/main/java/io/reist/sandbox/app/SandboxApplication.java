@@ -20,7 +20,7 @@ public class SandboxApplication extends BaseApplication {
             .build();
 
     /**
-     * Util method for creating new view component
+     * Util method for creating new view component, every Component should be registered here
      */
     @Override
     public Object buildComponentFor(BaseView view) {

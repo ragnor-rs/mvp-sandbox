@@ -1,4 +1,4 @@
-package io.reist.sandbox.app.mvp.view;
+package io.reist.sandbox.editrepo.mvp.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,24 +6,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import java.util.List;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.core.mvp.view.BaseFragment;
-import io.reist.sandbox.repos.mvp.view.RepoListFragment;
+import io.reist.sandbox.editrepo.mvp.presenter.EditRepoPresenter;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Created by defuera on 12/11/2015.
+ */
+public class EditRepoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        showFragment(new RepoListFragment(), true);
+        EditRepoFragment fragment = new EditRepoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putLong(EditRepoPresenter.EXTRA_REPO_ID, getIntent().getLongExtra(EditRepoPresenter.EXTRA_REPO_ID, -1));
+        fragment.setArguments(bundle);
+        showFragment(fragment, false);
     }
 
     /**
@@ -81,5 +85,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return topmostFragment;
     }
-
 }
