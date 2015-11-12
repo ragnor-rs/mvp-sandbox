@@ -6,7 +6,7 @@ import io.reist.sandbox.app.di.SandboxModule;
 import io.reist.sandbox.core.BaseApplication;
 import io.reist.sandbox.core.di.BaseModule;
 import io.reist.sandbox.core.mvp.view.BaseView;
-import io.reist.sandbox.editrepo.mvp.view.EditRepoFragment;
+import io.reist.sandbox.editrepo.mvp.view.RepoEditFragment;
 import io.reist.sandbox.repos.mvp.view.RepoListFragment;
 
 /**
@@ -20,7 +20,7 @@ public class SandboxApplication extends BaseApplication {
             .build();
 
     /**
-     * Util method for creating new view component
+     * Util method for creating new view component, every Component should be registered here
      */
     @Override
     public Object buildComponentFor(BaseView view) {
@@ -29,7 +29,7 @@ public class SandboxApplication extends BaseApplication {
 
         if (RepoListFragment.class.isAssignableFrom(viewClass)) {
             return sandboxComponent.reposFragmentComponent();
-        } else if (EditRepoFragment.class.isAssignableFrom(viewClass)) {
+        } else if (RepoEditFragment.class.isAssignableFrom(viewClass)) {
             return sandboxComponent.editReposComponent();
         } else {
             throw new RuntimeException("Unknown view class: " + viewClass.getName());

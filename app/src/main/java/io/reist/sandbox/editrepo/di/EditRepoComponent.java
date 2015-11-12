@@ -1,11 +1,11 @@
 package io.reist.sandbox.editrepo.di;
 
 import dagger.Subcomponent;
-import io.reist.sandbox.editrepo.mvp.view.EditRepoFragment;
+import io.reist.sandbox.editrepo.mvp.view.RepoEditFragment;
 
 @Subcomponent
 public interface EditRepoComponent {
 
-    void inject(EditRepoFragment view);
+    void inject(RepoEditFragment view);
 
 }
