@@ -3,8 +3,8 @@ package io.reist.sandbox.app.di;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import io.reist.sandbox.editrepo.di.EditRepoComponent;
-import io.reist.sandbox.repos.di.ReposFragmentComponent;
+import io.reist.sandbox.repoedit.di.RepoEditComponent;
+import io.reist.sandbox.repolist.di.ReposFragmentComponent;
 
 @Singleton
 @Component(modules = SandboxModule.class)
@@ -14,7 +14,7 @@ public interface SandboxComponent {
 
     ReposFragmentComponent reposFragmentComponent();
 
-    EditRepoComponent editReposComponent();
+    RepoEditComponent editReposComponent();
 
     //endregion
 }

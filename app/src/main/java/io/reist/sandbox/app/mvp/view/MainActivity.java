@@ -21,7 +21,7 @@ import java.util.List;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.core.mvp.view.BaseFragment;
-import io.reist.sandbox.repos.mvp.view.RepoListFragment;
+import io.reist.sandbox.repolist.mvp.view.RepoListFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

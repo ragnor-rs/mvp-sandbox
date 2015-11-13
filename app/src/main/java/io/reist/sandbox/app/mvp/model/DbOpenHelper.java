@@ -3,8 +3,8 @@ package io.reist.sandbox.app.mvp.model;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import io.reist.sandbox.core.mvp.model.local.storio.BaseDbHelper;
-import io.reist.sandbox.repos.mvp.model.local.storio.ReposTable;
+import io.reist.sandbox.core.mvp.model.local.BaseDbHelper;
+import io.reist.sandbox.repolist.mvp.model.local.ReposTable;
 
 public class DbOpenHelper extends BaseDbHelper {
 

@@ -6,8 +6,8 @@ import io.reist.sandbox.app.di.SandboxModule;
 import io.reist.sandbox.core.BaseApplication;
 import io.reist.sandbox.core.di.BaseModule;
 import io.reist.sandbox.core.mvp.view.BaseView;
-import io.reist.sandbox.editrepo.mvp.view.RepoEditFragment;
-import io.reist.sandbox.repos.mvp.view.RepoListFragment;
+import io.reist.sandbox.repoedit.mvp.view.RepoEditFragment;
+import io.reist.sandbox.repolist.mvp.view.RepoListFragment;
 
 /**
  * Created by Reist on 10/16/15.
