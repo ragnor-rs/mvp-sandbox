@@ -2,8 +2,7 @@ package io.reist.sandbox.core;
 
 import android.app.Application;
 
-import io.reist.sandbox.core.di.ComponentCache;
-import io.reist.sandbox.core.mvp.view.BaseView;
+import io.reist.sandbox.core.view.BaseView;
 
 /**
  * Created by Reist on 10/16/15.

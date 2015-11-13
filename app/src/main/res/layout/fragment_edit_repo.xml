@@ -53,7 +53,7 @@
             android:text="@string/save" />
     </LinearLayout>
 
-    <io.reist.sandbox.app.mvp.view.widget.LoaderView
+    <io.reist.sandbox.app.view.widget.LoaderView
         android:id="@+id/loader"
         android:layout_gravity="center"
         android:layout_width="wrap_content"

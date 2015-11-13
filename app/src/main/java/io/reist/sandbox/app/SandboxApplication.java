@@ -1,13 +1,10 @@
 package io.reist.sandbox.app;
 
-import io.reist.sandbox.app.di.DaggerSandboxComponent;
-import io.reist.sandbox.app.di.SandboxComponent;
-import io.reist.sandbox.app.di.SandboxModule;
 import io.reist.sandbox.core.BaseApplication;
-import io.reist.sandbox.core.di.BaseModule;
-import io.reist.sandbox.core.mvp.view.BaseView;
-import io.reist.sandbox.repoedit.mvp.view.RepoEditFragment;
-import io.reist.sandbox.repolist.mvp.view.RepoListFragment;
+import io.reist.sandbox.core.BaseModule;
+import io.reist.sandbox.core.view.BaseView;
+import io.reist.sandbox.repoedit.view.RepoEditFragment;
+import io.reist.sandbox.repolist.view.RepoListFragment;
 
 /**
  * Created by Reist on 10/16/15.
