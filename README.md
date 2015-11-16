@@ -15,4 +15,5 @@ This application has two dagger2 scopes. One is common scope which is implemente
 And the other one is handled manually by creating and destroying components for current view via ComponentCache.
 
 The backend is located at https://safe-reaches-4393.herokuapp.com/
+
 Backend sources: https://github.com/ragnor-rs/mvp-sandbox-backend
