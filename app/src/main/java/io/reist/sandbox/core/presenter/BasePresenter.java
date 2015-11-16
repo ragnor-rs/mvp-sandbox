@@ -50,8 +50,4 @@ public abstract class BasePresenter<V extends BaseView> {
         return view == null ? null : view.getContext();
     }
 
-    public final Object getComponent() {
-        return view().getComponent();
-    }
-
 }
