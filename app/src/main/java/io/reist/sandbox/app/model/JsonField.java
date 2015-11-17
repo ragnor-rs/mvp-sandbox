@@ -8,7 +8,6 @@ public interface JsonField {
     String ID = "id";
     String NAME = "name";
     String HTML_URL = "html_url";
-    String OWNER_LOGIN = "owner.login";
     String OWNER = "owner";
     String LOGIN = "login";
     String LIKE_COUNT = "like_count";

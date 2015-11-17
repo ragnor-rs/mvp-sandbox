@@ -45,7 +45,7 @@ public class UsersFragment extends BaseFragment<UsersPresenter>
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter = new UsersAdapter());
 
-//        mAdapter.setOnUserClickListener(user -> getFragmentController().showFragment(RepoListFragment.newInstance(user)));
+        mAdapter.setOnUserClickListener(user -> getFragmentController().showFragment(UserReposFragment.newInstance(user), true));
     }
 
     @NonNull

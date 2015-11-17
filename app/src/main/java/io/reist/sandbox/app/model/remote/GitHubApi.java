@@ -36,5 +36,6 @@ public interface GitHubApi {
     Observable<Response<List<User>>> listUsers();
 
     @GET("/user/{id}/repos")
-    Observable<Response<List<Repo>>> reposByUserId(@Path("id") String userId);
+    Observable<Response<List<Repo>>> reposByUserId(@Path("id") String userReposId, @Query("user_id") String userId);
+
 }

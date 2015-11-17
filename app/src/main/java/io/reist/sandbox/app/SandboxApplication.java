@@ -5,6 +5,7 @@ import io.reist.sandbox.core.BaseModule;
 import io.reist.sandbox.core.view.BaseView;
 import io.reist.sandbox.repoedit.view.RepoEditFragment;
 import io.reist.sandbox.repolist.view.RepoListFragment;
+import io.reist.sandbox.user.view.UserReposFragment;
 import io.reist.sandbox.user.view.UsersFragment;
 
 /**
@@ -29,7 +30,8 @@ public class SandboxApplication extends BaseApplication {
             return sandboxComponent.reposFragmentComponent();
         } else if (RepoEditFragment.class.isAssignableFrom(viewClass)) {
             return sandboxComponent.editReposComponent();
-        } if (UsersFragment.class.isAssignableFrom(viewClass)) {
+        } if (UsersFragment.class.isAssignableFrom(viewClass) ||
+                UserReposFragment.class.isAssignableFrom(viewClass)) {
             return sandboxComponent.userFragmentComponent();
         } else {
             throw new RuntimeException("Unknown view class: " + viewClass.getName());

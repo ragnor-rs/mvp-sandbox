@@ -18,4 +18,9 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
 
+    <string name="repo_button_like">like</string>
+    <string name="repo_button_unlike">unlike</string>
+
+    <string name="repo_like_count">like count: %s</string>
+
 </resources>

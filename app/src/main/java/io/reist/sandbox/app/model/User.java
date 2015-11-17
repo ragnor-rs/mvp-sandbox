@@ -24,10 +24,6 @@ public class User {
     @StorIOSQLiteColumn(name = UserTable.Column.NAME)
     public String name;
 
-    @SerializedName(JsonField.LIKE_COUNT)
-    @StorIOSQLiteColumn(name = UserTable.Column.LIKE_COUNT)
-    public Integer likeCount;
-
     @SerializedName(JsonField.LOGIN)
     @StorIOSQLiteColumn(name = UserTable.Column.LOGIN)
     public String login;

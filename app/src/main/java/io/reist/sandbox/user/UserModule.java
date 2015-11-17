@@ -7,8 +7,12 @@ import javax.inject.Singleton;
 import dagger.Provides;
 import io.reist.sandbox.app.model.remote.GitHubApi;
 import io.reist.sandbox.user.model.UserModelService;
+import io.reist.sandbox.user.model.UserReposModelService;
+import io.reist.sandbox.user.model.UserReposService;
 import io.reist.sandbox.user.model.UserService;
+import io.reist.sandbox.user.model.local.StorIoUserReposService;
 import io.reist.sandbox.user.model.local.StorIoUserService;
+import io.reist.sandbox.user.model.remote.RetrofitUserReposService;
 import io.reist.sandbox.user.model.remote.RetrofitUserService;
 
 /**
@@ -21,6 +25,12 @@ public class UserModule {
     @Provides
     UserService userService(GitHubApi gitHubApi, StorIOSQLite storIOSQLite) {
         return new UserModelService(new StorIoUserService(storIOSQLite), new RetrofitUserService(gitHubApi));
+    }
+
+    @Singleton
+    @Provides
+    UserReposService userReposService(GitHubApi gitHubApi, StorIOSQLite storIOSQLite) {
+        return new UserReposModelService(new StorIoUserReposService(storIOSQLite), new RetrofitUserReposService(gitHubApi));
     }
 
 }

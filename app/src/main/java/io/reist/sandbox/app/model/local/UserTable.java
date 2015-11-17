@@ -11,15 +11,13 @@ public class UserTable extends BaseTable {
 
     public interface Column extends BaseTable.Column {
         String NAME = "name";
-        String LIKE_COUNT = "like_count";
         String LOGIN = "login";
     }
 
     private static final String CREATE_TABLE = "create table " + NAME + "(" +
             Column.ID + " text not null primary key, " +
             Column.NAME + " text, " +
-            Column.LOGIN + " text, " +
-            Column.LIKE_COUNT + " integer " +
+            Column.LOGIN + " text" +
             ")";
 
     @Override

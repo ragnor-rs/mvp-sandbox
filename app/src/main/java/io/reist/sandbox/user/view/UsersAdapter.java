@@ -45,7 +45,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
         User user = mUsers.get(position);
 
         vh.name.setText(user.getName());
-        vh.likes.setText(String.valueOf(user.likeCount));
 
         vh.itemView.setTag(position);
     }
@@ -81,9 +80,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
 
         @Bind(R.id.name)
         TextView name;
-
-        @Bind(R.id.likes)
-        TextView likes;
 
         ViewHolder(View view) {
             super(view);

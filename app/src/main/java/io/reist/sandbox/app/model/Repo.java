@@ -21,6 +21,10 @@ public class Repo {
     @StorIOSQLiteColumn(name = ReposTable.Column.URL)
     public String url;
 
+    @SerializedName(JsonField.LIKE_COUNT)
+    @StorIOSQLiteColumn(name = ReposTable.Column.LIKE_COUNT)
+    public Integer likeCount;
+
     @SerializedName(JsonField.OWNER)
     public User owner;
 
@@ -29,6 +33,10 @@ public class Repo {
 
     @StorIOSQLiteColumn(name = ReposTable.Column.USER_ID)
     public String userId;
+
+    public boolean isLiked() {
+        return likedByMe != null? likedByMe : false;
+    }
 
     @Override
     public String toString() {
