@@ -17,16 +17,16 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.reist.sandbox.app.model.DbOpenHelper;
+import io.reist.sandbox.app.model.Like;
+import io.reist.sandbox.app.model.LikeStorIOSQLiteDeleteResolver;
+import io.reist.sandbox.app.model.LikeStorIOSQLiteGetResolver;
+import io.reist.sandbox.app.model.LikeStorIOSQLitePutResolver;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.UserStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.app.model.UserStorIOSQLiteGetResolver;
 import io.reist.sandbox.app.model.UserStorIOSQLitePutResolver;
-import io.reist.sandbox.app.model.UserWithRepo;
-import io.reist.sandbox.app.model.UserWithRepoStorIOSQLiteDeleteResolver;
-import io.reist.sandbox.app.model.UserWithRepoStorIOSQLiteGetResolver;
-import io.reist.sandbox.app.model.UserWithRepoStorIOSQLitePutResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoGetResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoPutResolver;
 import io.reist.sandbox.app.model.remote.GitHubApi;
@@ -75,11 +75,11 @@ public class SandboxModule {
                                 .build()
                 )
                 .addTypeMapping(
-                        UserWithRepo.class,
-                        SQLiteTypeMapping.<UserWithRepo>builder()
-                                .putResolver(new UserWithRepoStorIOSQLitePutResolver())
-                                .getResolver(new UserWithRepoStorIOSQLiteGetResolver())
-                                .deleteResolver(new UserWithRepoStorIOSQLiteDeleteResolver())
+                        Like.class,
+                        SQLiteTypeMapping.<Like>builder()
+                                .putResolver(new LikeStorIOSQLitePutResolver())
+                                .getResolver(new LikeStorIOSQLiteGetResolver())
+                                .deleteResolver(new LikeStorIOSQLiteDeleteResolver())
                                 .build()
                 )
                 .build();

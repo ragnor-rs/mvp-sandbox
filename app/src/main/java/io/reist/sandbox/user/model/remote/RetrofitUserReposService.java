@@ -23,12 +23,12 @@ public class RetrofitUserReposService implements RemoteUserReposService
     }
 
     @Override
-    public void unlike(User user, Repo repo) {
+    public void unlike(Repo repo) {
         throw new RuntimeException("Unsupported function");
     }
 
     @Override
-    public void like(User user, Repo repo) {
+    public void like(Repo repo) {
         throw new RuntimeException("Unsupported function");
     }
 }

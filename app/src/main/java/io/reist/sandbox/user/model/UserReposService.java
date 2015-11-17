@@ -14,8 +14,8 @@ public interface UserReposService {
 
     Observable<Response<List<Repo>>> findReposByUser(User user);
 
-    void like(User user, Repo repo);
+    void like(Repo repo);
 
-    void unlike(User user, Repo repo);
+    void unlike(Repo repo);
 
 }

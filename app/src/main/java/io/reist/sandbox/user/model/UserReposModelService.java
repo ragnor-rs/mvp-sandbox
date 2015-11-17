@@ -1,7 +1,5 @@
 package io.reist.sandbox.user.model;
 
-import android.util.Log;
-
 import com.fernandocejas.frodo.annotation.RxLogObservable;
 
 import java.util.List;
@@ -37,25 +35,27 @@ public class UserReposModelService implements UserReposService
     @RxLogObservable
     @Override
     public Observable<Response<List<Repo>>> findReposByUser(final User user) {
-        return Observable.merge(
-                local.findReposByUser(user),
-                remoteFindReposByUserIdWithSave(user).onErrorResumeNext((t) -> {
-                    Log.wtf(TAG, "findReposByUser", t);
-
-                    Response<List<Repo>> responseWithError = new Response<>();
-                    responseWithError.setError(new Response.Error("network error occured"));
-                    return Observable.just(responseWithError);
-                }))
+//        return Observable.merge(
+//                local.findReposByUser(user),
+//                remoteFindReposByUserIdWithSave(user).onErrorResumeNext((t) -> {
+//                    Log.wtf(TAG, "findReposByUser", t);
+//
+//                    Response<List<Repo>> responseWithError = new Response<>();
+//                    responseWithError.setError(new Response.Error("network error occured"));
+//                    return Observable.just(responseWithError);
+//                }))
+        return local
+                .findReposByUser(user)
                 .filter(response -> response.getData() != null && !response.getData().isEmpty() || !response.isSuccessful());
     }
 
     @Override
-    public void like(User user, Repo repo) {
-        local.like(user, repo);
+    public void like(Repo repo) {
+        local.like(repo);
     }
 
     @Override
-    public void unlike(User user, Repo repo) {
-        local.unlike(user, repo);
+    public void unlike(Repo repo) {
+        local.unlike(repo);
     }
 }

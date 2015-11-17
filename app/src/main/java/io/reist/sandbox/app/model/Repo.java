@@ -28,11 +28,11 @@ public class Repo {
     @SerializedName(JsonField.OWNER)
     public User owner;
 
-    @SerializedName(JsonField.LIKED_BY_ME)
-    public Boolean likedByMe;
-
     @StorIOSQLiteColumn(name = ReposTable.Column.USER_ID)
     public String userId;
+
+    @SerializedName(JsonField.LIKED_BY_ME)
+    public Boolean likedByMe;
 
     public boolean isLiked() {
         return likedByMe != null? likedByMe : false;
