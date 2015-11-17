@@ -4,7 +4,7 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 
 import java.util.List;
 
-import io.reist.sandbox.app.model.ResponseModel;
+import io.reist.sandbox.app.model.Response;
 import rx.Observable;
 
 /**
@@ -22,7 +22,7 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     }
 
     @RxLogObservable
-    protected Observable<ResponseModel<List<T>>> remoteListWithSave() {
+    protected Observable<Response<List<T>>> remoteListWithSave() {
         return remote
                 .list()
                 .doOnNext(response -> local.saveSync(response.getData()))
@@ -30,7 +30,7 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     }
 
     @RxLogObservable
-    protected Observable<ResponseModel<T>> remoteByIdWithSave(Long id) {
+    protected Observable<Response<T>> remoteByIdWithSave(Long id) {
         return remote
                 .byId(id)
                 .doOnNext(response -> local.saveSync(response.getData()));
@@ -38,18 +38,18 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
 
     /**
      * @return - data from local service and initiates remote service.
-     * Remote service can end up with error (f.e. network error), which will be emitted wrapped in ResponseModel.Error
+     * Remote service can end up with error (f.e. network error), which will be emitted wrapped in Response.Error
      * On success remote service saves data to local service, which should emit updated data immediately
      */
     @RxLogObservable
     @Override
-    public final Observable<ResponseModel<List<T>>> list() {
+    public final Observable<Response<List<T>>> list() {
         return Observable.merge(
                 local.list(),
                 remoteListWithSave()
                         .onErrorResumeNext((t) -> {
-                            ResponseModel<List<T>> responseWithError = new ResponseModel<>();
-                            responseWithError.setError(new ResponseModel.Error("network error occured"));
+                            Response<List<T>> responseWithError = new Response<>();
+                            responseWithError.setError(new Response.Error("network error occured"));
                             return Observable.just(responseWithError);
                         }))
                 .filter(response -> response.getData() != null && !response.getData().isEmpty() || !response.isSuccessful());
@@ -60,13 +60,13 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
      */
     @RxLogObservable
     @Override
-    public final Observable<ResponseModel<T>> byId(Long id) {
+    public final Observable<Response<T>> byId(Long id) {
         return Observable.merge(
                 local.byId(id),
                 remoteByIdWithSave(id)
                         .onErrorResumeNext((t) -> {
-                            ResponseModel<T> responseWithError = new ResponseModel<>();
-                            responseWithError.setError(new ResponseModel.Error("network error occured"));
+                            Response<T> responseWithError = new Response<>();
+                            responseWithError.setError(new Response.Error("network error occured"));
                             return Observable.just(responseWithError);
                         }))
                 .filter(response -> response.getData() != null || !response.isSuccessful());

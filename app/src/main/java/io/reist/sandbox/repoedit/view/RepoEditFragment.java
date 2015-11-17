@@ -9,12 +9,12 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
-import io.reist.sandbox.app.model.ResponseModel;
+import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.core.view.BaseFragment;
 import io.reist.sandbox.repoedit.RepoEditComponent;
 import io.reist.sandbox.repoedit.presenter.RepoEditPresenter;
-import io.reist.sandbox.repolist.model.Repo;
 
 /**
  * Created by defuera on 10/11/2015.
@@ -39,8 +39,8 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     @Inject
     RepoEditPresenter presenter;
 
-    public RepoEditFragment() {
-        super(R.layout.fragment_edit_repo);
+    public static RepoEditFragment newInstance() {
+        return newInstance(RepoEditFragment.class, R.layout.fragment_edit_repo);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     }
 
     @Override
-    public void displayError(ResponseModel.Error error) {
+    public void displayError(Response.Error error) {
         loaderView.showNetworkError();
     }
 

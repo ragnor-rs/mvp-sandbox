@@ -27,17 +27,51 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
 
     private static final int PERMISSION_REQUEST_CODE_GROUP = 0xab;
 
+    private static final String STATE_COMPONENT_ID = "STATE_COMPONENT_ID";
+    private static final String ARG_LAYOUT_RES_ID = "ARG_LAYOUT_RES_ID";
+
+    public static <T extends BaseFragment> T newInstance(Class<T> clazz, @LayoutRes int layoutResId) {
+        try {
+            T f = clazz.newInstance();
+
+            Bundle args = new Bundle();
+            args.putInt(ARG_LAYOUT_RES_ID, layoutResId);
+            f.setArguments(args);
+
+            return f;
+        } catch (java.lang.InstantiationException e) {
+            return null;
+        } catch (IllegalAccessException e) {
+            return null;
+        }
+    }
+
+    public interface FragmentController {
+        /**
+         * @param fragment - fragment to display
+         * @param remove   - boolean, stays for whether current fragment should be thrown away or stay in a back stack.
+         *                 false to stay in a back stack
+         */
+        void showFragment(BaseFragment fragment, boolean remove);
+    }
+
     private Runnable runnable;
     private int fragmentIndex;
 
-    private static final String STATE_COMPONENT_ID = "STATE_COMPONENT_ID";
-
     private Long componentId;
     private boolean stateSaved;
-    private final int layoutResId;
+    private int layoutResId;
 
-    public BaseFragment(@LayoutRes int layoutResId) {
-        this.layoutResId = layoutResId;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        layoutResId = getArguments().getInt(ARG_LAYOUT_RES_ID);
+
+        componentId = savedInstanceState == null ? null : savedInstanceState.getLong(STATE_COMPONENT_ID);
+        stateSaved = false;
+
+        inject(getComponent());
     }
 
     @SuppressWarnings("unused")
@@ -136,14 +170,6 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
 
     /// --- ///
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        componentId = savedInstanceState == null ? null : savedInstanceState.getLong(STATE_COMPONENT_ID);
-        stateSaved = false;
-        inject(getComponent());
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -182,5 +208,14 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     protected abstract void inject(Object from);
 
     protected abstract P getPresenter();
+
+    protected FragmentController getFragmentController() {
+        Object a = getActivity();
+        if (a instanceof FragmentController) {
+            return (FragmentController) a;
+        } else {
+            throw new IllegalArgumentException("Can't find " + FragmentController.class.getSimpleName());
+        }
+    }
 
 }

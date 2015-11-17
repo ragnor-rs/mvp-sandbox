@@ -2,7 +2,7 @@ package io.reist.sandbox.core.model;
 
 import java.util.List;
 
-import io.reist.sandbox.app.model.ResponseModel;
+import io.reist.sandbox.app.model.Response;
 import rx.Observable;
 
 /**
@@ -10,9 +10,9 @@ import rx.Observable;
  */
 public interface BaseService<T> {
 
-    Observable<ResponseModel<List<T>>> list();
+    Observable<Response<List<T>>> list();
 
-    Observable<ResponseModel<T>> byId(Long id); //cur this is not true. Api will not wrap simple model into a wrapper
+    Observable<Response<T>> byId(Long id); //cur this is not true. Api will not wrap simple model into a wrapper
 
     Observable<Integer> save(List<T> list);
 

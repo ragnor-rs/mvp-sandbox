@@ -15,14 +15,13 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
-import io.reist.sandbox.app.model.ResponseModel;
-import io.reist.sandbox.app.view.MainActivity;
+import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.core.view.BaseFragment;
 import io.reist.sandbox.repoedit.presenter.RepoEditPresenter;
 import io.reist.sandbox.repoedit.view.RepoEditFragment;
 import io.reist.sandbox.repolist.ReposFragmentComponent;
-import io.reist.sandbox.repolist.model.Repo;
 import io.reist.sandbox.repolist.presenter.RepoListAdapter;
 import io.reist.sandbox.repolist.presenter.RepoListPresenter;
 
@@ -42,8 +41,8 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
 
     private RepoListAdapter adapter;
 
-    public RepoListFragment() {
-        super(R.layout.github_fragment);
+    public static final RepoListFragment newInstance() {
+        return newInstance(RepoListFragment.class, R.layout.github_fragment);
     }
 
     @Override
@@ -83,7 +82,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     }
 
     @Override
-    public void displayError(ResponseModel.Error error) {
+    public void displayError(Response.Error error) {
         if (adapter == null || adapter.getItemCount() == 0) {
             loaderView.showNetworkError();
         } else {
@@ -99,11 +98,9 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         loaderView.hide();
         adapter = new RepoListAdapter(data);
         adapter.setItemClickListener(repo -> {
-            RepoEditFragment fragment = new RepoEditFragment();
-            Bundle bundle = new Bundle();
-            bundle.putLong(RepoEditPresenter.EXTRA_REPO_ID, repo.id);
-            fragment.setArguments(bundle);
-            ((MainActivity) getActivity()).showFragment(fragment, false);
+            RepoEditFragment fragment = RepoEditFragment.newInstance();
+            fragment.getArguments().putLong(RepoEditPresenter.EXTRA_REPO_ID, repo.id);
+            getFragmentController().showFragment(fragment, false);
         });
         mRecyclerView.setAdapter(adapter);
     }

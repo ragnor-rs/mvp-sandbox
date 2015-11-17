@@ -8,9 +8,10 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
-import io.reist.sandbox.app.model.ResponseModel;
+import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.Response;
+import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.sandbox.core.model.local.StorIoService;
-import io.reist.sandbox.repolist.model.Repo;
 import io.reist.sandbox.repolist.model.RepoService;
 import rx.Observable;
 
@@ -22,19 +23,19 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
 
     @RxLogObservable
     @Override
-    public Observable<ResponseModel<List<Repo>>> list() {
+    public Observable<Response<List<Repo>>> list() {
         return preparedGetBuilder(Repo.class)
-                .withQuery(Query.builder().table(ReposTable.TABLE_NAME).build())
+                .withQuery(Query.builder().table(ReposTable.NAME).build())
                 .prepare()
                 .createObservable()
-                .map(ResponseModel::new);
+                .map(Response::new);
     }
 
     @RxLogObservable
     @Override
-    public Observable<ResponseModel<Repo>> byId(Long id) {
-        return unique(Repo.class, ReposTable.TABLE_NAME, id)
-                .map(ResponseModel<Repo>::new);
+    public Observable<Response<Repo>> byId(Long id) {
+        return unique(Repo.class, ReposTable.NAME, id)
+                .map(Response<Repo>::new);
     }
 
     @Override
@@ -43,8 +44,8 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 .delete()
                 .byQuery(
                         DeleteQuery.builder()
-                                .table(ReposTable.TABLE_NAME)
-                                .where(ReposTable.COLUMN_ID + " = ?")
+                                .table(ReposTable.NAME)
+                                .where(ReposTable.Column.ID + " = ?")
                                 .whereArgs(id)
                                 .build()
                 )

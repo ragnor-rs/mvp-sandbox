@@ -5,7 +5,11 @@ package io.reist.sandbox.core.model.local;
  */
 public abstract class BaseTable {
 
-    public abstract String getCreateTableQuery(int databaseVersion);
+    public interface Column {
+        String ID = "_id";
+    }
+
+    public abstract String getCreateTableQuery();
 
     public abstract String[] getUpgradeTableQueries(int oldVersion);
 

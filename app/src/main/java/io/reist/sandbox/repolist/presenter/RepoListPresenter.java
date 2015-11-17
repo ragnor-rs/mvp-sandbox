@@ -10,10 +10,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reist.sandbox.R;
-import io.reist.sandbox.app.model.ResponseModel;
-import io.reist.sandbox.app.model.ResponseModelObserver;
+import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.Response;
+import io.reist.sandbox.app.model.ResponseObserver;
 import io.reist.sandbox.core.presenter.BasePresenter;
-import io.reist.sandbox.repolist.model.Repo;
 import io.reist.sandbox.repolist.model.RepoService;
 import io.reist.sandbox.repolist.view.RepoListView;
 import rx.Subscriber;
@@ -37,10 +37,10 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
     }
 
     public void loadData() {
-        subscribe(repoService.list(), new ResponseModelObserver<List<Repo>>() {
+        subscribe(repoService.list(), new ResponseObserver<List<Repo>>() {
 
             @Override
-            protected void onFail(ResponseModel.Error error) {
+            protected void onFail(Response.Error error) {
                 view().showLoader(false);
                 view().displayError(error);
             }

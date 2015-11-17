@@ -4,29 +4,29 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 
 import java.util.List;
 
-import io.reist.sandbox.app.model.ResponseModel;
+import io.reist.sandbox.app.Const;
+import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.Response;
+import io.reist.sandbox.app.model.remote.GitHubApi;
 import io.reist.sandbox.core.model.remote.RetrofitService;
-import io.reist.sandbox.repolist.model.Repo;
 import io.reist.sandbox.repolist.model.RepoService;
 import rx.Observable;
 
 public class RetrofitRepoService extends RetrofitService<Repo> implements RepoService {
 
-    private final GitHubApi gitHubApi;
-
     public RetrofitRepoService(GitHubApi gitHubApi) {
-        this.gitHubApi = gitHubApi;
+        super(gitHubApi);
     }
 
     @RxLogObservable
     @Override
-    public Observable<ResponseModel<List<Repo>>> list() {
-        return gitHubApi.listRepos();
+    public Observable<Response<List<Repo>>> list() {
+        return gitHubApi.listRepos(Const.DEFAULT_USER_ID);
     }
 
     @RxLogObservable
     @Override
-    public Observable<ResponseModel<Repo>> byId(Long id) {
+    public Observable<Response<Repo>> byId(Long id) {
         return gitHubApi.repoById(id);
     }
 
