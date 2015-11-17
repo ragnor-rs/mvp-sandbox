@@ -34,7 +34,7 @@ public class RepoGetResolver extends GetResolver<Repo> {
                 .withQuery(Query
                         .builder()
                         .table(UserTable.NAME)
-                        .where(UserTable.Column.NAME + " = ?")
+                        .where(UserTable.Column.ID + " = ?")
                         .whereArgs(repo.userId)
                         .limit(1)
                         .build())

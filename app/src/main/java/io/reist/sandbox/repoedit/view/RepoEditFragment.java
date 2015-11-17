@@ -74,7 +74,7 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     @Override
     public void displayData(Repo repo) {
         repoName.setText(repo.name);
-        authorName.setText(repo.author);
+        authorName.setText(repo.owner.name);
         repoUrl.setText(repo.url);
     }
 

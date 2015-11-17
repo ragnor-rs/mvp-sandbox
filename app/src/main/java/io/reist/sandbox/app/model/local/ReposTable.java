@@ -12,7 +12,6 @@ public class ReposTable extends BaseTable {
     public interface Column extends BaseTable.Column {
         String NAME = "name";
         String URL = "url";
-        String AUTHOR = "author";
         String LIKE_COUNT = "like_count";
         String USER_ID = "user_id";
     }
@@ -21,7 +20,6 @@ public class ReposTable extends BaseTable {
             Column.ID + " integer not null primary key, " +
             Column.NAME + " text, " +
             Column.URL + " text, " +
-            Column.AUTHOR + " text, " +
             Column.LIKE_COUNT + " integer, " +
             Column.USER_ID + " integer not null, " +
             "FOREIGN KEY (" + Column.USER_ID + ") "+
@@ -48,8 +46,7 @@ public class ReposTable extends BaseTable {
 
                         "alter table " +
                                 NAME + " " +
-                                "add column " +
-                                Column.AUTHOR + " text " +
+                                "add column author text " +
                                 "default " +
                                 "\"JakeWharton\""
 

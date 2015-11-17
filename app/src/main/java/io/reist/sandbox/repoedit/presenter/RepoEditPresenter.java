@@ -55,7 +55,7 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
 
     public void saveRepo(String name, String author, String url) {
         repo.name = name;
-        repo.author = author;
+        repo.owner.name = author;
         repo.url = url;
 
         subscribe(repoService.save(repo), new Observer<Boolean>() {

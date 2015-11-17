@@ -13,6 +13,7 @@ import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.model.ResponseObserver;
+import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.core.presenter.BasePresenter;
 import io.reist.sandbox.repolist.model.RepoService;
 import io.reist.sandbox.repolist.view.RepoListView;
@@ -58,8 +59,13 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         Random rand = new Random();
         Repo object = new Repo();
 
+        User owner = new User();
+
+        owner.id = String.valueOf(rand.nextInt(100));
+        owner.name = "author";
+
         object.id = Long.valueOf(rand.nextInt(100));
-        object.author = "author";
+        object.owner = owner;
         object.name = "name_" + object.id;
         object.url = "url";
 
