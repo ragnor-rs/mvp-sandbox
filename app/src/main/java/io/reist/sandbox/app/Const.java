@@ -5,6 +5,6 @@ package io.reist.sandbox.app;
  */
 public class Const {
 
-    public static final String DEFAULT_USER_ID = "1";
+    public static final Long DEFAULT_USER_ID = 1L;
 
 }

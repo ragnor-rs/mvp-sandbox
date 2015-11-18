@@ -14,6 +14,7 @@ public class ReposTable extends BaseTable {
         String URL = "url";
         String LIKE_COUNT = "like_count";
         String USER_ID = "user_id";
+        String LIKED_BY_ME = "liked_by_me";
     }
 
     private static final String CREATE_TABLE = "create table " + NAME + "(" +
@@ -22,7 +23,8 @@ public class ReposTable extends BaseTable {
             Column.URL + " text, " +
             Column.LIKE_COUNT + " integer, " +
             Column.USER_ID + " integer not null, " +
-            "FOREIGN KEY (" + Column.USER_ID + ") "+
+            Column.LIKED_BY_ME + " integer, " +
+            "FOREIGN KEY (" + Column.USER_ID + ") " +
             "REFERENCES " + UserTable.NAME + "(" + UserTable.Column.ID + ")" +
             ")";
 

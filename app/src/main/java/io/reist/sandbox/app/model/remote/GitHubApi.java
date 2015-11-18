@@ -19,7 +19,7 @@ import rx.Observable;
 public interface GitHubApi {
 
     @GET("/repos")
-    Observable<Response<List<Repo>>> listRepos(@Query("user_id") String userId);
+    Observable<Response<List<Repo>>> listRepos(@Query("user_id") Long userId);
 
     @GET("/repos/{id}")
     Observable<Response<Repo>> repoById(@Path("id") Long id);
@@ -29,13 +29,19 @@ public interface GitHubApi {
             @Body Repo repo
     );
 
+    @POST("/repos/{id}/like")
+    Observable<Response<Repo>> like(@Path("id") Long repoId, @Query("user_id") Long userId);
+
+    @POST("/repos/{id}/unlike")
+    Observable<Response<Repo>> unlike(@Path("id") Long repoId, @Query("user_id") Long userId);
+
     @DELETE("/repos/{id}")
     Observable<Integer> delete(Long id); //cur not implemented in apiary
 
     @GET("/users")
     Observable<Response<List<User>>> listUsers();
 
-    @GET("/user/{id}/repos")
-    Observable<Response<List<Repo>>> reposByUserId(@Path("id") String userReposId, @Query("user_id") String userId);
+    @GET("/users/{id}/repos")
+    Observable<Response<List<Repo>>> reposByUserId(@Path("id") Long userReposId, @Query("user_id") Long userId);
 
 }

@@ -25,14 +25,15 @@ public class Repo {
     @StorIOSQLiteColumn(name = ReposTable.Column.LIKE_COUNT)
     public Integer likeCount;
 
+    @SerializedName(JsonField.LIKED_BY_ME)
+    @StorIOSQLiteColumn(name = ReposTable.Column.LIKED_BY_ME)
+    public Boolean likedByMe;
+
     @SerializedName(JsonField.OWNER)
     public User owner;
 
     @StorIOSQLiteColumn(name = ReposTable.Column.USER_ID)
-    public String userId;
-
-    @SerializedName(JsonField.LIKED_BY_ME)
-    public Boolean likedByMe;
+    public Long userId;
 
     public boolean isLiked() {
         return likedByMe != null? likedByMe : false;

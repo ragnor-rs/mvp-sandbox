@@ -1,16 +1,11 @@
 package io.reist.sandbox.user.model;
 
-import java.util.List;
-
-import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.model.User;
-import rx.Observable;
+import io.reist.sandbox.core.model.BaseService;
 
 /**
  * Created by m039 on 11/12/15.
  */
-public interface UserService {
-
-    Observable<Response<List<User>>> list();
+public interface UserService extends BaseService<User> {
 
 }

@@ -13,8 +13,8 @@ import rx.Observable;
  */
 public abstract class CachedService<T> extends AbstractBaseService<T> {
 
-    private final BaseService<T> local;
-    private final BaseService<T> remote;
+    protected final BaseService<T> local;
+    protected final BaseService<T> remote;
 
     public CachedService(BaseService<T> local, BaseService<T> remote) {
         this.local = local;

@@ -17,10 +17,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.reist.sandbox.app.model.DbOpenHelper;
-import io.reist.sandbox.app.model.Like;
-import io.reist.sandbox.app.model.LikeStorIOSQLiteDeleteResolver;
-import io.reist.sandbox.app.model.LikeStorIOSQLiteGetResolver;
-import io.reist.sandbox.app.model.LikeStorIOSQLitePutResolver;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.app.model.User;
@@ -74,14 +70,6 @@ public class SandboxModule {
                                 .deleteResolver(new UserStorIOSQLiteDeleteResolver())
                                 .build()
                 )
-                .addTypeMapping(
-                        Like.class,
-                        SQLiteTypeMapping.<Like>builder()
-                                .putResolver(new LikeStorIOSQLitePutResolver())
-                                .getResolver(new LikeStorIOSQLiteGetResolver())
-                                .deleteResolver(new LikeStorIOSQLiteDeleteResolver())
-                                .build()
-                )
                 .build();
 
     }
@@ -107,6 +95,7 @@ public class SandboxModule {
                 .baseUrl(GIT_HUB_BASE_URL)
                 .client(httpClient)
                 .build();
+
 
         return retrofit.create(GitHubApi.class);
 

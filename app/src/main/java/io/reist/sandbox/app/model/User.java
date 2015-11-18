@@ -18,7 +18,7 @@ public class User {
 
     @SerializedName(JsonField.ID)
     @StorIOSQLiteColumn(name = UserTable.Column.ID, key = true)
-    public String id;
+    public Long id;
 
     @SerializedName(JsonField.NAME)
     @StorIOSQLiteColumn(name = UserTable.Column.NAME)

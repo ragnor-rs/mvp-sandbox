@@ -11,7 +11,6 @@ import com.pushtorefresh.storio.sqlite.queries.RawQuery;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.RepoStorIOSQLiteGetResolver;
 import io.reist.sandbox.app.model.User;
-import io.reist.sandbox.app.model.local.LikeTable;
 import io.reist.sandbox.app.model.local.UserTable;
 
 /**
@@ -26,11 +25,6 @@ public class RepoGetResolver extends GetResolver<Repo> {
     @Override
     public Repo mapFromCursor(@NonNull Cursor cursor) {
         Repo repo = defaultGetResolver.mapFromCursor(cursor);
-
-        int likedByMeIndex = cursor.getColumnIndex(LikeTable.Column.LIKED_BY_ME);
-        if (likedByMeIndex != -1) {
-            repo.likedByMe = cursor.getInt(likedByMeIndex) == 1;
-        }
 
         final StorIOSQLite storIOSQLite = storIOSQLiteFromPerformGet.get();
 

@@ -61,7 +61,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
 
         User owner = new User();
 
-        owner.id = String.valueOf(rand.nextInt(100));
+        owner.id = Long.valueOf(rand.nextInt(100));
         owner.name = "author";
 
         object.id = Long.valueOf(rand.nextInt(100));

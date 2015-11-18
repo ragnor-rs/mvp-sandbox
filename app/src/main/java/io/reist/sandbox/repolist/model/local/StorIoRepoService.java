@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.Response;
+import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.sandbox.core.model.local.StorIoService;
 import io.reist.sandbox.repolist.model.RepoService;
@@ -52,6 +53,50 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 .prepare() // BTW: it will use transaction!
                 .createObservable()
                 .map(DeleteResult::numberOfRowsDeleted);
+    }
+
+    @RxLogObservable
+    @Override
+    public Observable<Response<List<Repo>>> findReposByUser(User user) {
+        return preparedGetBuilder(Repo.class)
+                .withQuery(
+                        Query
+                                .builder()
+                                .table(ReposTable.NAME)
+                                .where(ReposTable.Column.USER_ID + " = ?")
+                                .whereArgs(user.id)
+                                .orderBy(ReposTable.Column.ID)
+                                .build())
+                .prepare()
+                .createObservable()
+                .map(Response::new);
+    }
+
+    @Override
+    public Observable<Response<Repo>> unlike(Repo repo) {
+        return like(repo, false);
+    }
+
+    @Override
+    public Observable<Response<Repo>> like(Repo repo) {
+        return like(repo, true);
+    }
+
+    private Observable<Response<Repo>> like(final Repo repo, boolean likedByMe) {
+        if (likedByMe) {
+            repo.likeCount += 1;
+        } else {
+            repo.likeCount -= 1;
+        }
+
+        repo.likedByMe = likedByMe;
+
+        preparedPutBuilder()
+                .object(repo)
+                .prepare()
+                .executeAsBlocking();
+
+        return Observable.just(repo).map(Response::new);
     }
 
 }

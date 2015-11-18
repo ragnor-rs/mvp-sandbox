@@ -7,6 +7,7 @@ import java.util.List;
 import io.reist.sandbox.app.Const;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.Response;
+import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
 import io.reist.sandbox.core.model.remote.RetrofitService;
 import io.reist.sandbox.repolist.model.RepoService;
@@ -55,6 +56,21 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
     @Override
     public boolean saveSync(Repo repo) {
         throw new UnsupportedOperationException("you cannot save make api calls synchronously");
+    }
+
+    @Override
+    public Observable<Response<Repo>> unlike(Repo repo) {
+        return gitHubApi.unlike(repo.id, Const.DEFAULT_USER_ID);
+    }
+
+    @Override
+    public Observable<Response<Repo>> like(Repo repo) {
+        return gitHubApi.like(repo.id, Const.DEFAULT_USER_ID);
+    }
+
+    @Override
+    public Observable<Response<List<Repo>>> findReposByUser(User user) {
+        return gitHubApi.reposByUserId(user.id, Const.DEFAULT_USER_ID);
     }
 
 }

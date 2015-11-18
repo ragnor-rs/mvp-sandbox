@@ -15,7 +15,7 @@ public class UserTable extends BaseTable {
     }
 
     private static final String CREATE_TABLE = "create table " + NAME + "(" +
-            Column.ID + " text not null primary key, " +
+            Column.ID + " integer not null primary key, " +
             Column.NAME + " text, " +
             Column.LOGIN + " text" +
             ")";
