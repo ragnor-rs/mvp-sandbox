@@ -1,13 +1,12 @@
 package io.reist.sandbox.app.view;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,16 +14,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
-import java.util.List;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.core.view.BaseFragment;
 import io.reist.sandbox.repolist.view.RepoListFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, android.app.FragmentManager.OnBackStackChangedListener {
+
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
+    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,26 +35,28 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fragmentManager = getFragmentManager();
 
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-            }
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+        );
 
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        drawerLayout.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+        drawerToggle.setToolbarNavigationClickListener(v -> fragmentManager.popBackStackImmediate());
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_camara);
 
-        showFragment(new RepoListFragment(), true);
+        fragmentManager.addOnBackStackChangedListener(this);
+
+        showFragment(new RepoListFragment(), false);
 
     }
 
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+        } else if (fragmentManager.getBackStackEntryCount() > 1) {
             super.onBackPressed();
         }
     }
@@ -77,9 +79,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -94,27 +93,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camara) {
-            showFragment(new RepoListFragment(), true);
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        switch (item.getItemId()) {
+            case R.id.nav_camara:
+                showFragment(new RepoListFragment(), true, true);
+                break;
+            case R.id.nav_gallery:
+                showFragment(new TestFragment(), true, true);
+                break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
-
     }
 
     /**
@@ -123,15 +112,21 @@ public class MainActivity extends AppCompatActivity
      *                 false to stay in a back stack
      */
     public void showFragment(BaseFragment fragment, boolean remove) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        showFragment(fragment, remove, false);
+    }
+
+    private void showFragment(BaseFragment fragment, boolean remove, boolean popBackStackInclusive) {
         Fragment topmostFragment = findTopmostFragment(fragmentManager);
         if (topmostFragment != null && fragment.getName().equals(topmostFragment.getTag())) {
             return;
         }
-        replace(fragmentManager, topmostFragment, fragment, remove);
+        replace(fragmentManager, topmostFragment, fragment, remove, popBackStackInclusive);
     }
 
-    private static void replace(FragmentManager fragmentManager, Fragment what, BaseFragment with, boolean remove) {
+    private static void replace(FragmentManager fragmentManager, Fragment what, BaseFragment with, boolean remove, boolean popBackStackInclusive) {
+        if (popBackStackInclusive && fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryAt(0).getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
@@ -148,21 +143,16 @@ public class MainActivity extends AppCompatActivity
         if (with.isAdded()) {
             transaction.show(with);
         } else {
-
             transaction.add(R.id.fragment_container, with, fragmentName);
-
-            List<Fragment> fragments = fragmentManager.getFragments();
-            with.setFragmentIndex(fragments == null ? 0 : fragments.size());
-
         }
 
         transaction.show(with).addToBackStack(fragmentName).commit();
-
     }
 
     @Nullable
     private static Fragment findTopmostFragment(FragmentManager fragmentManager) {
         int backStackEntryCount = fragmentManager.getBackStackEntryCount();
+
         Fragment topmostFragment;
         if (backStackEntryCount > 0) {
             String fragmentName = fragmentManager.getBackStackEntryAt(backStackEntryCount - 1).getName();
@@ -171,6 +161,21 @@ public class MainActivity extends AppCompatActivity
             topmostFragment = null;
         }
         return topmostFragment;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public void onBackStackChanged() {
+        boolean showBurger = fragmentManager.getBackStackEntryCount() == 1;
+        drawerToggle.setDrawerIndicatorEnabled(showBurger);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(!showBurger);
+        drawerToggle.syncState();
     }
 
 }
