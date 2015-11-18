@@ -49,7 +49,7 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
                 remoteListWithSave()
                         .onErrorResumeNext((t) -> {
                             ResponseModel<List<T>> responseWithError = new ResponseModel<>();
-                            responseWithError.setError(new ResponseModel.Error("network error occured"));
+                            responseWithError.setError(new ResponseModel.Error("network error occurred"));
                             return Observable.just(responseWithError);
                         }))
                 .filter(response -> response.getData() != null && !response.getData().isEmpty() || !response.isSuccessful());

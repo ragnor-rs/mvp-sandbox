@@ -28,5 +28,6 @@ public interface GitHubApi {
     );
 
     @DELETE("/repos/{id}")
-    Observable<Integer> delete(Long id); //cur not implemented in apiary
+    Observable<Integer> deleteRepo(@Path("id") Long id);
+
 }

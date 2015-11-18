@@ -44,7 +44,7 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
 
     @Override
     public Observable<Integer> delete(Long id) {
-        return gitHubApi.delete(id);
+        return gitHubApi.deleteRepo(id);
     }
 
     @Override
