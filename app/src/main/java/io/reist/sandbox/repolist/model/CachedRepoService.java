@@ -26,8 +26,7 @@ public class CachedRepoService extends CachedService<Repo> implements RepoServic
     protected Observable<Response<List<Repo>>> remoteFindReposByUserIdWithSave(User user) {
         return remote
                 .findReposByUser(user)
-                .filter(r -> r.getData() != null)
-                .doOnNext(r -> local.saveSync(r.getData()))
+                .doOnNext(r -> { if (r.getData() != null) local.saveSync(r.getData()); })
                 .filter(r -> !r.isSuccessful());
     }
 
@@ -36,11 +35,12 @@ public class CachedRepoService extends CachedService<Repo> implements RepoServic
     public Observable<Response<List<Repo>>> findReposByUser(final User user) {
         return Observable.merge(
                 local.findReposByUser(user),
-                remoteFindReposByUserIdWithSave(user).onErrorResumeNext((t) -> {
-                    Response<List<Repo>> responseWithError = new Response<>();
-                    responseWithError.setError(new Response.Error("network error occured"));
-                    return Observable.just(responseWithError);
-                }))
+                remoteFindReposByUserIdWithSave(user)
+                        .onErrorResumeNext((t) -> {
+                            Response<List<Repo>> responseWithError = new Response<>();
+                            responseWithError.setError(new Response.Error("network error occured"));
+                            return Observable.just(responseWithError);
+                        }))
                 .filter(response -> response.getData() != null && !response.getData().isEmpty() || !response.isSuccessful());
     }
 
@@ -59,8 +59,8 @@ public class CachedRepoService extends CachedService<Repo> implements RepoServic
     @RxLogObservable
     private Observable<Response<Repo>> like(Repo repo, boolean like) {
         return Observable.merge(
-                (like? local.like(repo) : local.unlike(repo)),
-                (like? remote.like(repo) : remote.unlike(repo))
+                (like ? local.like(repo) : local.unlike(repo)),
+                (like ? remote.like(repo) : remote.unlike(repo))
                         .doOnNext(r -> { if (r.getData() != null) local.saveSync(r.getData()); })
                         .filter(r -> !r.isSuccessful())
                         .onErrorResumeNext((t) -> {

@@ -35,11 +35,11 @@ public class UserReposPresenter extends BasePresenter<UserReposView> {
     }
 
     public void like(Repo repo) {
-        subscribe(repoService.unlike(repo), new LikeObserver(true));
+        subscribe(repoService.like(repo), new LikeObserver(true));
     }
 
     public void unlike(Repo repo) {
-        subscribe(repoService.like(repo), new LikeObserver(false));
+        subscribe(repoService.unlike(repo), new LikeObserver(false));
     }
 
     public void loadData() {
