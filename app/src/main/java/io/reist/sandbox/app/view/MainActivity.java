@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
+    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        fragmentManager = getFragmentManager();
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(
@@ -45,13 +48,13 @@ public class MainActivity extends AppCompatActivity
 
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();
-        drawerToggle.setToolbarNavigationClickListener(v -> getFragmentManager().popBackStackImmediate());
+        drawerToggle.setToolbarNavigationClickListener(v -> fragmentManager.popBackStackImmediate());
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_camara);
 
-        getFragmentManager().addOnBackStackChangedListener(this);
+        fragmentManager.addOnBackStackChangedListener(this);
 
         showFragment(new RepoListFragment(), false);
 
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (getFragmentManager().getBackStackEntryCount() > 1) {
+        } else if (fragmentManager.getBackStackEntryCount() > 1) {
             super.onBackPressed();
         }
     }
@@ -113,7 +116,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showFragment(BaseFragment fragment, boolean remove, boolean popBackStackInclusive) {
-        FragmentManager fragmentManager = getFragmentManager();
         Fragment topmostFragment = findTopmostFragment(fragmentManager);
         if (topmostFragment != null && fragment.getName().equals(topmostFragment.getTag())) {
             return;
@@ -170,8 +172,9 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onBackStackChanged() {
-        drawerToggle.setDrawerIndicatorEnabled(getFragmentManager().getBackStackEntryCount() == 1);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(getFragmentManager().getBackStackEntryCount() > 1);
+        boolean showBurger = fragmentManager.getBackStackEntryCount() == 1;
+        drawerToggle.setDrawerIndicatorEnabled(showBurger);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(!showBurger);
         drawerToggle.syncState();
     }
 
