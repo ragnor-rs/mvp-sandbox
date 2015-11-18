@@ -1,5 +1,7 @@
 package io.reist.sandbox.app;
 
+import android.util.Log;
+
 import io.reist.sandbox.core.BaseApplication;
 import io.reist.sandbox.core.BaseModule;
 import io.reist.sandbox.core.view.BaseView;
@@ -10,6 +12,8 @@ import io.reist.sandbox.repolist.view.RepoListFragment;
  * Created by Reist on 10/16/15.
  */
 public class SandboxApplication extends BaseApplication {
+
+    private static final String TAG = SandboxApplication.class.getSimpleName();
 
     private final SandboxComponent sandboxComponent = DaggerSandboxComponent.builder()
             .sandboxModule(new SandboxModule())
@@ -29,7 +33,8 @@ public class SandboxApplication extends BaseApplication {
         } else if (RepoEditFragment.class.isAssignableFrom(viewClass)) {
             return sandboxComponent.editReposComponent();
         } else {
-            throw new RuntimeException("Unknown view class: " + viewClass.getName());
+            Log.w(TAG, "Unknown view class: \" + viewClass.getName()");
+            return null;
         }
 
     }

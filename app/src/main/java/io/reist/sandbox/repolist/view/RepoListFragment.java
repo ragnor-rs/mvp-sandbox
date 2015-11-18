@@ -55,7 +55,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         mRecyclerView.setHasFixedSize(true);
 
         // setView a linear layout manager
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         loaderView.setOnRetryClickListener(v -> presenter.loadData());
