@@ -29,7 +29,8 @@ public class SandboxApplication extends BaseApplication {
         } else if (RepoEditFragment.class.isAssignableFrom(viewClass)) {
             return sandboxComponent.editReposComponent();
         } else {
-            throw new RuntimeException("Unknown view class: " + viewClass.getName());
+            return null; //cur what shall I do
+//            throw new RuntimeException("Unknown view class: " + viewClass.getName());
         }
 
     }
