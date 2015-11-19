@@ -1,25 +1,22 @@
 package io.reist.sandbox.app.view;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import io.reist.sandbox.R;
-import io.reist.sandbox.core.view.BaseFragment;
+import io.reist.sandbox.core.view.BaseActivity;
 import io.reist.sandbox.repolist.view.RepoListFragment;
+import io.reist.sandbox.user.view.UsersFragment;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, android.app.FragmentManager.OnBackStackChangedListener {
 
     private DrawerLayout drawerLayout;
@@ -95,7 +92,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.nav_camara:
-                showFragment(new RepoListFragment(), true, true);
+                showFragment(RepoListFragment.newInstance(), true, true);
                 break;
             case R.id.nav_gallery:
                 showFragment(UsersFragment.newInstance(), true, true);
@@ -106,5 +103,20 @@ public class MainActivity extends AppCompatActivity
         return true;
 
     }
-    
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public void onBackStackChanged() {
+        boolean showBurger = fragmentManager.getBackStackEntryCount() == 1;
+        drawerToggle.setDrawerIndicatorEnabled(showBurger);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(!showBurger);
+        drawerToggle.syncState();
+    }
+
 }

@@ -22,8 +22,6 @@ import io.reist.sandbox.core.view.BaseFragment;
 import io.reist.sandbox.user.UserFragmentComponent;
 import io.reist.sandbox.user.presenter.UserReposPresenter;
 
-;
-
 /**
  * Created by Reist on 10/13/15.
  */
@@ -67,7 +65,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
         mRecyclerView.setHasFixedSize(true);
 
         // setView a linear layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter = new UserReposAdapter());
 

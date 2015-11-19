@@ -28,6 +28,10 @@ public interface GitHubApi {
             @Body Repo repo
     );
 
+
+    @DELETE("/repos/{id}")
+    Observable<Integer> deleteRepo(@Path("id") Long id);
+
     @POST("/repos/{id}/like")
     Observable<Response<Repo>> like(@Path("id") Long repoId);
 

@@ -59,6 +59,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     private boolean stateSaved;
     private int layoutResId;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
