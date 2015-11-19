@@ -7,7 +7,7 @@ import io.reist.sandbox.core.model.CachedService;
  * Created by m039 on 11/12/15.
  */
 public class UserCachedService
-    extends CachedService<User>
+        extends CachedService<User>
         implements UserService
 {
 
