@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Response<T> {
 
-    @SerializedName(JsonField.DATA)
+    @SerializedName("data")
     private T data;
 
     private Error error;
@@ -37,9 +37,16 @@ public class Response<T> {
 
     public static class Error {
         private final String message;
+        private final Throwable throwable;
 
         public Error(String message) {
             this.message = message;
+            this.throwable = null;
+        }
+
+        public Error(Throwable throwable) {
+            this.throwable = throwable;
+            this.message = null;
         }
     }
 }

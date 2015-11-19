@@ -10,7 +10,6 @@ import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
-import retrofit.http.Query;
 import rx.Observable;
 
 /**
@@ -19,7 +18,7 @@ import rx.Observable;
 public interface GitHubApi {
 
     @GET("/repos")
-    Observable<Response<List<Repo>>> listRepos(@Query("user_id") Long userId);
+    Observable<Response<List<Repo>>> listRepos();
 
     @GET("/repos/{id}")
     Observable<Response<Repo>> repoById(@Path("id") Long id);
@@ -30,10 +29,10 @@ public interface GitHubApi {
     );
 
     @POST("/repos/{id}/like")
-    Observable<Response<Repo>> like(@Path("id") Long repoId, @Query("user_id") Long userId);
+    Observable<Response<Repo>> like(@Path("id") Long repoId);
 
     @POST("/repos/{id}/unlike")
-    Observable<Response<Repo>> unlike(@Path("id") Long repoId, @Query("user_id") Long userId);
+    Observable<Response<Repo>> unlike(@Path("id") Long repoId);
 
     @DELETE("/repos/{id}")
     Observable<Integer> delete(Long id); //cur not implemented in apiary
@@ -42,6 +41,6 @@ public interface GitHubApi {
     Observable<Response<List<User>>> listUsers();
 
     @GET("/users/{id}/repos")
-    Observable<Response<List<Repo>>> reposByUserId(@Path("id") Long userReposId, @Query("user_id") Long userId);
+    Observable<Response<List<Repo>>> reposByUserId(@Path("id") Long userId);
 
 }

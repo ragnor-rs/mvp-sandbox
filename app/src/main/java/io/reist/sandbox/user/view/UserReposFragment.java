@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.parceler.Parcels;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,7 +17,6 @@ import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.Response;
-import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.core.view.BaseFragment;
 import io.reist.sandbox.user.UserFragmentComponent;
@@ -44,12 +41,12 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
     UserReposPresenter presenter;
 
     private UserReposAdapter adapter;
-    private User mUser;
+    private Long mUserId;
 
-    public static UserReposFragment newInstance(User user) {
+    public static UserReposFragment newInstance(Long userId) {
         UserReposFragment f = newInstance(UserReposFragment.class, R.layout.fragment_user_repos);
 
-        f.getArguments().putParcelable(ARG_USER, Parcels.wrap(user));
+        f.getArguments().putLong(ARG_USER, userId);
 
         return f;
     }
@@ -58,7 +55,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mUser = Parcels.unwrap(getArguments().getParcelable(ARG_USER));
+        mUserId = getArguments().getLong(ARG_USER);
     }
 
     @Override
@@ -109,8 +106,8 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
     }
 
     @Override
-    public User getUser() {
-        return mUser;
+    public Long getUserId() {
+        return mUserId;
     }
 
     @Override

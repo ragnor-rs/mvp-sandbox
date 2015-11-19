@@ -1,4 +1,4 @@
-package io.reist.sandbox.app.model.remote;
+package io.reist.sandbox.core.model.remote;
 
 import android.support.annotation.Nullable;
 

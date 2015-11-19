@@ -4,7 +4,6 @@ import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.Response;
-import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.core.model.BaseService;
 import rx.Observable;
 
@@ -13,7 +12,7 @@ import rx.Observable;
  */
 public interface RepoService extends BaseService<Repo> {
 
-    Observable<Response<List<Repo>>> findReposByUser(User user);
+    Observable<Response<List<Repo>>> findReposByUserId(Long userId);
 
     Observable<Response<Repo>> like(Repo repo);
 

@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
+import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
@@ -26,8 +27,8 @@ import io.reist.sandbox.app.model.UserStorIOSQLitePutResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoGetResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoPutResolver;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-import io.reist.sandbox.app.model.remote.NestedFieldNameAdapter;
 import io.reist.sandbox.core.BaseModule;
+import io.reist.sandbox.core.model.remote.NestedFieldNameAdapter;
 import io.reist.sandbox.repolist.model.CachedRepoService;
 import io.reist.sandbox.repolist.model.RepoService;
 import io.reist.sandbox.repolist.model.local.StorIoRepoService;
@@ -84,8 +85,17 @@ public class SandboxModule {
         OkHttpClient httpClient = new OkHttpClient();
 
         httpClient.interceptors().add(chain -> {
-            final Request request = chain.request();
+            Request request = chain.request();
+            HttpUrl httpUrl = request
+                    .httpUrl()
+                    .newBuilder()
+                    .addQueryParameter("user_id", "1")
+                    .build();
+
+            request = request.newBuilder().url(httpUrl).build();
+
             Log.i(TAG, request.toString());
+
             return chain.proceed(request);
         });
 

@@ -4,10 +4,8 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 
 import java.util.List;
 
-import io.reist.sandbox.app.Const;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.Response;
-import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
 import io.reist.sandbox.core.model.remote.RetrofitService;
 import io.reist.sandbox.repolist.model.RepoService;
@@ -22,7 +20,7 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
     @RxLogObservable
     @Override
     public Observable<Response<List<Repo>>> list() {
-        return gitHubApi.listRepos(Const.DEFAULT_USER_ID);
+        return gitHubApi.listRepos();
     }
 
     @RxLogObservable
@@ -60,17 +58,17 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
 
     @Override
     public Observable<Response<Repo>> unlike(Repo repo) {
-        return gitHubApi.unlike(repo.id, Const.DEFAULT_USER_ID);
+        return gitHubApi.unlike(repo.id);
     }
 
     @Override
     public Observable<Response<Repo>> like(Repo repo) {
-        return gitHubApi.like(repo.id, Const.DEFAULT_USER_ID);
+        return gitHubApi.like(repo.id);
     }
 
     @Override
-    public Observable<Response<List<Repo>>> findReposByUser(User user) {
-        return gitHubApi.reposByUserId(user.id, Const.DEFAULT_USER_ID);
+    public Observable<Response<List<Repo>>> findReposByUserId(Long userId) {
+        return gitHubApi.reposByUserId(userId);
     }
 
 }

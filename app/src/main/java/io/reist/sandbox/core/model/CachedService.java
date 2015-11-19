@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.reist.sandbox.app.model.Response;
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by Reist on 11/2/15.
@@ -21,21 +22,6 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
         this.remote = remote;
     }
 
-    @RxLogObservable
-    protected Observable<Response<List<T>>> remoteListWithSave() {
-        return remote
-                .list()
-                .doOnNext(response -> local.saveSync(response.getData()))
-                .filter(response -> !response.isSuccessful());
-    }
-
-    @RxLogObservable
-    protected Observable<Response<T>> remoteByIdWithSave(Long id) {
-        return remote
-                .byId(id)
-                .doOnNext(response -> local.saveSync(response.getData()));
-    }
-
     /**
      * @return - data from local service and initiates remote service.
      * Remote service can end up with error (f.e. network error), which will be emitted wrapped in Response.Error
@@ -46,13 +32,8 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     public final Observable<Response<List<T>>> list() {
         return Observable.merge(
                 local.list(),
-                remoteListWithSave()
-                        .onErrorResumeNext((t) -> {
-                            Response<List<T>> responseWithError = new Response<>();
-                            responseWithError.setError(new Response.Error("network error occured"));
-                            return Observable.just(responseWithError);
-                        }))
-                .filter(response -> response.getData() != null && !response.getData().isEmpty() || !response.isSuccessful());
+                remote.list().compose(new SaveAndEmitErrorsListTransformer<T>(local)))
+                .filter(new FilterListResponse<>());
     }
 
     /**
@@ -63,13 +44,8 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     public final Observable<Response<T>> byId(Long id) {
         return Observable.merge(
                 local.byId(id),
-                remoteByIdWithSave(id)
-                        .onErrorResumeNext((t) -> {
-                            Response<T> responseWithError = new Response<>();
-                            responseWithError.setError(new Response.Error("network error occured"));
-                            return Observable.just(responseWithError);
-                        }))
-                .filter(response -> response.getData() != null || !response.isSuccessful());
+                remote.byId(id).compose(new SaveAndEmitErrorsTransformer<T>(local)))
+                .filter(new FilterResponse<>());
     }
 
     /**
@@ -109,6 +85,83 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     @Override
     public boolean saveSync(T t) {
         return local.saveSync(t);
+    }
+
+    // ----
+
+    public static class FilterListResponse<T> implements Func1<Response<List<T>>, Boolean> {
+
+        @Override
+        public Boolean call(Response<List<T>> response) {
+            return response.getData() != null && !response.getData().isEmpty() || !response.isSuccessful();
+        }
+
+    }
+
+    public static class FilterResponse<T> implements Func1<Response<T>, Boolean> {
+
+        @Override
+        public Boolean call(Response<T> response) {
+            return response.getData() != null || !response.isSuccessful();
+        }
+
+    }
+
+    private static class SaveTransformer<T> {
+
+        protected final BaseService<T> service;
+
+        public SaveTransformer(BaseService<T> service) {
+            this.service = service;
+        }
+
+    }
+
+    public static class SaveAndEmitErrorsTransformer<T>
+            extends SaveTransformer<T>
+            implements Observable.Transformer<Response<T>, Response<T>>
+    {
+
+        public SaveAndEmitErrorsTransformer(BaseService<T> service) {
+            super(service);
+        }
+
+        @Override
+        public Observable<Response<T>> call(Observable<Response<T>> observable) {
+            return observable
+                    .doOnNext(r -> service.saveSync(r.getData()))
+                    .filter(r -> !r.isSuccessful())
+                    .onErrorResumeNext((t) -> {
+                        Response<T> responseWithError = new Response<>();
+                        responseWithError.setError(new Response.Error(t));
+                        return Observable.just(responseWithError);
+                    });
+        }
+    }
+
+
+    public static class SaveAndEmitErrorsListTransformer<T>
+            extends SaveTransformer<T>
+            implements Observable.Transformer<Response<List<T>>, Response<List<T>>>
+
+    {
+
+        public SaveAndEmitErrorsListTransformer(BaseService<T> service) {
+            super(service);
+        }
+
+        @Override
+        public Observable<Response<List<T>>> call(Observable<Response<List<T>>> observable) {
+            return observable
+                    .doOnNext(r -> service.saveSync(r.getData()))
+                    .filter(r -> !r.isSuccessful())
+                    .onErrorResumeNext((t) -> {
+                        Response<List<T>> responseWithError = new Response<>();
+                        responseWithError.setError(new Response.Error(t));
+                        return Observable.just(responseWithError);
+                    });
+        }
+
     }
 
 }

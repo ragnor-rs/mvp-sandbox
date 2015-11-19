@@ -9,34 +9,31 @@ import io.reist.sandbox.app.model.local.ReposTable;
 @StorIOSQLiteType(table = ReposTable.NAME)
 public class Repo {
 
-    @SerializedName(JsonField.ID)
+    @SerializedName("id")
     @StorIOSQLiteColumn(name = ReposTable.Column.ID, key = true)
     public Long id;
 
-    @SerializedName(JsonField.NAME)
+    @SerializedName("name")
     @StorIOSQLiteColumn(name = ReposTable.Column.NAME)
     public String name;
 
-    @SerializedName(JsonField.HTML_URL)
+    @SerializedName("html_url")
     @StorIOSQLiteColumn(name = ReposTable.Column.URL)
     public String url;
 
-    @SerializedName(JsonField.LIKE_COUNT)
+    @SerializedName("like_count")
     @StorIOSQLiteColumn(name = ReposTable.Column.LIKE_COUNT)
     public Integer likeCount;
 
-    @SerializedName(JsonField.LIKED_BY_ME)
+    @SerializedName("liked_by_me")
     @StorIOSQLiteColumn(name = ReposTable.Column.LIKED_BY_ME)
-    public Boolean likedByMe;
+    public boolean likedByMe;
 
-    @SerializedName(JsonField.OWNER)
+    @SerializedName("owner")
     public User owner;
 
-    @StorIOSQLiteColumn(name = ReposTable.Column.USER_ID)
-    public Long userId;
-
     public boolean isLiked() {
-        return likedByMe != null? likedByMe : false;
+        return likedByMe;
     }
 
     @Override

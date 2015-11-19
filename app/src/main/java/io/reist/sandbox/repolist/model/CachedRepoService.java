@@ -6,7 +6,6 @@ import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.Response;
-import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.core.model.CachedService;
 import rx.Observable;
 
@@ -23,25 +22,12 @@ public class CachedRepoService extends CachedService<Repo> implements RepoServic
     }
 
     @RxLogObservable
-    protected Observable<Response<List<Repo>>> remoteFindReposByUserIdWithSave(User user) {
-        return remote
-                .findReposByUser(user)
-                .doOnNext(r -> { if (r.getData() != null) local.saveSync(r.getData()); })
-                .filter(r -> !r.isSuccessful());
-    }
-
-    @RxLogObservable
     @Override
-    public Observable<Response<List<Repo>>> findReposByUser(final User user) {
+    public Observable<Response<List<Repo>>> findReposByUserId(final Long userId) {
         return Observable.merge(
-                local.findReposByUser(user),
-                remoteFindReposByUserIdWithSave(user)
-                        .onErrorResumeNext((t) -> {
-                            Response<List<Repo>> responseWithError = new Response<>();
-                            responseWithError.setError(new Response.Error("network error occured"));
-                            return Observable.just(responseWithError);
-                        }))
-                .filter(response -> response.getData() != null && !response.getData().isEmpty() || !response.isSuccessful());
+                local.findReposByUserId(userId),
+                remote.findReposByUserId(userId).compose(new SaveAndEmitErrorsListTransformer<>(local)))
+                .filter(new FilterListResponse<>());
     }
 
     @RxLogObservable
@@ -61,14 +47,8 @@ public class CachedRepoService extends CachedService<Repo> implements RepoServic
         return Observable.merge(
                 (like ? local.like(repo) : local.unlike(repo)),
                 (like ? remote.like(repo) : remote.unlike(repo))
-                        .doOnNext(r -> { if (r.getData() != null) local.saveSync(r.getData()); })
-                        .filter(r -> !r.isSuccessful())
-                        .onErrorResumeNext((t) -> {
-                            Response<Repo> responseWithError = new Response<>();
-                            responseWithError.setError(new Response.Error("network error occured"));
-                            return Observable.just(responseWithError);
-                        })
-        );
+                        .compose(new SaveAndEmitErrorsTransformer<>(local)))
+                .filter(new FilterResponse<>());
     }
 
 }

@@ -43,7 +43,7 @@ public class UserReposPresenter extends BasePresenter<UserReposView> {
     }
 
     public void loadData() {
-        subscribe(repoService.findReposByUser(view().getUser()), new RepoListObserver());
+        subscribe(repoService.findReposByUserId(view().getUserId()), new RepoListObserver());
     }
 
     private class LikeObserver implements Observer<Response<Repo>> {

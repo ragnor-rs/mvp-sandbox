@@ -4,27 +4,24 @@ import com.google.gson.annotations.SerializedName;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
-import org.parceler.Parcel;
-
 import io.reist.sandbox.app.model.local.UserTable;
 
 /**
  * Created by m039 on 11/12/15.
  */
 
-@Parcel
 @StorIOSQLiteType(table = UserTable.NAME)
 public class User {
 
-    @SerializedName(JsonField.ID)
+    @SerializedName("id")
     @StorIOSQLiteColumn(name = UserTable.Column.ID, key = true)
     public Long id;
 
-    @SerializedName(JsonField.NAME)
+    @SerializedName("name")
     @StorIOSQLiteColumn(name = UserTable.Column.NAME)
     public String name;
 
-    @SerializedName(JsonField.LOGIN)
+    @SerializedName("login")
     @StorIOSQLiteColumn(name = UserTable.Column.LOGIN)
     public String login;
 

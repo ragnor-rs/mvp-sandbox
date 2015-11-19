@@ -4,7 +4,6 @@ import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.Response;
-import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.core.view.BaseView;
 
 /**
@@ -17,5 +16,5 @@ public interface UserReposView extends BaseView {
 
     void displayData(List<Repo> data);
 
-    User getUser();
+    Long getUserId();
 }

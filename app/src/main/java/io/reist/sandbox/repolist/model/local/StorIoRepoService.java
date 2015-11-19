@@ -10,7 +10,6 @@ import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.Response;
-import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.sandbox.core.model.local.StorIoService;
 import io.reist.sandbox.repolist.model.RepoService;
@@ -57,14 +56,14 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
 
     @RxLogObservable
     @Override
-    public Observable<Response<List<Repo>>> findReposByUser(User user) {
+    public Observable<Response<List<Repo>>> findReposByUserId(Long userId) {
         return preparedGetBuilder(Repo.class)
                 .withQuery(
                         Query
                                 .builder()
                                 .table(ReposTable.NAME)
                                 .where(ReposTable.Column.USER_ID + " = ?")
-                                .whereArgs(user.id)
+                                .whereArgs(userId)
                                 .orderBy(ReposTable.Column.ID)
                                 .build())
                 .prepare()

@@ -1,5 +1,6 @@
 package io.reist.sandbox.app.model.local.resolvers;
 
+import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
@@ -19,7 +20,19 @@ import io.reist.sandbox.app.model.local.UserTable;
  */
 public class RepoPutResolver extends PutResolver<Repo> {
 
-    PutResolver<Repo> defaultPutResolver = new RepoStorIOSQLitePutResolver();
+    PutResolver<Repo> defaultPutResolver = new RepoStorIOSQLitePutResolver() {
+
+        @NonNull
+        @Override
+        public ContentValues mapToContentValues(@NonNull Repo object) {
+            ContentValues contentValues = super.mapToContentValues(object);
+
+            contentValues.put(ReposTable.Column.USER_ID, object.owner.id);
+
+            return contentValues;
+        }
+
+    };
 
     @NonNull
     @Override
@@ -33,8 +46,6 @@ public class RepoPutResolver extends PutResolver<Repo> {
                 .object(object.owner)
                 .prepare()
                 .executeAsBlocking();
-
-        object.userId = object.owner.id;
 
         PutResult repoResult = defaultPutResolver.performPut(storIOSQLite, object);
 

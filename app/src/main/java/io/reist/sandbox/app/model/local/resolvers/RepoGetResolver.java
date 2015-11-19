@@ -11,6 +11,7 @@ import com.pushtorefresh.storio.sqlite.queries.RawQuery;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.RepoStorIOSQLiteGetResolver;
 import io.reist.sandbox.app.model.User;
+import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.sandbox.app.model.local.UserTable;
 
 /**
@@ -18,13 +19,18 @@ import io.reist.sandbox.app.model.local.UserTable;
  */
 public class RepoGetResolver extends GetResolver<Repo> {
 
+    // This is hack, look at
+    // https://github.com/pushtorefresh/storio/blob/master/storio-sample-app/src/main/java/com/pushtorefresh/storio/sample/db/resolvers/UserWithTweetsGetResolver.java
     private final ThreadLocal<StorIOSQLite> storIOSQLiteFromPerformGet = new ThreadLocal<>();
+
     private final GetResolver<Repo> defaultGetResolver = new RepoStorIOSQLiteGetResolver();
 
     @NonNull
     @Override
     public Repo mapFromCursor(@NonNull Cursor cursor) {
         Repo repo = defaultGetResolver.mapFromCursor(cursor);
+
+        long userId = cursor.getLong(cursor.getColumnIndex(ReposTable.Column.USER_ID));
 
         final StorIOSQLite storIOSQLite = storIOSQLiteFromPerformGet.get();
 
@@ -35,7 +41,7 @@ public class RepoGetResolver extends GetResolver<Repo> {
                         .builder()
                         .table(UserTable.NAME)
                         .where(UserTable.Column.ID + " = ?")
-                        .whereArgs(repo.userId)
+                        .whereArgs(userId)
                         .limit(1)
                         .build())
                 .prepare()
