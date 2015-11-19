@@ -33,6 +33,7 @@ public abstract class BasePresenter<V extends BaseView> {
                 observable
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .unsubscribeOn(Schedulers.io())
                         .subscribe(observer)
         );
     }

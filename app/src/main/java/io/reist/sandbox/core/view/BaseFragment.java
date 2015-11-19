@@ -25,7 +25,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
 
     private static final int PERMISSION_REQUEST_CODE_GROUP = 0xab;
 
-    private static final String STATE_COMPONENT_ID = "STATE_COMPONENT_ID";
+    private static final String ARG_STATE_COMPONENT_ID = "ARG_STATE_COMPONENT_ID";
     private static final String ARG_LAYOUT_RES_ID = "ARG_LAYOUT_RES_ID";
 
     public static <T extends BaseFragment> T newInstance(Class<T> clazz, @LayoutRes int layoutResId) {
@@ -66,7 +66,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
 
         layoutResId = getArguments().getInt(ARG_LAYOUT_RES_ID);
 
-        componentId = savedInstanceState == null ? null : savedInstanceState.getLong(STATE_COMPONENT_ID);
+        componentId = savedInstanceState == null ? null : savedInstanceState.getLong(ARG_STATE_COMPONENT_ID);
         stateSaved = false;
 
         inject(getComponent());
@@ -160,7 +160,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong(STATE_COMPONENT_ID, componentId);
+        outState.putLong(ARG_STATE_COMPONENT_ID, componentId);
         stateSaved = true;
     }
 
