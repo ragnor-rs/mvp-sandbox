@@ -14,11 +14,9 @@ import java.util.List;
 public abstract class BaseDbHelper extends SQLiteOpenHelper {
 
     private final List<BaseTable> tables = new ArrayList<>();
-    private final int databaseVersion;
 
     public BaseDbHelper(Context context, String databaseName, int databaseVersion) {
         super(context, databaseName, null, databaseVersion);
-        this.databaseVersion = databaseVersion;
     }
 
     protected final void addTable(Class<? extends BaseTable> tableClass) {
@@ -32,7 +30,7 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
     @Override
     public final void onCreate(@NonNull SQLiteDatabase db) {
         for (BaseTable table : tables) {
-            db.execSQL(table.getCreateTableQuery(databaseVersion));
+            db.execSQL(table.getCreateTableQuery());
         }
     }
 
@@ -40,8 +38,10 @@ public abstract class BaseDbHelper extends SQLiteOpenHelper {
     public final void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
         for (BaseTable table : tables) {
             String[] upgradeTableQueries = table.getUpgradeTableQueries(oldVersion);
-            for (String query : upgradeTableQueries) {
-                db.execSQL(query);
+            if (upgradeTableQueries != null) {
+                for (String query : upgradeTableQueries) {
+                    db.execSQL(query);
+                }
             }
         }
     }

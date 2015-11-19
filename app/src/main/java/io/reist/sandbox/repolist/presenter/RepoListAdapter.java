@@ -12,7 +12,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reist.sandbox.R;
-import io.reist.sandbox.repolist.model.Repo;
+import io.reist.sandbox.app.model.Repo;
 
 /**
  * Created by Reist on 10/14/15.

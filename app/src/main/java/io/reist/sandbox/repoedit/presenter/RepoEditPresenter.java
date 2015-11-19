@@ -7,11 +7,11 @@ import javax.inject.Named;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.SandboxModule;
-import io.reist.sandbox.app.model.ResponseModel;
-import io.reist.sandbox.app.model.ResponseModelObserver;
+import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.Response;
+import io.reist.sandbox.app.model.ResponseObserver;
 import io.reist.sandbox.core.presenter.BasePresenter;
 import io.reist.sandbox.repoedit.view.RepoEditView;
-import io.reist.sandbox.repolist.model.Repo;
 import io.reist.sandbox.repolist.model.RepoService;
 import rx.Observer;
 import rx.Subscriber;
@@ -36,10 +36,10 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
     protected void onViewAttached() {
         long repoId = view().getArguments().getLong(EXTRA_REPO_ID);
         view().showLoader(true);
-        subscribe(repoService.byId(repoId), new ResponseModelObserver<Repo>() {
+        subscribe(repoService.byId(repoId), new ResponseObserver<Repo>() {
 
             @Override
-            protected void onFail(ResponseModel.Error error) {
+            protected void onFail(Response.Error error) {
                 view().showLoader(false);
                 view().displayError(error);
             }
@@ -55,7 +55,7 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
 
     public void saveRepo(String name, String author, String url) {
         repo.name = name;
-        repo.author = author;
+        repo.owner.name = author;
         repo.url = url;
 
         subscribe(repoService.save(repo), new Observer<Boolean>() {

@@ -7,6 +7,8 @@ import io.reist.sandbox.core.BaseModule;
 import io.reist.sandbox.core.view.BaseView;
 import io.reist.sandbox.repoedit.view.RepoEditFragment;
 import io.reist.sandbox.repolist.view.RepoListFragment;
+import io.reist.sandbox.user.view.UserReposFragment;
+import io.reist.sandbox.user.view.UsersFragment;
 
 /**
  * Created by Reist on 10/16/15.
@@ -32,6 +34,9 @@ public class SandboxApplication extends BaseApplication {
             return sandboxComponent.reposFragmentComponent();
         } else if (RepoEditFragment.class.isAssignableFrom(viewClass)) {
             return sandboxComponent.editReposComponent();
+        } if (UsersFragment.class.isAssignableFrom(viewClass) ||
+                UserReposFragment.class.isAssignableFrom(viewClass)) {
+            return sandboxComponent.userFragmentComponent();
         } else {
             Log.w(TAG, "Unknown view class: \" + viewClass.getName()");
             return null;

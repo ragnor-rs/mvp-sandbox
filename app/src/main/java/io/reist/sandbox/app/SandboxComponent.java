@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import io.reist.sandbox.repoedit.RepoEditComponent;
 import io.reist.sandbox.repolist.ReposFragmentComponent;
+import io.reist.sandbox.user.UserFragmentComponent;
 
 @Singleton
 @Component(modules = SandboxModule.class)
@@ -15,6 +16,8 @@ public interface SandboxComponent {
     ReposFragmentComponent reposFragmentComponent();
 
     RepoEditComponent editReposComponent();
+
+    UserFragmentComponent userFragmentComponent();
 
     //endregion
 }

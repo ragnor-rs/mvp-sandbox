@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
 
         fragmentManager.addOnBackStackChangedListener(this);
 
-        showFragment(new RepoListFragment(), false);
+        showFragment(RepoListFragment.newInstance(), false);
 
     }
 
@@ -98,84 +98,13 @@ public class MainActivity extends AppCompatActivity
                 showFragment(new RepoListFragment(), true, true);
                 break;
             case R.id.nav_gallery:
-                showFragment(new TestFragment(), true, true);
+                showFragment(UsersFragment.newInstance(), true, true);
                 break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+
     }
-
-    /**
-     * @param fragment - fragment to display
-     * @param remove   - boolean, stays for whether current fragment should be thrown away or stay in a back stack.
-     *                 false to stay in a back stack
-     */
-    public void showFragment(BaseFragment fragment, boolean remove) {
-        showFragment(fragment, remove, false);
-    }
-
-    private void showFragment(BaseFragment fragment, boolean remove, boolean popBackStackInclusive) {
-        Fragment topmostFragment = findTopmostFragment(fragmentManager);
-        if (topmostFragment != null && fragment.getName().equals(topmostFragment.getTag())) {
-            return;
-        }
-        replace(fragmentManager, topmostFragment, fragment, remove, popBackStackInclusive);
-    }
-
-    private static void replace(FragmentManager fragmentManager, Fragment what, BaseFragment with, boolean remove, boolean popBackStackInclusive) {
-        if (popBackStackInclusive && fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStackImmediate(fragmentManager.getBackStackEntryAt(0).getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
-
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-
-        if (what != null) {
-            if (remove) {
-                transaction.remove(what);
-            } else {
-                transaction.hide(what);
-            }
-        }
-
-        String fragmentName = with.getName();
-
-        if (with.isAdded()) {
-            transaction.show(with);
-        } else {
-            transaction.add(R.id.fragment_container, with, fragmentName);
-        }
-
-        transaction.show(with).addToBackStack(fragmentName).commit();
-    }
-
-    @Nullable
-    private static Fragment findTopmostFragment(FragmentManager fragmentManager) {
-        int backStackEntryCount = fragmentManager.getBackStackEntryCount();
-
-        Fragment topmostFragment;
-        if (backStackEntryCount > 0) {
-            String fragmentName = fragmentManager.getBackStackEntryAt(backStackEntryCount - 1).getName();
-            topmostFragment = fragmentManager.findFragmentByTag(fragmentName);
-        } else {
-            topmostFragment = null;
-        }
-        return topmostFragment;
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Override
-    public void onBackStackChanged() {
-        boolean showBurger = fragmentManager.getBackStackEntryCount() == 1;
-        drawerToggle.setDrawerIndicatorEnabled(showBurger);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(!showBurger);
-        drawerToggle.syncState();
-    }
-
+    
 }

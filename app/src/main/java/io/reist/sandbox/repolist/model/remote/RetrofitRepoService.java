@@ -4,29 +4,28 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 
 import java.util.List;
 
-import io.reist.sandbox.app.model.ResponseModel;
+import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.Response;
+import io.reist.sandbox.app.model.remote.GitHubApi;
 import io.reist.sandbox.core.model.remote.RetrofitService;
-import io.reist.sandbox.repolist.model.Repo;
 import io.reist.sandbox.repolist.model.RepoService;
 import rx.Observable;
 
 public class RetrofitRepoService extends RetrofitService<Repo> implements RepoService {
 
-    private final GitHubApi gitHubApi;
-
     public RetrofitRepoService(GitHubApi gitHubApi) {
-        this.gitHubApi = gitHubApi;
+        super(gitHubApi);
     }
 
     @RxLogObservable
     @Override
-    public Observable<ResponseModel<List<Repo>>> list() {
+    public Observable<Response<List<Repo>>> list() {
         return gitHubApi.listRepos();
     }
 
     @RxLogObservable
     @Override
-    public Observable<ResponseModel<Repo>> byId(Long id) {
+    public Observable<Response<Repo>> byId(Long id) {
         return gitHubApi.repoById(id);
     }
 
@@ -55,6 +54,21 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
     @Override
     public boolean saveSync(Repo repo) {
         throw new UnsupportedOperationException("you cannot save make api calls synchronously");
+    }
+
+    @Override
+    public Observable<Response<Repo>> unlike(Repo repo) {
+        return gitHubApi.unlike(repo.id);
+    }
+
+    @Override
+    public Observable<Response<Repo>> like(Repo repo) {
+        return gitHubApi.like(repo.id);
+    }
+
+    @Override
+    public Observable<Response<List<Repo>>> findReposByUserId(Long userId) {
+        return gitHubApi.reposByUserId(userId);
     }
 
 }

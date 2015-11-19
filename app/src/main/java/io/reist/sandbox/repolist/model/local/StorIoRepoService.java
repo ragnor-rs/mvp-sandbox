@@ -8,9 +8,10 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
-import io.reist.sandbox.app.model.ResponseModel;
+import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.Response;
+import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.sandbox.core.model.local.StorIoService;
-import io.reist.sandbox.repolist.model.Repo;
 import io.reist.sandbox.repolist.model.RepoService;
 import rx.Observable;
 
@@ -22,19 +23,19 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
 
     @RxLogObservable
     @Override
-    public Observable<ResponseModel<List<Repo>>> list() {
+    public Observable<Response<List<Repo>>> list() {
         return preparedGetBuilder(Repo.class)
-                .withQuery(Query.builder().table(ReposTable.TABLE_NAME).build())
+                .withQuery(Query.builder().table(ReposTable.NAME).build())
                 .prepare()
                 .createObservable()
-                .map(ResponseModel::new);
+                .map(Response::new);
     }
 
     @RxLogObservable
     @Override
-    public Observable<ResponseModel<Repo>> byId(Long id) {
-        return unique(Repo.class, ReposTable.TABLE_NAME, id)
-                .map(ResponseModel<Repo>::new);
+    public Observable<Response<Repo>> byId(Long id) {
+        return unique(Repo.class, ReposTable.NAME, id)
+                .map(Response<Repo>::new);
     }
 
     @Override
@@ -43,14 +44,58 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 .delete()
                 .byQuery(
                         DeleteQuery.builder()
-                                .table(ReposTable.TABLE_NAME)
-                                .where(ReposTable.COLUMN_ID + " = ?")
+                                .table(ReposTable.NAME)
+                                .where(ReposTable.Column.ID + " = ?")
                                 .whereArgs(id)
                                 .build()
                 )
                 .prepare() // BTW: it will use transaction!
                 .createObservable()
                 .map(DeleteResult::numberOfRowsDeleted);
+    }
+
+    @RxLogObservable
+    @Override
+    public Observable<Response<List<Repo>>> findReposByUserId(Long userId) {
+        return preparedGetBuilder(Repo.class)
+                .withQuery(
+                        Query
+                                .builder()
+                                .table(ReposTable.NAME)
+                                .where(ReposTable.Column.USER_ID + " = ?")
+                                .whereArgs(userId)
+                                .orderBy(ReposTable.Column.ID)
+                                .build())
+                .prepare()
+                .createObservable()
+                .map(Response::new);
+    }
+
+    @Override
+    public Observable<Response<Repo>> unlike(Repo repo) {
+        return like(repo, false);
+    }
+
+    @Override
+    public Observable<Response<Repo>> like(Repo repo) {
+        return like(repo, true);
+    }
+
+    private Observable<Response<Repo>> like(final Repo repo, boolean likedByMe) {
+        if (likedByMe) {
+            repo.likeCount += 1;
+        } else {
+            repo.likeCount -= 1;
+        }
+
+        repo.likedByMe = likedByMe;
+
+        preparedPutBuilder()
+                .object(repo)
+                .prepare()
+                .executeAsBlocking();
+
+        return Observable.just(repo).map(Response::new);
     }
 
 }

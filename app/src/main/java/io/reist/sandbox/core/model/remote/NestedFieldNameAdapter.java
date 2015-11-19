@@ -42,7 +42,7 @@ public class NestedFieldNameAdapter implements JsonDeserializer<Object> {
 
     @Nullable
     private Object fill(Object o, JsonElement json, Class<?> rootClass) {
-        if (!json.isJsonPrimitive()) {
+        if (json != null && !json.isJsonPrimitive()) {
             if (List.class.isAssignableFrom(rootClass) || rootClass.isArray()) {
                 JsonArray jsonArray = json.getAsJsonArray();
                 for (int i = 0; i < jsonArray.size(); i++) {

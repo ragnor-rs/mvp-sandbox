@@ -5,18 +5,18 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by defuera on 09/11/2015.
  */
-public class ResponseModel<T> {
+public class Response<T> {
 
-    @SerializedName(ResponseJson.FIELD_DATA)
+    @SerializedName("data")
     private T data;
 
     private Error error;
 
-    public ResponseModel(T t) {
+    public Response(T t) {
         data = t;
     }
 
-    public ResponseModel() {
+    public Response() {
     }
 
     public void setError(Error error) {
@@ -37,9 +37,16 @@ public class ResponseModel<T> {
 
     public static class Error {
         private final String message;
+        private final Throwable throwable;
 
         public Error(String message) {
             this.message = message;
+            this.throwable = null;
+        }
+
+        public Error(Throwable throwable) {
+            this.throwable = throwable;
+            this.message = null;
         }
     }
 }

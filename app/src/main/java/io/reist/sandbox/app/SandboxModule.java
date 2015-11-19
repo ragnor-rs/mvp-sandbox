@@ -8,12 +8,9 @@ import com.google.gson.GsonBuilder;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
-import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import java.io.IOException;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -21,16 +18,20 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.reist.sandbox.app.model.DbOpenHelper;
+import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.RepoStorIOSQLiteDeleteResolver;
+import io.reist.sandbox.app.model.User;
+import io.reist.sandbox.app.model.UserStorIOSQLiteDeleteResolver;
+import io.reist.sandbox.app.model.UserStorIOSQLiteGetResolver;
+import io.reist.sandbox.app.model.UserStorIOSQLitePutResolver;
+import io.reist.sandbox.app.model.local.resolvers.RepoGetResolver;
+import io.reist.sandbox.app.model.local.resolvers.RepoPutResolver;
+import io.reist.sandbox.app.model.remote.GitHubApi;
 import io.reist.sandbox.core.BaseModule;
 import io.reist.sandbox.core.model.remote.NestedFieldNameAdapter;
 import io.reist.sandbox.repolist.model.CachedRepoService;
-import io.reist.sandbox.repolist.model.Repo;
 import io.reist.sandbox.repolist.model.RepoService;
-import io.reist.sandbox.repolist.model.RepoStorIOSQLiteDeleteResolver;
-import io.reist.sandbox.repolist.model.RepoStorIOSQLiteGetResolver;
-import io.reist.sandbox.repolist.model.RepoStorIOSQLitePutResolver;
 import io.reist.sandbox.repolist.model.local.StorIoRepoService;
-import io.reist.sandbox.repolist.model.remote.GitHubApi;
 import io.reist.sandbox.repolist.model.remote.RetrofitRepoService;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
@@ -42,7 +43,7 @@ public class SandboxModule {
     public static final String REMOTE_SERVICE = "remote";
     public static final String LOCAL_SERVICE = "local";
 
-    private static final String GIT_HUB_BASE_URL = "http://private-ccfc02-crackywacky.apiary-mock.com";
+    public static final String GIT_HUB_BASE_URL = "https://safe-reaches-4393.herokuapp.com";
 
     private static final String TAG = SandboxModule.class.getName();
 
@@ -51,14 +52,23 @@ public class SandboxModule {
 
         DbOpenHelper dbOpenHelper = new DbOpenHelper(context);
 
-        return DefaultStorIOSQLite.builder()
+        return DefaultStorIOSQLite
+                .builder()
                 .sqliteOpenHelper(dbOpenHelper)
                 .addTypeMapping(
                         Repo.class,
                         SQLiteTypeMapping.<Repo>builder()
-                                .putResolver(new RepoStorIOSQLitePutResolver())
-                                .getResolver(new RepoStorIOSQLiteGetResolver())
+                                .putResolver(new RepoPutResolver())
+                                .getResolver(new RepoGetResolver())
                                 .deleteResolver(new RepoStorIOSQLiteDeleteResolver())
+                                .build()
+                )
+                .addTypeMapping(
+                        User.class,
+                        SQLiteTypeMapping.<User>builder()
+                                .putResolver(new UserStorIOSQLitePutResolver())
+                                .getResolver(new UserStorIOSQLiteGetResolver())
+                                .deleteResolver(new UserStorIOSQLiteDeleteResolver())
                                 .build()
                 )
                 .build();
@@ -74,15 +84,19 @@ public class SandboxModule {
 
         OkHttpClient httpClient = new OkHttpClient();
 
-        httpClient.interceptors().add(new Interceptor() {
+        httpClient.interceptors().add(chain -> {
+            Request request = chain.request();
+            HttpUrl httpUrl = request
+                    .httpUrl()
+                    .newBuilder()
+                    .addQueryParameter("user_id", "1")
+                    .build();
 
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                final Request request = chain.request();
-                Log.i(TAG, request.toString());
-                return chain.proceed(request);
-            }
+            request = request.newBuilder().url(httpUrl).build();
 
+            Log.i(TAG, request.toString());
+
+            return chain.proceed(request);
         });
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -91,6 +105,7 @@ public class SandboxModule {
                 .baseUrl(GIT_HUB_BASE_URL)
                 .client(httpClient)
                 .build();
+
 
         return retrofit.create(GitHubApi.class);
 
