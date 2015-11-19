@@ -27,10 +27,11 @@ public class UsersPresenter extends BasePresenter<UsersView> {
 
     @Override
     protected void onViewAttached() {
+        view().showLoader(true);
         loadData();
     }
 
-    protected void loadData() {
+    public void loadData() {
         subscribe(mUserService.list(), new UsersObserver());
     }
 
@@ -41,6 +42,9 @@ public class UsersPresenter extends BasePresenter<UsersView> {
             UsersView view = view();
             if (response.isSuccessful()) {
                 view.displayData(response.getData());
+                view.showLoader(false);
+            } else {
+                view.displayError(response.getError());
             }
         }
 
@@ -51,7 +55,7 @@ public class UsersPresenter extends BasePresenter<UsersView> {
 
         @Override
         public void onError(Throwable e) {
-
+            view().showLoader(false);
         }
 
     }
