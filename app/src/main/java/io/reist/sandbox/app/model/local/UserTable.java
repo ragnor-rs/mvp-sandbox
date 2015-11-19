@@ -16,6 +16,7 @@ public class UserTable extends BaseTable {
 
     private static final String CREATE_TABLE = "create table " + NAME + "(" +
             Column.ID + " integer not null primary key, " +
+            Column.REVISION + " integer," +
             Column.NAME + " text, " +
             Column.LOGIN + " text" +
             ")";
@@ -24,7 +25,7 @@ public class UserTable extends BaseTable {
     public String[] getUpgradeTableQueries(int oldVersion) {
         switch (oldVersion) {
             case 2:
-                return new String[] { CREATE_TABLE };
+                return new String[]{CREATE_TABLE};
             default:
                 return null;
         }

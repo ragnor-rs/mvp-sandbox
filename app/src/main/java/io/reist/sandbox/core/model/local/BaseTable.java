@@ -7,6 +7,7 @@ public abstract class BaseTable {
 
     public interface Column {
         String ID = "_id";
+        String REVISION = "revision";
     }
 
     public abstract String getCreateTableQuery();
