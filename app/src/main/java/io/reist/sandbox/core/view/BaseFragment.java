@@ -2,6 +2,7 @@ package io.reist.sandbox.core.view;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -112,6 +113,11 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     }
 
     /// --- ///
+
+    @Override
+    public Context context() {
+        return getActivity();
+    }
 
     @Override
     public final Long getComponentId() {

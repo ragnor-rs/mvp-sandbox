@@ -3,10 +3,8 @@ package io.reist.sandbox.repoedit.presenter;
 import android.widget.Toast;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import io.reist.sandbox.R;
-import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.model.ResponseObserver;
@@ -26,9 +24,8 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
     RepoService repoService;
     private Repo repo;
 
-    //todo since apiary not really working we cannot use remote service, since it provides incorrect data
     @Inject
-    public RepoEditPresenter(@Named(SandboxModule.LOCAL_SERVICE) RepoService repoService) {
+    public RepoEditPresenter(RepoService repoService) {
         this.repoService = repoService;
     }
 
@@ -67,13 +64,13 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(view().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(view().context(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNext(Boolean success) {
                 if (success)
-                    Toast.makeText(view().getContext(), R.string.repo_saved, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view().context(), R.string.repo_saved, Toast.LENGTH_SHORT).show();
             }
         });
     }

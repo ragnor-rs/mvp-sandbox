@@ -32,7 +32,7 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     public final Observable<Response<List<T>>> list() {
         return Observable.merge(
                 local.list(),
-                remote.list().compose(new SaveAndEmitErrorsListTransformer<T>(local)))
+                remote.list().compose(new SaveAndEmitErrorsListTransformer<>(local)))
                 .filter(new FilterListResponse<>());
     }
 
@@ -44,7 +44,7 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     public final Observable<Response<T>> byId(Long id) {
         return Observable.merge(
                 local.byId(id),
-                remote.byId(id).compose(new SaveAndEmitErrorsTransformer<T>(local)))
+                remote.byId(id).compose(new SaveAndEmitErrorsTransformer<>(local)))
                 .filter(new FilterResponse<>());
     }
 
@@ -69,7 +69,9 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     @RxLogObservable
     @Override
     public final Observable<Boolean> save(T t) {
-        return Observable.concat(local.save(t), remote.save(t));
+        return Observable.concat(
+                local.save(t).first(),
+                remote.save(t));
     }
 
     @Override
@@ -119,8 +121,7 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
 
     public static class SaveAndEmitErrorsTransformer<T>
             extends SaveTransformer<T>
-            implements Observable.Transformer<Response<T>, Response<T>>
-    {
+            implements Observable.Transformer<Response<T>, Response<T>> {
 
         public SaveAndEmitErrorsTransformer(BaseService<T> service) {
             super(service);

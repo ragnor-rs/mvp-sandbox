@@ -13,12 +13,12 @@ public abstract class AbstractBaseService<T> implements BaseService<T> {
 
     @RxLogObservable
     public Observable<Integer> save(List<T> list) {
-        return Observable.create(subscriber -> saveSync(list));
+        return Observable.just(saveSync(list));
     }
 
     @RxLogObservable
     public Observable<Boolean> save(T t) {
-        return Observable.create(subscriber -> saveSync(t));
+        return Observable.just(saveSync(t));
     }
 
 }
