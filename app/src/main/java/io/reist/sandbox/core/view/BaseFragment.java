@@ -17,8 +17,6 @@ import io.reist.sandbox.core.presenter.BasePresenter;
 
 public abstract class BaseFragment<P extends BasePresenter> extends Fragment implements BaseView {
 
-    private static final int PERMISSION_REQUEST_CODE_GROUP = 0xab;
-
     private static final String ARG_STATE_COMPONENT_ID = "ARG_STATE_COMPONENT_ID";
     private static final String ARG_LAYOUT_RES_ID = "ARG_LAYOUT_RES_ID";
 
@@ -47,12 +45,9 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         void showFragment(BaseFragment fragment, boolean remove);
     }
 
-    private Runnable runnable;
-
     private Long componentId;
     private boolean stateSaved;
     private int layoutResId;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
