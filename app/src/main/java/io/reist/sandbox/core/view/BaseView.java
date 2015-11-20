@@ -8,7 +8,7 @@ import android.os.Bundle;
  */
 public interface BaseView {
 
-    Bundle getExtras();
+    Bundle extras();
 
     Context context();
 

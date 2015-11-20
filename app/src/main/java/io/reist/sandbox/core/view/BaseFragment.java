@@ -2,7 +2,6 @@ package io.reist.sandbox.core.view;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -70,7 +69,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     /// --- ///
 
     @Override
-    public Bundle getExtras() {
+    public Bundle extras() {
         return getArguments();
     }
 
