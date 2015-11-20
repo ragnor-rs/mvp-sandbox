@@ -73,6 +73,11 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     /// --- ///
 
     @Override
+    public Bundle getExtras() {
+        return getArguments();
+    }
+
+    @Override
     public final Long getComponentId() {
         return componentId;
     }
