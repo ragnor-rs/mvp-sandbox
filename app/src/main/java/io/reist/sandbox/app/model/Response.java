@@ -48,6 +48,14 @@ public class Response<T> {
             this.throwable = throwable;
             this.message = null;
         }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public Throwable getThrowable() {
+            return throwable;
+        }
     }
 }
 

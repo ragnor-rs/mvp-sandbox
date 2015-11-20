@@ -4,6 +4,7 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 
 import java.util.List;
 
+import io.reist.sandbox.app.model.Response;
 import rx.Observable;
 
 /**
@@ -12,12 +13,12 @@ import rx.Observable;
 public abstract class AbstractBaseService<T> implements BaseService<T> {
 
     @RxLogObservable
-    public Observable<Integer> save(List<T> list) {
+    public Observable<Response<List<T>>> save(List<T> list) {
         return Observable.just(saveSync(list));
     }
 
     @RxLogObservable
-    public Observable<Boolean> save(T t) {
+    public Observable<Response<T>> save(T t) {
         return Observable.just(saveSync(t));
     }
 

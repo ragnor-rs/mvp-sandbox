@@ -6,12 +6,11 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.get.PreparedGetListOfObjects;
 import com.pushtorefresh.storio.sqlite.operations.put.PreparedPut;
-import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
-import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
+import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.sandbox.core.model.AbstractBaseService;
 import rx.Observable;
@@ -56,26 +55,26 @@ public abstract class StorIoService<T> extends AbstractBaseService<T> {
     }
 
     @Override
-    public final int saveSync(List<T> list) {
+    public final Response<List<T>> saveSync(List<T> list) {
 
-        final PutResults<T> putResults = preparedPutBuilder()
+        preparedPutBuilder()
                 .objects(list)
                 .prepare()
                 .executeAsBlocking();
 
-        return putResults.numberOfUpdates() + putResults.numberOfInserts();
+        return new Response<>(list);
 
     }
 
     @Override
-    public final boolean saveSync(T t) {
+    public final Response<T> saveSync(T t) {
 
-        final PutResult putResult = preparedPutBuilder()
+        preparedPutBuilder()
                 .object(t)
                 .prepare()
                 .executeAsBlocking();
 
-        return putResult.wasInserted() || putResult.wasUpdated();
+        return new Response<>(t);
 
     }
 

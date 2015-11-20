@@ -11,7 +11,6 @@ import io.reist.sandbox.app.model.ResponseObserver;
 import io.reist.sandbox.core.presenter.BasePresenter;
 import io.reist.sandbox.repoedit.view.RepoEditView;
 import io.reist.sandbox.repolist.model.RepoService;
-import rx.Observer;
 import rx.Subscriber;
 
 /**
@@ -22,6 +21,7 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
     public static final String EXTRA_REPO_ID = "io.reist.sandbox.extra_repo_id";
 
     RepoService repoService;
+
     private Repo repo;
 
     @Inject
@@ -55,23 +55,18 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
         repo.owner.name = author;
         repo.url = url;
 
-        subscribe(repoService.save(repo), new Observer<Boolean>() {
+        subscribe(repoService.save(repo), new ResponseObserver<Repo>() {
 
             @Override
-            public void onCompleted() {
-
+            protected void onFail(Response.Error error) {
+                Toast.makeText(view().context(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onError(Throwable e) {
-                Toast.makeText(view().context(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            protected void onSuccess(Repo data) {
+                Toast.makeText(view().context(), R.string.repo_saved, Toast.LENGTH_SHORT).show();
             }
 
-            @Override
-            public void onNext(Boolean success) {
-                if (success)
-                    Toast.makeText(view().context(), R.string.repo_saved, Toast.LENGTH_SHORT).show();
-            }
         });
     }
 

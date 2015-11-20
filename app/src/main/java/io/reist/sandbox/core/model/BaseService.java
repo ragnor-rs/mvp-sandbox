@@ -14,14 +14,14 @@ public interface BaseService<T> {
 
     Observable<Response<T>> byId(Long id); //cur this is not true. Api will not wrap simple model into a wrapper
 
-    Observable<Integer> save(List<T> list);
+    Observable<Response<List<T>>> save(List<T> list);
 
-    Observable<Boolean> save(T t);
+    Observable<Response<T>> save(T t);
 
     Observable<Integer> delete(Long id);
 
-    int saveSync(List<T> list);
+    Response<List<T>> saveSync(List<T> list);
 
-    boolean saveSync(T t);
+    Response<T> saveSync(T t);
 
 }

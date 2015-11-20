@@ -56,7 +56,7 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
      */
     @RxLogObservable
     @Override
-    public final Observable<Integer> save(List<T> list) { //cur we are getting num of updated items, but what about rest response?
+    public final Observable<Response<List<T>>> save(List<T> list) { //cur we are getting num of updated items, but what about rest response?
         return Observable.concat(local.save(list), remote.save(list));
     }
 
@@ -68,7 +68,7 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
      */
     @RxLogObservable
     @Override
-    public final Observable<Boolean> save(T t) {
+    public final Observable<Response<T>> save(T t) {
         return Observable.concat(
                 local.save(t).first(),
                 remote.save(t));
@@ -80,12 +80,12 @@ public abstract class CachedService<T> extends AbstractBaseService<T> {
     }
 
     @Override
-    public int saveSync(List<T> list) {
+    public Response<List<T>> saveSync(List<T> list) {
         return local.saveSync(list);
     }
 
     @Override
-    public boolean saveSync(T t) {
+    public Response<T> saveSync(T t) {
         return local.saveSync(t);
     }
 
