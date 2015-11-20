@@ -25,7 +25,7 @@ public class RetrofitUserService  extends RetrofitService<User>
     }
 
     @Override
-    public boolean saveSync(User user) {
+    public Response<User> saveSync(User user) {
         throw new IllegalStateException("Unsupported");
     }
 
@@ -40,7 +40,7 @@ public class RetrofitUserService  extends RetrofitService<User>
     }
 
     @Override
-    public int saveSync(List<User> list) {
+    public Response<List<User>> saveSync(List<User> list) {
         throw new IllegalStateException("Unsupported");
     }
 

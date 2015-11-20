@@ -48,7 +48,7 @@ public abstract class BasePresenter<V extends BaseView> {
     }
 
     public final Context getContext() {
-        return view == null ? null : view.getContext();
+        return view == null ? null : view.context();
     }
 
 }
