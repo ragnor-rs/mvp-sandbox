@@ -16,7 +16,6 @@ import io.reist.sandbox.app.model.ResponseObserver;
 import io.reist.sandbox.core.presenter.BasePresenter;
 import io.reist.sandbox.repolist.model.RepoService;
 import io.reist.sandbox.repolist.view.RepoListView;
-import rx.Subscriber;
 
 @Singleton
 public class RepoListPresenter extends BasePresenter<RepoListView> {
@@ -65,24 +64,19 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         subscribe(repoService.save(object), new AddRepoSubscriber());
     }
 
-    private class AddRepoSubscriber extends Subscriber<Boolean> {
-
+    private class AddRepoSubscriber extends ResponseObserver<Repo> {
         @Override
-        public void onNext(Boolean success) {
-            Log.i(TAG, "success add repo subscriber");
-            Toast.makeText(getContext(), R.string.repo_saved, Toast.LENGTH_LONG).show();
-            view().showLoader(false);
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            Log.e(TAG, "Error saving data", e);
+        protected void onFail(Response.Error error) {
+            Log.e(TAG, "Error saving data" + error.getMessage());
             Toast.makeText(getContext(), R.string.github_repo_saving_list_error, Toast.LENGTH_LONG).show();
             view().showLoader(false);
         }
 
         @Override
-        public void onCompleted() {
+        protected void onSuccess(Repo data) {
+            Log.i(TAG, "success add repo subscriber");
+            Toast.makeText(getContext(), R.string.repo_saved, Toast.LENGTH_LONG).show();
+            view().showLoader(false);
         }
 
     }

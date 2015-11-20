@@ -24,10 +24,7 @@ public interface GitHubApi {
     Observable<Response<Repo>> repoById(@Path("id") Long id);
 
     @POST("/repos")
-    Observable<Boolean> save(
-            @Body Repo repo
-    );
-
+    Observable<Response<Repo>> save(@Body Repo repo);
 
     @DELETE("/repos/{id}")
     Observable<Integer> deleteRepo(@Path("id") Long id);

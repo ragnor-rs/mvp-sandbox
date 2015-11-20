@@ -19,6 +19,7 @@ public class ReposTable extends BaseTable {
 
     private static final String CREATE_TABLE = "create table " + NAME + "(" +
             Column.ID + " integer not null primary key, " +
+            Column.REVISION + " integer," +
             Column.NAME + " text, " +
             Column.URL + " text, " +
             Column.LIKE_COUNT + " integer, " +

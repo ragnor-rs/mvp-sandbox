@@ -96,6 +96,11 @@ public class SandboxModule {
 
             Log.i(TAG, request.toString());
 
+            //print request body
+//            Buffer buffer = new Buffer();
+//            request.body().writeTo(buffer);
+//            Log.i(TAG, buffer.readUtf8());
+
             return chain.proceed(request);
         });
 

@@ -31,13 +31,13 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
 
     @RxLogObservable
     @Override
-    public Observable<Integer> save(List<Repo> list) { //cur this is not what we really get form api
+    public Observable<Response<List<Repo>>> save(List<Repo> list) { //cur this is not what we really get form api
         throw new UnsupportedOperationException();
     }
 
     @RxLogObservable
     @Override
-    public Observable<Boolean> save(Repo repo) {
+    public Observable<Response<Repo>> save(Repo repo) {
         return gitHubApi.save(repo);
     }
 
@@ -47,12 +47,12 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
     }
 
     @Override
-    public int saveSync(List<Repo> list) {
+    public Response<List<Repo>> saveSync(List<Repo> list) {
         throw new UnsupportedOperationException("you cannot save make api calls synchronously");
     }
 
     @Override
-    public boolean saveSync(Repo repo) {
+    public Response<Repo> saveSync(Repo repo) {
         throw new UnsupportedOperationException("you cannot save make api calls synchronously");
     }
 

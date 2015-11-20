@@ -10,7 +10,7 @@ public interface BaseView {
 
     Bundle getExtras();
 
-    Context getContext();
+    Context context();
 
     Long getComponentId();
 
