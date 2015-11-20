@@ -31,7 +31,7 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
 
     @Override
     protected void onViewAttached() {
-        long repoId = view().getArguments().getLong(EXTRA_REPO_ID);
+        long repoId = view().extras().getLong(EXTRA_REPO_ID);
         view().showLoader(true);
         subscribe(repoService.byId(repoId), new ResponseObserver<Repo>() {
 

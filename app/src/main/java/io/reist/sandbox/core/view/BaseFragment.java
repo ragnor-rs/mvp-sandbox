@@ -69,6 +69,16 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     /// --- ///
 
     @Override
+    public Bundle extras() {
+        return getArguments();
+    }
+
+    @Override
+    public Context context() {
+        return getActivity();
+    }
+
+    @Override
     public final Long getComponentId() {
         return componentId;
     }
@@ -143,11 +153,6 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         } else {
             throw new IllegalArgumentException("Can't find " + FragmentController.class.getSimpleName());
         }
-    }
-
-    @Override
-    public Context context() {
-        return getActivity();
     }
 
 }
