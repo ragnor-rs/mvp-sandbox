@@ -1,20 +1,12 @@
 package io.reist.sandbox.core.view;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import io.reist.sandbox.core.BaseApplication;
@@ -70,39 +62,6 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         stateSaved = false;
 
         inject(getComponent());
-    }
-
-    @SuppressWarnings("unused")
-    public final void runPrivileged(@NonNull Runnable runnable, String... permissions) {
-
-        Activity activity = getActivity();
-
-        List<String> deniedPermissions = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
-                deniedPermissions.add(permission);
-            }
-        }
-
-        if (deniedPermissions.isEmpty()) {
-            runnable.run();
-        } else {
-
-            this.runnable = runnable;
-
-            String[] permissionArray = new String[deniedPermissions.size()];
-            for (int i = 0; i < permissionArray.length; i++) {
-                permissionArray[i] = deniedPermissions.get(i);
-            }
-
-            ActivityCompat.requestPermissions(
-                    activity,
-                    permissionArray,
-                    PERMISSION_REQUEST_CODE_GROUP
-            );
-
-        }
-
     }
 
     /// --- ///
