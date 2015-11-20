@@ -1,6 +1,7 @@
 package io.reist.sandbox.core.view;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -46,7 +47,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     private Long componentId;
     private boolean stateSaved;
     private int layoutResId;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +143,11 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         } else {
             throw new IllegalArgumentException("Can't find " + FragmentController.class.getSimpleName());
         }
+    }
+
+    @Override
+    public Context context() {
+        return getActivity();
     }
 
 }
