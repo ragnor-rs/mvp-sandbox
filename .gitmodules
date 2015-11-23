@@ -1,3 +1,4 @@
 [submodule "visum"]
 	path = visum
 	url = git@github.com:ragnor-rs/visum.git
+	branch = develop
