@@ -5,7 +5,7 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
 import io.reist.sandbox.app.model.local.ReposTable;
-import io.reist.sandbox.core.model.local.BaseTable;
+import io.reist.visum.model.local.BaseTable;
 
 @StorIOSQLiteType(table = ReposTable.NAME)
 public class Repo {

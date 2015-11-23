@@ -16,9 +16,8 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.view.widget.LoaderView;
-import io.reist.sandbox.core.view.BaseFragment;
+import io.reist.visum.view.BaseFragment;
 import io.reist.sandbox.repoedit.presenter.RepoEditPresenter;
 import io.reist.sandbox.repoedit.view.RepoEditFragment;
 import io.reist.sandbox.repolist.ReposFragmentComponent;
@@ -82,7 +81,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     }
 
     @Override
-    public void displayError(Response.Error error) {
+    public void displayError(io.reist.visum.Error error) {
         if (adapter == null || adapter.getItemCount() == 0) {
             loaderView.showNetworkError();
         } else {

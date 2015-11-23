@@ -6,9 +6,9 @@ import javax.inject.Inject;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.model.ResponseObserver;
-import io.reist.sandbox.core.presenter.BasePresenter;
+import io.reist.visum.Error;
+import io.reist.visum.presenter.BasePresenter;
 import io.reist.sandbox.repoedit.view.RepoEditView;
 import io.reist.sandbox.repolist.model.RepoService;
 import rx.Subscriber;
@@ -36,7 +36,7 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
         subscribe(repoService.byId(repoId), new ResponseObserver<Repo>() {
 
             @Override
-            protected void onFail(Response.Error error) {
+            protected void onFail(io.reist.visum.Error error) {
                 view().showLoader(false);
                 view().displayError(error);
             }
@@ -58,7 +58,7 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
         subscribe(repoService.save(repo), new ResponseObserver<Repo>() {
 
             @Override
-            protected void onFail(Response.Error error) {
+            protected void onFail(Error error) {
                 Toast.makeText(view().context(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
 

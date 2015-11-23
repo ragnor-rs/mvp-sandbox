@@ -11,9 +11,9 @@ import javax.inject.Singleton;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
+import io.reist.visum.Error;
 import io.reist.sandbox.app.model.ResponseObserver;
-import io.reist.sandbox.core.presenter.BasePresenter;
+import io.reist.visum.presenter.BasePresenter;
 import io.reist.sandbox.repolist.model.RepoService;
 import io.reist.sandbox.repolist.view.RepoListView;
 
@@ -39,7 +39,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         subscribe(repoService.list(), new ResponseObserver<List<Repo>>() {
 
             @Override
-            protected void onFail(Response.Error error) {
+            protected void onFail(io.reist.visum.Error error) {
                 view().showLoader(false);
                 view().displayError(error);
             }
@@ -66,7 +66,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
 
     private class AddRepoSubscriber extends ResponseObserver<Repo> {
         @Override
-        protected void onFail(Response.Error error) {
+        protected void onFail(Error error) {
             Log.e(TAG, "Error saving data" + error.getMessage());
             Toast.makeText(getContext(), R.string.github_repo_saving_list_error, Toast.LENGTH_LONG).show();
             view().showLoader(false);

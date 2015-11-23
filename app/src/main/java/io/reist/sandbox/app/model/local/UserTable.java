@@ -1,6 +1,6 @@
 package io.reist.sandbox.app.model.local;
 
-import io.reist.sandbox.core.model.local.BaseTable;
+import io.reist.visum.model.local.BaseTable;
 
 /**
  * Created by m039 on 11/12/15.
