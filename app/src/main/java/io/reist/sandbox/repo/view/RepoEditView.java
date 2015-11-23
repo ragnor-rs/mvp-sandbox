@@ -1,4 +1,4 @@
-package io.reist.sandbox.repoedit.view;
+package io.reist.sandbox.repo.view;
 
 import io.reist.sandbox.app.model.Repo;
 import io.reist.visum.view.BaseView;

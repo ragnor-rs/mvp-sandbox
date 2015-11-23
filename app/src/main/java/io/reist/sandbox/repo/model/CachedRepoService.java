@@ -1,12 +1,12 @@
-package io.reist.sandbox.repolist.model;
+package io.reist.sandbox.repo.model;
 
 import com.fernandocejas.frodo.annotation.RxLogObservable;
 
 import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
-import io.reist.visum.model.Response;
 import io.reist.visum.model.CachedService;
+import io.reist.visum.model.Response;
 import rx.Observable;
 
 public class CachedRepoService extends CachedService<Repo> implements RepoService {

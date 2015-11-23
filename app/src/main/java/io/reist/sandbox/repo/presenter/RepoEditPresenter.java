@@ -1,4 +1,4 @@
-package io.reist.sandbox.repoedit.presenter;
+package io.reist.sandbox.repo.presenter;
 
 import android.widget.Toast;
 
@@ -7,10 +7,10 @@ import javax.inject.Inject;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.ResponseObserver;
+import io.reist.sandbox.repo.model.RepoService;
+import io.reist.sandbox.repo.view.RepoEditView;
 import io.reist.visum.Error;
 import io.reist.visum.presenter.BasePresenter;
-import io.reist.sandbox.repoedit.view.RepoEditView;
-import io.reist.sandbox.repolist.model.RepoService;
 import rx.Subscriber;
 
 /**
