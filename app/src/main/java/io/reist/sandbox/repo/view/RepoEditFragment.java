@@ -1,4 +1,4 @@
-package io.reist.sandbox.repoedit.view;
+package io.reist.sandbox.repo.view;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +11,9 @@ import butterknife.OnClick;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.view.widget.LoaderView;
+import io.reist.sandbox.repo.RepoEditComponent;
+import io.reist.sandbox.repo.presenter.RepoEditPresenter;
 import io.reist.visum.view.BaseFragment;
-import io.reist.sandbox.repoedit.RepoEditComponent;
-import io.reist.sandbox.repoedit.presenter.RepoEditPresenter;
 
 /**
  * Created by defuera on 10/11/2015.

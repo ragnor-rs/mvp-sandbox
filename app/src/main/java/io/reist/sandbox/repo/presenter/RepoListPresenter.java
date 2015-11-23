@@ -1,4 +1,4 @@
-package io.reist.sandbox.repolist.presenter;
+package io.reist.sandbox.repo.presenter;
 
 import android.util.Log;
 import android.widget.Toast;
@@ -11,11 +11,11 @@ import javax.inject.Singleton;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.visum.Error;
 import io.reist.sandbox.app.model.ResponseObserver;
+import io.reist.sandbox.repo.model.RepoService;
+import io.reist.sandbox.repo.view.RepoListView;
+import io.reist.visum.Error;
 import io.reist.visum.presenter.BasePresenter;
-import io.reist.sandbox.repolist.model.RepoService;
-import io.reist.sandbox.repolist.view.RepoListView;
 
 @Singleton
 public class RepoListPresenter extends BasePresenter<RepoListView> {
@@ -57,7 +57,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         Random rand = new Random();
         Repo object = new Repo();
 
-        object.id = Long.valueOf(rand.nextInt(100));
+        object.id = (long) rand.nextInt(100);
         object.name = "name_" + object.id;
         object.url = "url";
 

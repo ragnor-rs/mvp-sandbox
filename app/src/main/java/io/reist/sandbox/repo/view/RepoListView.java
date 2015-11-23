@@ -1,4 +1,4 @@
-package io.reist.sandbox.repolist.view;
+package io.reist.sandbox.repo.view;
 
 import java.util.List;
 

@@ -3,8 +3,8 @@ package io.reist.sandbox.app;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import io.reist.sandbox.repoedit.RepoEditComponent;
-import io.reist.sandbox.repolist.ReposFragmentComponent;
+import io.reist.sandbox.repo.RepoEditComponent;
+import io.reist.sandbox.repo.ReposFragmentComponent;
 import io.reist.sandbox.user.UserFragmentComponent;
 
 @Singleton
