@@ -12,7 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import io.reist.sandbox.R;
-import io.reist.sandbox.core.view.BaseActivity;
+import io.reist.visum.view.BaseActivity;
 import io.reist.sandbox.repolist.view.RepoListFragment;
 import io.reist.sandbox.user.view.UsersFragment;
 

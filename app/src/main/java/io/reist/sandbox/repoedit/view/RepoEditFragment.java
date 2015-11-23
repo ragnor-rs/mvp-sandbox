@@ -10,9 +10,8 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.view.widget.LoaderView;
-import io.reist.sandbox.core.view.BaseFragment;
+import io.reist.visum.view.BaseFragment;
 import io.reist.sandbox.repoedit.RepoEditComponent;
 import io.reist.sandbox.repoedit.presenter.RepoEditPresenter;
 
@@ -67,7 +66,7 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     }
 
     @Override
-    public void displayError(Response.Error error) {
+    public void displayError(io.reist.visum.Error error) {
         loaderView.showNetworkError();
     }
 

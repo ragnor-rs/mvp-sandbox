@@ -5,10 +5,10 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
-import io.reist.sandbox.app.model.Response;
+import io.reist.visum.model.Response;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.local.UserTable;
-import io.reist.sandbox.core.model.local.StorIoService;
+import io.reist.visum.model.local.StorIoService;
 import io.reist.sandbox.user.model.UserService;
 import rx.Observable;
 

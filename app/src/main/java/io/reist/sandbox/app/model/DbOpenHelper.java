@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.sandbox.app.model.local.UserTable;
-import io.reist.sandbox.core.model.local.BaseDbHelper;
+import io.reist.visum.model.local.BaseDbHelper;
 
 public class DbOpenHelper extends BaseDbHelper {
 

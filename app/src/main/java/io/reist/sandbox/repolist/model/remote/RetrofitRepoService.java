@@ -5,16 +5,18 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
+import io.reist.visum.model.Response;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-import io.reist.sandbox.core.model.remote.RetrofitService;
+import io.reist.visum.model.remote.RetrofitService;
 import io.reist.sandbox.repolist.model.RepoService;
 import rx.Observable;
 
 public class RetrofitRepoService extends RetrofitService<Repo> implements RepoService {
 
+    protected final GitHubApi gitHubApi;
+
     public RetrofitRepoService(GitHubApi gitHubApi) {
-        super(gitHubApi);
+        this.gitHubApi = gitHubApi;
     }
 
     @RxLogObservable

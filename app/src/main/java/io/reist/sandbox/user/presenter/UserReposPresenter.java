@@ -10,8 +10,8 @@ import javax.inject.Singleton;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
-import io.reist.sandbox.core.presenter.BasePresenter;
+import io.reist.visum.model.Response;
+import io.reist.visum.presenter.BasePresenter;
 import io.reist.sandbox.repolist.model.RepoService;
 import io.reist.sandbox.user.view.UserReposView;
 import rx.Observer;

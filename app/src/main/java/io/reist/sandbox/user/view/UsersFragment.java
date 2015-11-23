@@ -13,10 +13,9 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import io.reist.sandbox.R;
-import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.view.widget.LoaderView;
-import io.reist.sandbox.core.view.BaseFragment;
+import io.reist.visum.view.BaseFragment;
 import io.reist.sandbox.user.UserFragmentComponent;
 import io.reist.sandbox.user.presenter.UsersPresenter;
 
@@ -72,7 +71,7 @@ public class UsersFragment extends BaseFragment<UsersPresenter>
     }
 
     @Override
-    public void displayError(Response.Error error) {
+    public void displayError(io.reist.visum.Error error) {
         if (mAdapter == null || mAdapter.getItemCount() == 0) {
             mLoaderView.showNetworkError();
         } else {

@@ -5,9 +5,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reist.sandbox.app.model.Response;
+import io.reist.visum.model.Response;
 import io.reist.sandbox.app.model.User;
-import io.reist.sandbox.core.presenter.BasePresenter;
+import io.reist.visum.presenter.BasePresenter;
 import io.reist.sandbox.user.model.UserService;
 import io.reist.sandbox.user.view.UsersView;
 import rx.Observer;

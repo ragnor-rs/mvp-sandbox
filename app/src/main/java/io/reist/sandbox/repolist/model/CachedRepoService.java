@@ -5,8 +5,8 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
-import io.reist.sandbox.core.model.CachedService;
+import io.reist.visum.model.Response;
+import io.reist.visum.model.CachedService;
 import rx.Observable;
 
 public class CachedRepoService extends CachedService<Repo> implements RepoService {
