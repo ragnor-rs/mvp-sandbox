@@ -1,4 +1,4 @@
-package io.reist.sandbox.repoedit.view;
+package io.reist.sandbox.repo.view;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +10,10 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.view.widget.LoaderView;
-import io.reist.sandbox.core.view.BaseFragment;
-import io.reist.sandbox.repoedit.RepoEditComponent;
-import io.reist.sandbox.repoedit.presenter.RepoEditPresenter;
+import io.reist.sandbox.repo.RepoEditComponent;
+import io.reist.sandbox.repo.presenter.RepoEditPresenter;
+import io.reist.visum.view.BaseFragment;
 
 /**
  * Created by defuera on 10/11/2015.
@@ -67,7 +66,7 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     }
 
     @Override
-    public void displayError(Response.Error error) {
+    public void displayError(io.reist.visum.Error error) {
         loaderView.showNetworkError();
     }
 

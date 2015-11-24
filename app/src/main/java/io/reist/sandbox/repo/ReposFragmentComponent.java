@@ -1,7 +1,7 @@
-package io.reist.sandbox.repolist;
+package io.reist.sandbox.repo;
 
 import dagger.Subcomponent;
-import io.reist.sandbox.repolist.view.RepoListFragment;
+import io.reist.sandbox.repo.view.RepoListFragment;
 
 @Subcomponent
 public interface ReposFragmentComponent {

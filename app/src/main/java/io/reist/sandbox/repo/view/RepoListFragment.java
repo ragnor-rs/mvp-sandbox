@@ -1,4 +1,4 @@
-package io.reist.sandbox.repolist.view;
+package io.reist.sandbox.repo.view;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -16,14 +16,12 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.view.widget.LoaderView;
-import io.reist.sandbox.core.view.BaseFragment;
-import io.reist.sandbox.repoedit.presenter.RepoEditPresenter;
-import io.reist.sandbox.repoedit.view.RepoEditFragment;
-import io.reist.sandbox.repolist.ReposFragmentComponent;
-import io.reist.sandbox.repolist.presenter.RepoListAdapter;
-import io.reist.sandbox.repolist.presenter.RepoListPresenter;
+import io.reist.sandbox.repo.ReposFragmentComponent;
+import io.reist.sandbox.repo.presenter.RepoEditPresenter;
+import io.reist.sandbox.repo.presenter.RepoListAdapter;
+import io.reist.sandbox.repo.presenter.RepoListPresenter;
+import io.reist.visum.view.BaseFragment;
 
 /**
  * Created by Reist on 10/13/15.
@@ -41,7 +39,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
 
     private RepoListAdapter adapter;
 
-    public static final RepoListFragment newInstance() {
+    public static RepoListFragment newInstance() {
         return newInstance(RepoListFragment.class, R.layout.github_fragment);
     }
 
@@ -82,7 +80,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     }
 
     @Override
-    public void displayError(Response.Error error) {
+    public void displayError(io.reist.visum.Error error) {
         if (adapter == null || adapter.getItemCount() == 0) {
             loaderView.showNetworkError();
         } else {

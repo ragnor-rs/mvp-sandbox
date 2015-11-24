@@ -1,4 +1,4 @@
-package io.reist.sandbox.repolist.presenter;
+package io.reist.sandbox.repo.presenter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

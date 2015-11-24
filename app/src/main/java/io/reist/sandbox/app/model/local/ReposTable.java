@@ -1,6 +1,6 @@
 package io.reist.sandbox.app.model.local;
 
-import io.reist.sandbox.core.model.local.BaseTable;
+import io.reist.visum.model.local.BaseTable;
 
 /**
  * Created by Reist on 10/16/15.
@@ -19,6 +19,7 @@ public class ReposTable extends BaseTable {
 
     private static final String CREATE_TABLE = "create table " + NAME + "(" +
             Column.ID + " integer not null primary key, " +
+            Column.REVISION + " integer," +
             Column.NAME + " text, " +
             Column.URL + " text, " +
             Column.LIKE_COUNT + " integer, " +

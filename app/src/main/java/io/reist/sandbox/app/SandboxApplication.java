@@ -2,13 +2,13 @@ package io.reist.sandbox.app;
 
 import android.util.Log;
 
-import io.reist.sandbox.core.BaseApplication;
-import io.reist.sandbox.core.BaseModule;
-import io.reist.sandbox.core.view.BaseView;
-import io.reist.sandbox.repoedit.view.RepoEditFragment;
-import io.reist.sandbox.repolist.view.RepoListFragment;
+import io.reist.sandbox.repo.view.RepoEditFragment;
+import io.reist.sandbox.repo.view.RepoListFragment;
 import io.reist.sandbox.user.view.UserReposFragment;
 import io.reist.sandbox.user.view.UsersFragment;
+import io.reist.visum.BaseApplication;
+import io.reist.visum.BaseModule;
+import io.reist.visum.view.BaseView;
 
 /**
  * Created by Reist on 10/16/15.

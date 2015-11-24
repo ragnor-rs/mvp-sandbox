@@ -1,19 +1,16 @@
-package io.reist.sandbox.repoedit.presenter;
+package io.reist.sandbox.repo.presenter;
 
 import android.widget.Toast;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import io.reist.sandbox.R;
-import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.model.ResponseObserver;
-import io.reist.sandbox.core.presenter.BasePresenter;
-import io.reist.sandbox.repoedit.view.RepoEditView;
-import io.reist.sandbox.repolist.model.RepoService;
-import rx.Observer;
+import io.reist.sandbox.repo.model.RepoService;
+import io.reist.sandbox.repo.view.RepoEditView;
+import io.reist.visum.Error;
+import io.reist.visum.presenter.BasePresenter;
 import rx.Subscriber;
 
 /**
@@ -24,22 +21,22 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
     public static final String EXTRA_REPO_ID = "io.reist.sandbox.extra_repo_id";
 
     RepoService repoService;
+
     private Repo repo;
 
-    //todo since apiary not really working we cannot use remote service, since it provides incorrect data
     @Inject
-    public RepoEditPresenter(@Named(SandboxModule.LOCAL_SERVICE) RepoService repoService) {
+    public RepoEditPresenter(RepoService repoService) {
         this.repoService = repoService;
     }
 
     @Override
     protected void onViewAttached() {
-        long repoId = view().getArguments().getLong(EXTRA_REPO_ID);
+        long repoId = view().extras().getLong(EXTRA_REPO_ID);
         view().showLoader(true);
         subscribe(repoService.byId(repoId), new ResponseObserver<Repo>() {
 
             @Override
-            protected void onFail(Response.Error error) {
+            protected void onFail(io.reist.visum.Error error) {
                 view().showLoader(false);
                 view().displayError(error);
             }
@@ -58,23 +55,18 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
         repo.owner.name = author;
         repo.url = url;
 
-        subscribe(repoService.save(repo), new Observer<Boolean>() {
+        subscribe(repoService.save(repo), new ResponseObserver<Repo>() {
 
             @Override
-            public void onCompleted() {
-
+            protected void onFail(Error error) {
+                Toast.makeText(view().context(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onError(Throwable e) {
-                Toast.makeText(view().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            protected void onSuccess(Repo data) {
+                Toast.makeText(view().context(), R.string.repo_saved, Toast.LENGTH_SHORT).show();
             }
 
-            @Override
-            public void onNext(Boolean success) {
-                if (success)
-                    Toast.makeText(view().getContext(), R.string.repo_saved, Toast.LENGTH_SHORT).show();
-            }
         });
     }
 

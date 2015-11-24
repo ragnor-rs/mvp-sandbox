@@ -27,12 +27,12 @@ import io.reist.sandbox.app.model.UserStorIOSQLitePutResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoGetResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoPutResolver;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-import io.reist.sandbox.core.BaseModule;
-import io.reist.sandbox.core.model.remote.NestedFieldNameAdapter;
-import io.reist.sandbox.repolist.model.CachedRepoService;
-import io.reist.sandbox.repolist.model.RepoService;
-import io.reist.sandbox.repolist.model.local.StorIoRepoService;
-import io.reist.sandbox.repolist.model.remote.RetrofitRepoService;
+import io.reist.sandbox.repo.model.CachedRepoService;
+import io.reist.sandbox.repo.model.RepoService;
+import io.reist.sandbox.repo.model.local.StorIoRepoService;
+import io.reist.sandbox.repo.model.remote.RetrofitRepoService;
+import io.reist.visum.BaseModule;
+import io.reist.visum.model.remote.NestedFieldNameAdapter;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
@@ -95,6 +95,11 @@ public class SandboxModule {
             request = request.newBuilder().url(httpUrl).build();
 
             Log.i(TAG, request.toString());
+
+            //print request body
+//            Buffer buffer = new Buffer();
+//            request.body().writeTo(buffer);
+//            Log.i(TAG, buffer.readUtf8());
 
             return chain.proceed(request);
         });

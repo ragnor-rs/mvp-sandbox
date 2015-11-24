@@ -1,4 +1,4 @@
-package io.reist.sandbox.repolist.presenter;
+package io.reist.sandbox.repo.presenter;
 
 import android.util.Log;
 import android.widget.Toast;
@@ -11,12 +11,11 @@ import javax.inject.Singleton;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.model.ResponseObserver;
-import io.reist.sandbox.core.presenter.BasePresenter;
-import io.reist.sandbox.repolist.model.RepoService;
-import io.reist.sandbox.repolist.view.RepoListView;
-import rx.Subscriber;
+import io.reist.sandbox.repo.model.RepoService;
+import io.reist.sandbox.repo.view.RepoListView;
+import io.reist.visum.Error;
+import io.reist.visum.presenter.BasePresenter;
 
 @Singleton
 public class RepoListPresenter extends BasePresenter<RepoListView> {
@@ -40,7 +39,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         subscribe(repoService.list(), new ResponseObserver<List<Repo>>() {
 
             @Override
-            protected void onFail(Response.Error error) {
+            protected void onFail(io.reist.visum.Error error) {
                 view().showLoader(false);
                 view().displayError(error);
             }
@@ -58,31 +57,26 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         Random rand = new Random();
         Repo object = new Repo();
 
-        object.id = Long.valueOf(rand.nextInt(100));
+        object.id = (long) rand.nextInt(100);
         object.name = "name_" + object.id;
         object.url = "url";
 
         subscribe(repoService.save(object), new AddRepoSubscriber());
     }
 
-    private class AddRepoSubscriber extends Subscriber<Boolean> {
-
+    private class AddRepoSubscriber extends ResponseObserver<Repo> {
         @Override
-        public void onNext(Boolean success) {
-            Log.i(TAG, "success add repo subscriber");
-            Toast.makeText(getContext(), R.string.repo_saved, Toast.LENGTH_LONG).show();
-            view().showLoader(false);
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            Log.e(TAG, "Error saving data", e);
+        protected void onFail(Error error) {
+            Log.e(TAG, "Error saving data" + error.getMessage());
             Toast.makeText(getContext(), R.string.github_repo_saving_list_error, Toast.LENGTH_LONG).show();
             view().showLoader(false);
         }
 
         @Override
-        public void onCompleted() {
+        protected void onSuccess(Repo data) {
+            Log.i(TAG, "success add repo subscriber");
+            Toast.makeText(getContext(), R.string.repo_saved, Toast.LENGTH_LONG).show();
+            view().showLoader(false);
         }
 
     }

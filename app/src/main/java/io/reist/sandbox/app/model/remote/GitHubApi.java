@@ -3,7 +3,7 @@ package io.reist.sandbox.app.model.remote;
 import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
+import io.reist.visum.model.Response;
 import io.reist.sandbox.app.model.User;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
@@ -24,10 +24,7 @@ public interface GitHubApi {
     Observable<Response<Repo>> repoById(@Path("id") Long id);
 
     @POST("/repos")
-    Observable<Boolean> save(
-            @Body Repo repo
-    );
-
+    Observable<Response<Repo>> save(@Body Repo repo);
 
     @DELETE("/repos/{id}")
     Observable<Integer> deleteRepo(@Path("id") Long id);

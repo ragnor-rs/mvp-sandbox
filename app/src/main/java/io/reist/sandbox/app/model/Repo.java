@@ -5,6 +5,7 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
 import io.reist.sandbox.app.model.local.ReposTable;
+import io.reist.visum.model.local.BaseTable;
 
 @StorIOSQLiteType(table = ReposTable.NAME)
 public class Repo {
@@ -12,6 +13,10 @@ public class Repo {
     @SerializedName("id")
     @StorIOSQLiteColumn(name = ReposTable.Column.ID, key = true)
     public Long id;
+
+    @SerializedName("revision")
+    @StorIOSQLiteColumn(name = BaseTable.Column.REVISION)
+    public int revision;
 
     @SerializedName("name")
     @StorIOSQLiteColumn(name = ReposTable.Column.NAME)

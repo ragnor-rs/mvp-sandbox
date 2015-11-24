@@ -1,10 +1,10 @@
-package io.reist.sandbox.repolist.model;
+package io.reist.sandbox.repo.model;
 
 import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
-import io.reist.sandbox.core.model.BaseService;
+import io.reist.visum.model.BaseService;
+import io.reist.visum.model.Response;
 import rx.Observable;
 
 /**

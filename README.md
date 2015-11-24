@@ -1,19 +1,24 @@
 # mvp-sandbox
-Android reactive MVP stack
+Android sample app based on Visum (https://github.com/ragnor-rs/visum)
 
-The app uses a mock API (http://docs.crackywacky.apiary.io/) to mimic GitHub functionality. There's a custom RxJava implementation which can be found in feature/custom-rx branch.
-
-Application is divided in three packages (according android clean architecture pattern http://fernandocejas.com/2015/07/18/architecting-android-the-evolution/):
-app - base feature, containing MainActivity and app start logic
-core - base architecture framework to be moved to separate module or even plug with gradle dependency
-repos - common feature. According to clean architecture every feature is stored in it's own package
-
-NB since this this app is using MVP pattern term view in documentation is relates to V
-in MVP (Model, View, Presenter).
-
-This application has two dagger2 scopes. One is common scope which is implemented by creating component in Application.class.
-And the other one is handled manually by creating and destroying components for current view via ComponentCache.
+There's a custom RxJava implementation which can be found in feature/custom-rx branch.
 
 The backend is located at https://safe-reaches-4393.herokuapp.com/
 
 Backend sources: https://github.com/ragnor-rs/mvp-sandbox-backend
+
+## Model
+
+Let's discuss a single feature, to clear up, how visual framework works.
+
+Large part of every MVP application is Model.
+Visum helps (but not enforces) you to build your model layer with [StorIo](https://github.com/pushtorefresh/storio) and [Retrofit](http://square.github.io/retrofit/) libraries [reactive way](https://github.com/ReactiveX/RxJava). 
+And it is covered by current example.
+
+### Providing data
+[BaseService](https://github.com/ragnor-rs/visum/blob/develop/src%2Fmain%2Fjava%2Fio%2Freist%2Fvisum%2Fmodel%2FBaseService.java) provides convinient [CRUD](https://www.wikiwand.com/en/Create,_read,_update_and_delete) interface.
+
+Sandbox application loads data from api, saves it to db and displays in View.
+RetrofitRepoService (remote service) and StorIoRepoServices (local service) implements BaseService and provides data from api and database respectively.
+
+[CachedRepoService](https://github.com/ragnor-rs/mvp-sandbox/blob/develop/app%2Fsrc%2Fmain%2Fjava%2Fio%2Freist%2Fsandbox%2Frepolist%2Fmodel%2FCachedRepoService.java) unites remote and local services and provides data to presenter. It also saves data to both DB and server.

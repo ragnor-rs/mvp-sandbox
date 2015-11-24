@@ -1,4 +1,4 @@
-package io.reist.sandbox.repolist.model.local;
+package io.reist.sandbox.repo.model.local;
 
 import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
@@ -9,10 +9,10 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.model.local.ReposTable;
-import io.reist.sandbox.core.model.local.StorIoService;
-import io.reist.sandbox.repolist.model.RepoService;
+import io.reist.sandbox.repo.model.RepoService;
+import io.reist.visum.model.Response;
+import io.reist.visum.model.local.StorIoService;
 import rx.Observable;
 
 public class StorIoRepoService extends StorIoService<Repo> implements RepoService {
