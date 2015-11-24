@@ -19,11 +19,12 @@ import io.reist.sandbox.app.SandboxApplication;
 import io.reist.sandbox.app.SandboxComponent;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.Response;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-import io.reist.sandbox.core.BaseModule;
-import io.reist.sandbox.repolist.model.RepoService;
+
+import io.reist.sandbox.repo.model.RepoService;
+import io.reist.visum.BaseModule;
+import io.reist.visum.model.Response;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
