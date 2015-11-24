@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_camara);
+        navigationView.setCheckedItem(R.id.nav_repos);
 
         fragmentManager.addOnBackStackChangedListener(this);
 
@@ -91,10 +91,10 @@ public class MainActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.nav_camara:
+            case R.id.nav_repos:
                 showFragment(RepoListFragment.newInstance(), true, true);
                 break;
-            case R.id.nav_gallery:
+            case R.id.nav_users:
                 showFragment(UsersFragment.newInstance(), true, true);
                 break;
         }
