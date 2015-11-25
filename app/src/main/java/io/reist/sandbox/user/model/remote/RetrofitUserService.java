@@ -36,7 +36,7 @@ public class RetrofitUserService extends RetrofitService<User> implements UserSe
     }
 
     @Override
-    public Observable<Integer> delete(Long id) {
+    public Observable<Response<Integer>> delete(Long id) {
         throw new IllegalStateException("Unsupported");
     }
 

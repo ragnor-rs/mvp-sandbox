@@ -10,6 +10,7 @@ import io.reist.sandbox.app.model.ResponseObserver;
 import io.reist.sandbox.repo.model.RepoService;
 import io.reist.sandbox.repo.view.RepoEditView;
 import io.reist.visum.Error;
+import io.reist.visum.model.Response;
 import io.reist.visum.presenter.BasePresenter;
 import rx.Subscriber;
 
@@ -20,7 +21,7 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
 
     public static final String EXTRA_REPO_ID = "io.reist.sandbox.extra_repo_id";
 
-    RepoService repoService;
+    private RepoService repoService;
 
     private Repo repo;
 
@@ -36,17 +37,18 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
         subscribe(repoService.byId(repoId), new ResponseObserver<Repo>() {
 
             @Override
-            protected void onFail(io.reist.visum.Error error) {
+            protected void onFail(Error error) {
                 view().showLoader(false);
                 view().displayError(error);
             }
 
             @Override
-            protected void onSuccess(Repo data) {
+            protected void onSuccess(Repo result) {
                 view().showLoader(false);
-                repo = data;
-                view().displayData(data);
+                repo = result;
+                view().displayData(result);
             }
+
         });
     }
 
@@ -63,7 +65,7 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
             }
 
             @Override
-            protected void onSuccess(Repo data) {
+            protected void onSuccess(Repo result) {
                 Toast.makeText(view().context(), R.string.repo_saved, Toast.LENGTH_SHORT).show();
             }
 
@@ -71,21 +73,20 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
     }
 
     public void deleteRepo() {
-        subscribe(repoService.delete(repo.id), new Subscriber<Integer>() {
-            @Override
-            public void onCompleted() {
-
-            }
+        subscribe(repoService.delete(repo.id), new Subscriber<Response<Integer>>() {
 
             @Override
-            public void onError(Throwable e) {
-
-            }
+            public void onCompleted() {}
 
             @Override
-            public void onNext(Integer integer) {
+            public void onError(Throwable e) {}
+
+            @Override
+            public void onNext(Response<Integer> response) {
                 view().back();
             }
+
         });
     }
+
 }

@@ -27,16 +27,13 @@ public interface GitHubApi {
     Observable<Response<Repo>> save(@Body Repo repo);
 
     @DELETE("/repos/{id}")
-    Observable<Integer> deleteRepo(@Path("id") Long id);
+    Observable<Response<Integer>> deleteRepo(@Path("id") Long id);
 
     @POST("/repos/{id}/like")
     Observable<Response<Repo>> like(@Path("id") Long repoId);
 
     @POST("/repos/{id}/unlike")
     Observable<Response<Repo>> unlike(@Path("id") Long repoId);
-
-    @DELETE("/repos/{id}")
-    Observable<Integer> delete(Long id); //cur not implemented in apiary
 
     @GET("/users")
     Observable<Response<List<User>>> listUsers();
