@@ -1,4 +1,4 @@
-package io.reist.sandbox.model;
+package io.reist.sandbox.user;
 
 
 import org.junit.Before;
@@ -36,10 +36,13 @@ import static org.mockito.Mockito.when;
 
 /**
  * Created by m039 on 11/19/15.
+ *
+ * To work on unit tests, switch the Test Artifact in the Build Variants view.
+ *
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class ModelTest {
+public class UserModelTest {
 
     @Inject
     RepoService repoService;
@@ -48,7 +51,7 @@ public class ModelTest {
     public void setup() {
         SandboxApplication sandboxApplication = (SandboxApplication) RuntimeEnvironment.application;
 
-        TestModelComponent modelComponent = DaggerModelTest_TestModelComponent
+        TestModelComponent modelComponent = DaggerUserModelTest_TestModelComponent
                 .builder()
                 .sandboxModule(new TestModelModule())
                 .baseModule(new BaseModule(sandboxApplication))
@@ -62,7 +65,7 @@ public class ModelTest {
     @Singleton
     @Component(modules = { SandboxModule.class })
     public interface TestModelComponent extends SandboxComponent {
-        void inject(ModelTest modelTest);
+        void inject(UserModelTest userModelTest);
     }
 
     public static class TestModelModule extends SandboxModule {
