@@ -24,11 +24,7 @@ public abstract class ResponseObserver<T> implements Observer<Response<T>> {
 
     @Override
     public void onError(Throwable e) {
-        VisumError error = new VisumError();
-
-        error.setThrowable(e);
-
-        onFail(error);
+        onFail(new VisumError(e));
     }
 
     @Override

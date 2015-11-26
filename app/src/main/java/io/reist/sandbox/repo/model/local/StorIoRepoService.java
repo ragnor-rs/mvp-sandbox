@@ -18,7 +18,7 @@ import rx.Observable;
 public class StorIoRepoService extends StorIoService<Repo> implements RepoService {
 
     public StorIoRepoService(StorIOSQLite storIoSqLite) {
-        super( storIoSqLite);
+        super(storIoSqLite);
     }
 
     @RxLogObservable
