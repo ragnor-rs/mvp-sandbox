@@ -38,6 +38,11 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class UserUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
+    /**
+     * Should take into consideration delays during network operations
+     */
+    public static final int ACTION_TIMEOUT = 10000;
+
     MainActivity mMainActivity;
 
     public UserUiTest() {
@@ -59,26 +64,26 @@ public class UserUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
         onView(allOf(isDescendantOfA(withId(R.id.nav_view)), withText(R.string.menu_users)))
                 .perform(click());
 
-        waitForMs(2000);
+        waitForMs(ACTION_TIMEOUT);
 
         onView(withId(R.id.recycler))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        waitForMs(2000);
+        waitForMs(ACTION_TIMEOUT);
 
         boolean isLiked = isLiked(R.id.recycler, 0);
 
         onView(withId(R.id.recycler))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, clickOnId(R.id.like)));
 
-        waitForMs(2000);
+        waitForMs(ACTION_TIMEOUT);
 
         Assert.assertEquals(isLiked, !isLiked(R.id.recycler, 0));
 
         onView(withId(R.id.recycler))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, clickOnId(R.id.like)));
 
-        waitForMs(2000);
+        waitForMs(ACTION_TIMEOUT);
 
         Assert.assertEquals(isLiked, isLiked(R.id.recycler, 0));
     }
