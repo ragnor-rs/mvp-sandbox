@@ -1,4 +1,4 @@
-package io.reist.sandbox.app.view;
+package io.reist.sandbox.test.user;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import io.reist.sandbox.user.view.UsersFragment;
 /**
  * Created by m039 on 11/25/15.
  */
-public class TestActivity extends Activity {
+public class UsersTestActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

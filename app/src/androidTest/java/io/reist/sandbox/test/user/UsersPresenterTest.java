@@ -1,9 +1,10 @@
 package io.reist.sandbox.test.user;
 
 import android.app.Instrumentation;
+import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.ActivityInstrumentationTestCase2;
+import android.test.ActivityUnitTestCase;
 
 import junit.framework.Assert;
 
@@ -25,7 +26,6 @@ import io.reist.sandbox.app.SandboxApplication;
 import io.reist.sandbox.app.SandboxComponent;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.User;
-import io.reist.sandbox.app.view.TestActivity;
 import io.reist.sandbox.repo.model.RepoService;
 import io.reist.sandbox.user.UserFragmentComponent;
 import io.reist.sandbox.user.model.UserService;
@@ -40,13 +40,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Created by m039 on 11/25/15.
  */
 @RunWith(AndroidJUnit4.class)
-public class UsersPresenterTest extends ActivityInstrumentationTestCase2<TestActivity> {
+public class UsersPresenterTest extends ActivityUnitTestCase<UsersTestActivity> {
 
     public UsersPresenterTest() {
-        super(TestActivity.class);
+        super(UsersTestActivity.class);
     }
 
-    TestActivity mTestUsersActivity;
+    UsersTestActivity mTestUsersActivity;
 
     @Before
     public void setUp() throws Exception {
@@ -65,8 +65,19 @@ public class UsersPresenterTest extends ActivityInstrumentationTestCase2<TestAct
         sandboxApplication.setSandboxComponent(modelComponent);
 
         injectInstrumentation(instrumentation);
+        setApplication(sandboxApplication);
 
         super.setUp();
+
+        instrumentation.runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(sandboxApplication, UsersTestActivity.class);
+                startActivity(intent, null, null);
+            }
+        });
+
+        try { Thread.sleep(1000); } catch (Exception e) {}
 
         mTestUsersActivity = getActivity();
     }
@@ -140,10 +151,6 @@ public class UsersPresenterTest extends ActivityInstrumentationTestCase2<TestAct
                 .findFragmentById(android.R.id.content);
 
         assertThat(usersFragment.getPresenter()).isNotNull();
-
-        try { Thread.sleep(1000); } catch (Exception e) {
-        }
-
         Assert.assertTrue(usersFragment.getPresenter().isDataLoaded());
     }
 
