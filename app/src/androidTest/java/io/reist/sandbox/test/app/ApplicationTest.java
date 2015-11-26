@@ -1,4 +1,4 @@
-package io.reist.sandbox.app;
+package io.reist.sandbox.test.app;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

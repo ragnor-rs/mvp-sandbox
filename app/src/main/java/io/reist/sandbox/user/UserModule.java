@@ -24,5 +24,4 @@ public class UserModule {
         return new UserCachedService(new StorIoUserService(storIOSQLite), new RetrofitUserService(gitHubApi));
     }
 
-
 }

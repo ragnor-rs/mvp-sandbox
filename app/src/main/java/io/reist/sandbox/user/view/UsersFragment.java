@@ -18,6 +18,7 @@ import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.user.UserFragmentComponent;
 import io.reist.sandbox.user.presenter.UsersPresenter;
 import io.reist.visum.model.Error;
+
 import io.reist.visum.view.BaseFragment;
 
 /**
@@ -56,7 +57,7 @@ public class UsersFragment extends BaseFragment<UsersPresenter>
 
     @NonNull
     @Override
-    protected UsersPresenter getPresenter() {
+    public UsersPresenter getPresenter() {
         return mPresenter;
     }
 

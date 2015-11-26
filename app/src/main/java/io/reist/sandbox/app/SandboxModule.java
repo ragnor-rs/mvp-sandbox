@@ -48,7 +48,7 @@ public class SandboxModule {
     private static final String TAG = SandboxModule.class.getName();
 
     @Provides @Singleton
-    StorIOSQLite storIoSqLite(Context context) {
+    protected StorIOSQLite storIoSqLite(Context context) {
 
         DbOpenHelper dbOpenHelper = new DbOpenHelper(context);
 
@@ -76,7 +76,7 @@ public class SandboxModule {
     }
 
     @Provides @Singleton
-    GitHubApi gitHubApi() {
+    protected GitHubApi gitHubApi() {
 
         Gson gson = new GsonBuilder()
                 .registerTypeHierarchyAdapter(Object.class, new NestedFieldNameAdapter())
@@ -117,17 +117,17 @@ public class SandboxModule {
     }
 
     @Provides @Singleton @Named(SandboxModule.LOCAL_SERVICE)
-    RepoService localRepoService(StorIOSQLite storIoSqLite) {
+    protected RepoService localRepoService(StorIOSQLite storIoSqLite) {
         return new StorIoRepoService(storIoSqLite);
     }
 
     @Provides @Singleton @Named(SandboxModule.REMOTE_SERVICE)
-    RepoService remoteRepoService(GitHubApi gitHubApi) {
+    protected RepoService remoteRepoService(GitHubApi gitHubApi) {
         return new RetrofitRepoService(gitHubApi);
     }
 
     @Provides @Singleton
-    RepoService repoService(
+    protected RepoService repoService(
             @Named(SandboxModule.LOCAL_SERVICE) RepoService local,
             @Named(SandboxModule.REMOTE_SERVICE) RepoService remote
     ) {
