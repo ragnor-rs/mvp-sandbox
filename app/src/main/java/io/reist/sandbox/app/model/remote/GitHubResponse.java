@@ -24,20 +24,10 @@ public class GitHubResponse<T> implements Response<T> {
         return result;
     }
 
-    @Override
-    public void setResult(T result) {
-        this.result = result;
-    }
-
     @Nullable
     @Override
     public Error getError() {
         return error;
-    }
-
-    @Override
-    public void setError(Error error) {
-        this.error = new GitHubError(error);
     }
 
     @Override

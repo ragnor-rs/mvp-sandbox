@@ -11,6 +11,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import io.reist.sandbox.user.model.UserService;
 import io.reist.sandbox.user.view.UsersFragment;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.Response;
+import io.reist.visum.model.VisumResponse;
 import rx.Observable;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -136,8 +138,7 @@ public class UsersPresenterTest extends ActivityUnitTestCase<UsersTestActivity> 
             users.add(user1);
             users.add(user2);
 
-            Mockito.when(mockedUserService.list())
-                    .thenReturn(Observable.just(new Response<>(users)));
+            Mockito.doReturn(Observable.just(new VisumResponse<>(users))).when(mockedUserService).list();
 
             return mockedUserService;
         }
