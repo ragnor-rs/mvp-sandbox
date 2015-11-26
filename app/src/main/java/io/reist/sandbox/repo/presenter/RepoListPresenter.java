@@ -45,9 +45,9 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
             }
 
             @Override
-            protected void onSuccess(List<Repo> data) {
+            protected void onSuccess(List<Repo> result) {
                 view().showLoader(false);
-                view().displayData(data); //cur need to check if view detached or crash can occure
+                view().displayData(result); //cur need to check if view detached or crash can occure
             }
         });
     }
@@ -73,7 +73,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         }
 
         @Override
-        protected void onSuccess(Repo data) {
+        protected void onSuccess(Repo result) {
             Log.i(TAG, "success add repo subscriber");
             Toast.makeText(getContext(), R.string.repo_saved, Toast.LENGTH_LONG).show();
             view().showLoader(false);

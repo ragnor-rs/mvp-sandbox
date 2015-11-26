@@ -75,8 +75,8 @@ public class UserReposPresenter extends BasePresenter<UserReposView> {
             Log.i(TAG, "--- OBSERVED ON " + Thread.currentThread() + " ---");
             UserReposView view = view();
             if (response.isSuccessful()) {
-                Log.d(TAG, "successfully loaded " + response.getData().size() + " items");
-                view.displayData(response.getData());
+                Log.d(TAG, "successfully loaded " + response.getResult().size() + " items");
+                view.displayData(response.getResult());
                 view.showLoader(false);
             } else {
                 Log.w(TAG, "network error occured");

@@ -51,7 +51,7 @@ public class UsersPresenter extends BasePresenter<UsersView> {
         public void onNext(Response<List<User>> response) {
             UsersView view = view();
             if (response.isSuccessful()) {
-                view.displayData(response.getData());
+                view.displayData(response.getResult());
                 view.showLoader(false);
                 mIsDataLoaded = true;
             } else {

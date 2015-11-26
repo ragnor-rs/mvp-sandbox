@@ -12,14 +12,14 @@ public abstract class ResponseObserver<T> implements Observer<Response<T>> {
     @Override
     public void onNext(Response<T> response) {
         if (response.isSuccessful())
-            onSuccess(response.getData());
+            onSuccess(response.getResult());
         else
             onFail(response.getError());
     }
 
-    protected abstract void onFail(io.reist.visum.Error error);
+    protected abstract void onFail(Error error);
 
-    protected abstract void onSuccess(T data);
+    protected abstract void onSuccess(T result);
 
     @Override
     public void onError(Throwable e) {
@@ -27,8 +27,6 @@ public abstract class ResponseObserver<T> implements Observer<Response<T>> {
     }
 
     @Override
-    public void onCompleted() {
-
-    }
+    public void onCompleted() {}
 
 }

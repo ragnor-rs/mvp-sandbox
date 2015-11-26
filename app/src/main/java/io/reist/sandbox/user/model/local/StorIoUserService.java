@@ -29,7 +29,7 @@ public class StorIoUserService extends StorIoService<User>
     }
 
     @Override
-    public Observable<Integer> delete(Long id) {
+    public Observable<Response<Integer>> delete(Long id) {
         throw new IllegalStateException("Unsupported");
     }
 

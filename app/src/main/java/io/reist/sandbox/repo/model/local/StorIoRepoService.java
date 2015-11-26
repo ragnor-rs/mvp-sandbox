@@ -39,7 +39,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
     }
 
     @Override
-    public Observable<Integer> delete(Long id) {
+    public Observable<Response<Integer>>  delete(Long id) {
         return storIoSqLite        //cur if that's fine to make storIoSqLite protected?
                 .delete()
                 .byQuery(
@@ -51,7 +51,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 )
                 .prepare() // BTW: it will use transaction!
                 .createObservable()
-                .map(DeleteResult::numberOfRowsDeleted);
+                .map(t -> new Response<>(t.numberOfRowsDeleted()));
     }
 
     @RxLogObservable
