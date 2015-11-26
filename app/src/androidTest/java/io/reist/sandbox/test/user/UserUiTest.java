@@ -13,6 +13,7 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
 import android.test.ActivityInstrumentationTestCase2;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Created by m039 on 11/20/15.
@@ -41,7 +43,7 @@ public class UserUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
     /**
      * Should take into consideration delays during network operations
      */
-    public static final int ACTION_TIMEOUT = 10000;
+    public static final int ACTION_TIMEOUT = 5000;
 
     MainActivity mMainActivity;
 
@@ -58,37 +60,49 @@ public class UserUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     @Test
     public void testLike() throws Throwable {
+
+        // open sidebar
         onView(withId(R.id.drawer_layout))
                 .perform(DrawerActions.open());
 
+        // go to users section
         onView(allOf(isDescendantOfA(withId(R.id.nav_view)), withText(R.string.menu_users)))
                 .perform(click());
 
         waitForMs(ACTION_TIMEOUT);
 
+        // click on user
         onView(withId(R.id.recycler))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         waitForMs(ACTION_TIMEOUT);
 
-        boolean isLiked = isLiked(R.id.recycler, 0);
+        // is first repo liked?
+        boolean isLiked = isRepoLiked(R.id.recycler, 0);
 
+        Log.i(UserUiTest.class.getName(), "isRepoLiked = " + isLiked);
+
+        // click on like button
         onView(withId(R.id.recycler))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, clickOnId(R.id.like)));
 
         waitForMs(ACTION_TIMEOUT);
 
-        Assert.assertEquals(isLiked, !isLiked(R.id.recycler, 0));
+        // check if like status changed
+        Assert.assertEquals(!isLiked, isRepoLiked(R.id.recycler, 0));
 
+        // click on like button (should be an opposite of first button state)
         onView(withId(R.id.recycler))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, clickOnId(R.id.like)));
 
         waitForMs(ACTION_TIMEOUT);
 
-        Assert.assertEquals(isLiked, isLiked(R.id.recycler, 0));
+        // check if like status reverted
+        Assert.assertEquals(isLiked, isRepoLiked(R.id.recycler, 0));
+
     }
 
-    boolean isLiked(@IdRes int recyclerViewId, int position) {
+    boolean isRepoLiked(@IdRes int recyclerViewId, int position) {
         Activity activity = mMainActivity;
 
         TextView like = (TextView) ((RecyclerView) activity.findViewById(recyclerViewId))
@@ -96,7 +110,15 @@ public class UserUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
                 .itemView
                 .findViewById(R.id.like);
 
-        return like.getText().equals(activity.getString(R.string.repo_button_like));
+        final String label = like.getText().toString();
+        if (label.equalsIgnoreCase(activity.getString(R.string.repo_button_unlike))) {
+            return true;
+        } else if (label.equalsIgnoreCase(activity.getString(R.string.repo_button_like))) {
+            return false;
+        } else {
+            fail("Like button label: " + label);
+            return false;
+        }
     }
 
     void waitForItems(@IdRes int recylerViewId, long timeOutMillis) {

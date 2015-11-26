@@ -115,7 +115,7 @@ public class UserModelTest {
         assertThat(subscriber.getOnErrorEvents())
                 .isEmpty();
 
-        Repo repo = subscriber.getOnNextEvents().get(0).getData();
+        Repo repo = subscriber.getOnNextEvents().get(0).getResult();
 
         assertThat(repo.id).isEqualTo(REPO_ID);
         assertThat(repo.likedByMe).isEqualTo(like);
