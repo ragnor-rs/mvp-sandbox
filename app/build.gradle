@@ -51,6 +51,11 @@ android {
         disable 'InvalidPackage'
     }
 
+    packagingOptions {
+        exclude 'NOTICE'
+        exclude "asm-license.txt"
+    }
+
 }
 
 dependencies {
@@ -79,6 +84,13 @@ dependencies {
     testApt 'com.google.dagger:dagger-compiler:2.0.1'
 
     // android tests
+
+    androidTestCompile 'org.assertj:assertj-core:2.2.0'
+    androidTestCompile "org.mockito:mockito-core:1.10.19"
+    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
+    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+
+    androidTestApt 'com.google.dagger:dagger-compiler:2.0.1'
 
     androidTestCompile ('com.android.support.test:runner:0.4.1') {
         exclude group: 'com.android.support', module: 'support-annotations'

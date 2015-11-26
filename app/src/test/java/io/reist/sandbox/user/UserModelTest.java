@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import dagger.Subcomponent;
 import io.reist.sandbox.BuildConfig;
 import io.reist.sandbox.app.SandboxApplication;
 import io.reist.sandbox.app.SandboxComponent;
@@ -51,9 +52,9 @@ public class UserModelTest {
     public void setup() {
         SandboxApplication sandboxApplication = (SandboxApplication) RuntimeEnvironment.application;
 
-        TestModelComponent modelComponent = DaggerUserModelTest_TestModelComponent
+        TestComponent modelComponent = DaggerUserModelTest_TestComponent
                 .builder()
-                .sandboxModule(new TestModelModule())
+                .sandboxModule(new TestSandboxModule())
                 .baseModule(new BaseModule(sandboxApplication))
                 .build();
 
@@ -63,13 +64,12 @@ public class UserModelTest {
     }
 
     @Singleton
-    @Component(modules = { SandboxModule.class })
-    public interface TestModelComponent extends SandboxComponent {
-        void inject(UserModelTest userModelTest);
+    @Component(modules = SandboxModule.class)
+    public interface TestComponent extends SandboxComponent {
+        void inject(UserModelTest baseTest);
     }
 
-    public static class TestModelModule extends SandboxModule {
-
+    private static class TestSandboxModule extends SandboxModule {
         @Override
         protected RepoService remoteRepoService(GitHubApi gitHubApi) {
             RepoService mockedRepoService = mock(RepoService.class);
@@ -85,7 +85,6 @@ public class UserModelTest {
 
             return mockedRepoService;
         }
-
     }
 
     @Test

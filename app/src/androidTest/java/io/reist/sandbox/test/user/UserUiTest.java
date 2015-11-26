@@ -1,4 +1,4 @@
-package io.reist.sandbox.user;
+package io.reist.sandbox.test.user;
 
 import android.app.Activity;
 import android.app.Fragment;

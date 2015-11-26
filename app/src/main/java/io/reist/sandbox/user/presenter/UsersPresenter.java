@@ -5,11 +5,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reist.visum.model.Response;
 import io.reist.sandbox.app.model.User;
-import io.reist.visum.presenter.BasePresenter;
 import io.reist.sandbox.user.model.UserService;
 import io.reist.sandbox.user.view.UsersView;
+import io.reist.visum.model.Response;
+import io.reist.visum.presenter.BasePresenter;
 import rx.Observer;
 
 /**
@@ -19,6 +19,7 @@ import rx.Observer;
 public class UsersPresenter extends BasePresenter<UsersView> {
 
     UserService mUserService;
+    private boolean mIsDataLoaded = false;
 
     @Inject
     UsersPresenter(UserService userService) {
@@ -27,12 +28,21 @@ public class UsersPresenter extends BasePresenter<UsersView> {
 
     @Override
     protected void onViewAttached() {
+        mIsDataLoaded = false;
+
         view().showLoader(true);
         loadData();
     }
 
     public void loadData() {
         subscribe(mUserService.list(), new UsersObserver());
+    }
+
+    /**
+     * Used in test only
+     */
+    public boolean isDataLoaded() {
+        return mIsDataLoaded;
     }
 
     private class UsersObserver implements Observer<Response<List<User>>> {
@@ -43,9 +53,11 @@ public class UsersPresenter extends BasePresenter<UsersView> {
             if (response.isSuccessful()) {
                 view.displayData(response.getData());
                 view.showLoader(false);
+                mIsDataLoaded = true;
             } else {
                 view.displayError(response.getError());
             }
+
         }
 
         @Override
