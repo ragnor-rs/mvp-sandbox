@@ -15,9 +15,9 @@ import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.view.widget.LoaderView;
-import io.reist.visum.view.BaseFragment;
 import io.reist.sandbox.user.UserFragmentComponent;
 import io.reist.sandbox.user.presenter.UsersPresenter;
+import io.reist.visum.view.BaseFragment;
 
 /**
  * Created by m039 on 11/12/15.
@@ -55,7 +55,7 @@ public class UsersFragment extends BaseFragment<UsersPresenter>
 
     @NonNull
     @Override
-    protected UsersPresenter getPresenter() {
+    public UsersPresenter getPresenter() {
         return mPresenter;
     }
 

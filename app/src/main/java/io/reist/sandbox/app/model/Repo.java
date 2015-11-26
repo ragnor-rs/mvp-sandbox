@@ -28,7 +28,7 @@ public class Repo {
 
     @SerializedName("like_count")
     @StorIOSQLiteColumn(name = ReposTable.Column.LIKE_COUNT)
-    public Integer likeCount;
+    public int likeCount;
 
     @SerializedName("liked_by_me")
     @StorIOSQLiteColumn(name = ReposTable.Column.LIKED_BY_ME)

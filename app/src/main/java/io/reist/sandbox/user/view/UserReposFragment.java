@@ -28,7 +28,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
 
     private static final String ARG_USER = "arg_user";
 
-    @Bind(R.id.daggertest_repo_recycler_view)
+    @Bind(R.id.recycler)
     RecyclerView mRecyclerView;
 
     @Bind(R.id.loader)
