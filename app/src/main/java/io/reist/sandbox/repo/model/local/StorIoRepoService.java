@@ -2,7 +2,6 @@ package io.reist.sandbox.repo.model.local;
 
 import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
-import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 
@@ -12,13 +11,14 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.sandbox.repo.model.RepoService;
 import io.reist.visum.model.Response;
+import io.reist.visum.model.VisumResponse;
 import io.reist.visum.model.local.StorIoService;
 import rx.Observable;
 
 public class StorIoRepoService extends StorIoService<Repo> implements RepoService {
 
     public StorIoRepoService(StorIOSQLite storIoSqLite) {
-        super(storIoSqLite);
+        super( storIoSqLite);
     }
 
     @RxLogObservable
@@ -28,14 +28,14 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 .withQuery(Query.builder().table(ReposTable.NAME).build())
                 .prepare()
                 .createObservable()
-                .map(Response::new);
+                .map(VisumResponse::new);
     }
 
     @RxLogObservable
     @Override
     public Observable<Response<Repo>> byId(Long id) {
         return unique(Repo.class, ReposTable.NAME, id)
-                .map(Response<Repo>::new);
+                .map(VisumResponse::new);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 )
                 .prepare() // BTW: it will use transaction!
                 .createObservable()
-                .map(t -> new Response<>(t.numberOfRowsDeleted()));
+                .map(t -> new VisumResponse<>(t.numberOfRowsDeleted()));
     }
 
     @RxLogObservable
@@ -68,7 +68,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                                 .build())
                 .prepare()
                 .createObservable()
-                .map(Response::new);
+                .map(VisumResponse::new);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 .prepare()
                 .executeAsBlocking();
 
-        return Observable.just(repo).map(Response::new);
+        return Observable.just(repo).map(VisumResponse::new);
     }
 
 }

@@ -2,11 +2,11 @@ package io.reist.sandbox.user.model.remote;
 
 import java.util.List;
 
-import io.reist.visum.model.Response;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-import io.reist.visum.model.remote.RetrofitService;
 import io.reist.sandbox.user.model.UserService;
+import io.reist.visum.model.Response;
+import io.reist.visum.model.remote.RetrofitService;
 import rx.Observable;
 
 /**
@@ -21,7 +21,7 @@ public class RetrofitUserService extends RetrofitService<User> implements UserSe
     }
 
     @Override
-    public Observable<Response<List<User>>> list() {
+    public Observable<? extends Response<List<User>>> list() {
         return gitHubApi.listUsers();
     }
 

@@ -21,30 +21,30 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
 
     @RxLogObservable
     @Override
-    public Observable<Response<List<Repo>>> list() {
+    public Observable<? extends Response<List<Repo>>> list() {
         return gitHubApi.listRepos();
     }
 
     @RxLogObservable
     @Override
-    public Observable<Response<Repo>> byId(Long id) {
+    public Observable<? extends Response<Repo>> byId(Long id) {
         return gitHubApi.repoById(id);
     }
 
     @RxLogObservable
     @Override
-    public Observable<Response<List<Repo>>> save(List<Repo> list) { //cur this is not what we really get form api
+    public Observable<? extends Response<List<Repo>>> save(List<Repo> list) { //cur this is not what we really get form api
         throw new UnsupportedOperationException();
     }
 
     @RxLogObservable
     @Override
-    public Observable<Response<Repo>> save(Repo repo) {
+    public Observable<? extends Response<Repo>> save(Repo repo) {
         return gitHubApi.save(repo);
     }
 
     @Override
-    public Observable<Response<Integer>> delete(Long id) {
+    public Observable<? extends Response<Integer>> delete(Long id) {
         return gitHubApi.deleteRepo(id);
     }
 
@@ -59,17 +59,17 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
     }
 
     @Override
-    public Observable<Response<Repo>> unlike(Repo repo) {
+    public Observable<? extends Response<Repo>> unlike(Repo repo) {
         return gitHubApi.unlike(repo.id);
     }
 
     @Override
-    public Observable<Response<Repo>> like(Repo repo) {
+    public Observable<? extends Response<Repo>> like(Repo repo) {
         return gitHubApi.like(repo.id);
     }
 
     @Override
-    public Observable<Response<List<Repo>>> findReposByUserId(Long userId) {
+    public Observable<? extends Response<List<Repo>>> findReposByUserId(Long userId) {
         return gitHubApi.reposByUserId(userId);
     }
 

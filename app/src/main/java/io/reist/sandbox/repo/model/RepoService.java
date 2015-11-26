@@ -12,10 +12,10 @@ import rx.Observable;
  */
 public interface RepoService extends BaseService<Repo> {
 
-    Observable<Response<List<Repo>>> findReposByUserId(Long userId);
+    Observable<? extends Response<List<Repo>>> findReposByUserId(Long userId);
 
-    Observable<Response<Repo>> like(Repo repo);
+    Observable<? extends Response<Repo>> like(Repo repo);
 
-    Observable<Response<Repo>> unlike(Repo repo);
+    Observable<? extends Response<Repo>> unlike(Repo repo);
 
 }

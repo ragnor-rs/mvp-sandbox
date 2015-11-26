@@ -1,6 +1,7 @@
 package io.reist.sandbox.repo.view;
 
 import io.reist.sandbox.app.model.Repo;
+import io.reist.visum.model.Error;
 import io.reist.visum.view.BaseView;
 
 /**
@@ -8,7 +9,7 @@ import io.reist.visum.view.BaseView;
  */
 public interface RepoEditView extends BaseView {
 
-    void displayError(io.reist.visum.Error error);
+    void displayError(Error error);
 
     void displayData(Repo data);
 

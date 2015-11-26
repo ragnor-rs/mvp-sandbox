@@ -5,11 +5,12 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
-import io.reist.visum.model.Response;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.local.UserTable;
-import io.reist.visum.model.local.StorIoService;
 import io.reist.sandbox.user.model.UserService;
+import io.reist.visum.model.Response;
+import io.reist.visum.model.VisumResponse;
+import io.reist.visum.model.local.StorIoService;
 import rx.Observable;
 
 /**
@@ -43,6 +44,6 @@ public class StorIoUserService extends StorIoService<User>
                         .build())
                 .prepare()
                 .createObservable()
-                .map(Response::new);
+                .map(VisumResponse::new);
     }
 }
