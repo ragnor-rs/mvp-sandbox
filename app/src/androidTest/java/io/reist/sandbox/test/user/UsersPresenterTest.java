@@ -6,6 +6,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityUnitTestCase;
 
+import com.pushtorefresh.storio.sqlite.StorIOSQLite;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -22,13 +24,19 @@ import javax.inject.Singleton;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
+import io.reist.sandbox.app.DaggerSandboxComponent;
 import io.reist.sandbox.app.SandboxApplication;
 import io.reist.sandbox.app.SandboxComponent;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.User;
+import io.reist.sandbox.app.model.remote.GitHubApi;
 import io.reist.sandbox.repo.model.RepoService;
 import io.reist.sandbox.user.UserFragmentComponent;
+import io.reist.sandbox.user.UserModule;
+import io.reist.sandbox.user.model.UserCachedService;
 import io.reist.sandbox.user.model.UserService;
+import io.reist.sandbox.user.model.local.StorIoUserService;
+import io.reist.sandbox.user.model.remote.RetrofitUserService;
 import io.reist.sandbox.user.view.UsersFragment;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.Response;
@@ -56,13 +64,13 @@ public class UsersPresenterTest extends ActivityUnitTestCase<UsersTestActivity> 
                 .getTargetContext()
                 .getApplicationContext();
 
-        TestComponent modelComponent = DaggerUsersPresenterTest_TestComponent
+        SandboxComponent sandboxComponent = DaggerSandboxComponent
                 .builder()
-                .sandboxModule(new SandboxModule())
+                .userModule(new TestUserModule())
                 .baseModule(new BaseModule(sandboxApplication))
                 .build();
 
-        sandboxApplication.setSandboxComponent(modelComponent);
+        sandboxApplication.setSandboxComponent(sandboxComponent);
 
         injectInstrumentation(instrumentation);
         setApplication(sandboxApplication);
@@ -82,43 +90,10 @@ public class UsersPresenterTest extends ActivityUnitTestCase<UsersTestActivity> 
         mTestUsersActivity = getActivity();
     }
 
-    @Singleton
-    @Component(modules = SandboxModule.class)
-    public static abstract class TestComponent implements SandboxComponent {
+    public static class TestUserModule extends UserModule {
 
         @Override
-        public UserFragmentComponent userFragmentComponent() {
-            TestUserModule testUserModule = new TestUserModule();
-
-            inject(testUserModule);
-
-            return DaggerUsersPresenterTest_TestUserFragmentComponent
-                    .builder()
-                    .testUserModule(testUserModule)
-                    .build();
-        }
-
-        public abstract void inject(TestUserModule testUserModule);
-    }
-
-    @Singleton
-    @Component(modules = TestUserModule.class)
-    public interface TestUserFragmentComponent extends UserFragmentComponent {
-    }
-
-    @Module
-    public static class TestUserModule {
-
-        @Inject RepoService repoService;
-
-        @Provides
-        RepoService repoService() {
-            return repoService;
-        }
-
-        @Singleton
-        @Provides
-        UserService userService() {
+        public UserService userService(GitHubApi gitHubApi, StorIOSQLite storIOSQLite) {
             UserService mockedUserService = Mockito.mock(UserService.class);
 
             User user1 = new User();

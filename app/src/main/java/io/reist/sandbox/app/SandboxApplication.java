@@ -17,14 +17,14 @@ public class SandboxApplication extends BaseApplication {
 
     private static final String TAG = SandboxApplication.class.getSimpleName();
 
-    private SandboxComponent sandboxComponent = DaggerSandboxComponent.builder()
-            .sandboxModule(new SandboxModule())
-            .baseModule(new BaseModule(this))
+    private SandboxComponent sandboxComponent = DaggerSandboxComponent
+            .builder()
+            .baseModule(new BaseModule(this)) // Other module classes will be created via default constructor
             .build();
-
 
     /**
      * This method is used in tests
+     *
      * @param sandboxComponent
      */
     public void setSandboxComponent(SandboxComponent sandboxComponent) {
@@ -43,7 +43,8 @@ public class SandboxApplication extends BaseApplication {
             return sandboxComponent.reposFragmentComponent();
         } else if (RepoEditFragment.class.isAssignableFrom(viewClass)) {
             return sandboxComponent.editReposComponent();
-        } if (UsersFragment.class.isAssignableFrom(viewClass) ||
+        }
+        if (UsersFragment.class.isAssignableFrom(viewClass) ||
                 UserReposFragment.class.isAssignableFrom(viewClass)) {
             return sandboxComponent.userFragmentComponent();
         } else {

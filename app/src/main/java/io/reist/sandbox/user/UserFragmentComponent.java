@@ -10,7 +10,7 @@ import io.reist.sandbox.user.view.UsersFragment;
  * Created by m039 on 11/12/15.
  */
 @Singleton
-@Subcomponent(modules = UserModule.class)
+@Subcomponent
 public interface UserFragmentComponent {
 
     void inject(UsersFragment userFragment);

@@ -27,17 +27,23 @@ import io.reist.sandbox.app.model.UserStorIOSQLitePutResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoGetResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoPutResolver;
 import io.reist.sandbox.app.model.remote.GitHubApi;
+import io.reist.sandbox.repo.RepoModule;
 import io.reist.sandbox.repo.model.CachedRepoService;
 import io.reist.sandbox.repo.model.RepoService;
 import io.reist.sandbox.repo.model.local.StorIoRepoService;
 import io.reist.sandbox.repo.model.remote.RetrofitRepoService;
+import io.reist.sandbox.user.UserModule;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.remote.NestedFieldNameAdapter;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 
-@Module(includes = BaseModule.class)
+@Module(includes = {
+        BaseModule.class,
+        UserModule.class,
+        RepoModule.class
+})
 public class SandboxModule {
 
     public static final String REMOTE_SERVICE = "remote";
@@ -96,11 +102,6 @@ public class SandboxModule {
 
             Log.i(TAG, request.toString());
 
-            //print request body
-//            Buffer buffer = new Buffer();
-//            request.body().writeTo(buffer);
-//            Log.i(TAG, buffer.readUtf8());
-
             return chain.proceed(request);
         });
 
@@ -113,25 +114,6 @@ public class SandboxModule {
 
 
         return retrofit.create(GitHubApi.class);
-
-    }
-
-    @Provides @Singleton @Named(SandboxModule.LOCAL_SERVICE)
-    protected RepoService localRepoService(StorIOSQLite storIoSqLite) {
-        return new StorIoRepoService(storIoSqLite);
-    }
-
-    @Provides @Singleton @Named(SandboxModule.REMOTE_SERVICE)
-    protected RepoService remoteRepoService(GitHubApi gitHubApi) {
-        return new RetrofitRepoService(gitHubApi);
-    }
-
-    @Provides @Singleton
-    protected RepoService repoService(
-            @Named(SandboxModule.LOCAL_SERVICE) RepoService local,
-            @Named(SandboxModule.REMOTE_SERVICE) RepoService remote
-    ) {
-        return new CachedRepoService(local, remote);
     }
 
 }

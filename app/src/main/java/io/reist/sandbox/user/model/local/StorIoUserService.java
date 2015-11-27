@@ -5,6 +5,8 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
+import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.visum.model.Response;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.local.UserTable;
@@ -25,7 +27,8 @@ public class StorIoUserService extends StorIoService<User>
 
     @Override
     public Observable<Response<User>> byId(Long id) {
-        throw new IllegalStateException("Unsupported");
+        return unique(User.class, UserTable.NAME, id)
+                .map(Response<User>::new);
     }
 
     @Override

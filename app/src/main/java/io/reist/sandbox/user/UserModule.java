@@ -4,6 +4,7 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 
 import javax.inject.Singleton;
 
+import dagger.Module;
 import dagger.Provides;
 import io.reist.sandbox.app.model.remote.GitHubApi;
 import io.reist.sandbox.user.model.UserCachedService;
@@ -14,12 +15,12 @@ import io.reist.sandbox.user.model.remote.RetrofitUserService;
 /**
  * Created by m039 on 11/12/15.
  */
-@dagger.Module
+@Module
 public class UserModule {
 
     @Singleton
     @Provides
-    UserService userService(GitHubApi gitHubApi, StorIOSQLite storIOSQLite) {
+    public UserService userService(GitHubApi gitHubApi, StorIOSQLite storIOSQLite) {
         return new UserCachedService(new StorIoUserService(storIOSQLite), new RetrofitUserService(gitHubApi));
     }
 

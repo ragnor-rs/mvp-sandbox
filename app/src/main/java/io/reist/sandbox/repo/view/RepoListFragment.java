@@ -70,7 +70,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     }
 
     @Override
-    protected RepoListPresenter getPresenter() {
+    public RepoListPresenter getPresenter() {
         return presenter;
     }
 

@@ -93,7 +93,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
 
     @NonNull
     @Override
-    protected UserReposPresenter getPresenter() {
+    public UserReposPresenter getPresenter() {
         return presenter;
     }
 

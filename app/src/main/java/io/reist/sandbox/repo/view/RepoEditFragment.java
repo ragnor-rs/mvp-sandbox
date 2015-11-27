@@ -48,7 +48,7 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     }
 
     @Override
-    protected RepoEditPresenter getPresenter() {
+    public RepoEditPresenter getPresenter() {
         return presenter;
     }
 
