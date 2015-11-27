@@ -2,6 +2,8 @@ package io.reist.sandbox.app.model.remote;
 
 import android.support.annotation.Nullable;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.reist.visum.model.Error;
 
 /**
@@ -9,31 +11,13 @@ import io.reist.visum.model.Error;
  */
 public class GitHubError implements Error {
 
-    private Throwable throwable;
+    @SerializedName("message")
     private String message;
-
-    public GitHubError() {
-    }
-
-    public GitHubError(Error error) {
-        this.throwable = error.getThrowable();
-        this.message = error.getMessage();
-    }
-
-    @Override
-    public void setThrowable(Throwable throwable) {
-        this.throwable = throwable;
-    }
 
     @Nullable
     @Override
     public Throwable getThrowable() {
-        return throwable;
-    }
-
-    @Override
-    public void setMessage(String message) {
-        this.message = message;
+        return null;
     }
 
     @Nullable
