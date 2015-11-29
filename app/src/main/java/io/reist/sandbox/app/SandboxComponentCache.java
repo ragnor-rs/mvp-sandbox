@@ -2,10 +2,10 @@ package io.reist.sandbox.app;
 
 import android.content.Context;
 
-import io.reist.sandbox.repo.view.RepoEditFragment;
-import io.reist.sandbox.repo.view.RepoListFragment;
-import io.reist.sandbox.user.view.UserListFragment;
-import io.reist.sandbox.user.view.UserReposFragment;
+import io.reist.sandbox.repos.view.RepoEditFragment;
+import io.reist.sandbox.repos.view.RepoListFragment;
+import io.reist.sandbox.users.view.UserListFragment;
+import io.reist.sandbox.users.view.UserReposFragment;
 import io.reist.visum.BaseModule;
 import io.reist.visum.ComponentCache;
 import io.reist.visum.view.BaseView;

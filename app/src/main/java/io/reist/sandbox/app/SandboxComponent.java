@@ -3,8 +3,8 @@ package io.reist.sandbox.app;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import io.reist.sandbox.repo.ReposComponent;
-import io.reist.sandbox.user.UsersComponent;
+import io.reist.sandbox.repos.ReposComponent;
+import io.reist.sandbox.users.UsersComponent;
 
 @Singleton
 @Component(modules = SandboxModule.class)

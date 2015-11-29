@@ -12,8 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import io.reist.sandbox.R;
-import io.reist.sandbox.repo.view.RepoListFragment;
-import io.reist.sandbox.user.view.UserListFragment;
+import io.reist.sandbox.repos.view.RepoListFragment;
+import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.visum.view.BaseActivity;
 
 public class MainActivity extends BaseActivity

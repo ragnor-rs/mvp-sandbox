@@ -1,4 +1,4 @@
-package io.reist.sandbox.user;
+package io.reist.sandbox.users;
 
 
 import org.junit.Before;
@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import dagger.Subcomponent;
 import io.reist.sandbox.BuildConfig;
 import io.reist.sandbox.app.SandboxApplication;
 import io.reist.sandbox.app.SandboxComponent;
@@ -23,7 +22,7 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
 
-import io.reist.sandbox.repo.model.RepoService;
+import io.reist.sandbox.repos.model.RepoService;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.Response;
 import rx.Observable;
