@@ -25,6 +25,7 @@ import io.reist.sandbox.app.SandboxApplication;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.repos.ReposModule;
+import io.reist.sandbox.users.UsersComponent;
 import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.view.UserListActivity;
 import io.reist.sandbox.users.view.UserListFragment;
@@ -85,7 +86,7 @@ public class UserListPresenterTest extends ActivityUnitTestCase<UserListActivity
 
     @Singleton
     @Subcomponent(modules = TestUsersModule.class)
-    public interface TestUsersComponent {
+    public interface TestUsersComponent extends UsersComponent {
 
         void inject(UserListFragment userFragment);
 
