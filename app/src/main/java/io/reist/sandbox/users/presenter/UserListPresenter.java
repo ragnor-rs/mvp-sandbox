@@ -3,6 +3,7 @@ package io.reist.sandbox.users.presenter;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.users.model.UserService;
@@ -14,6 +15,7 @@ import rx.Observer;
 /**
  * Created by m039 on 11/12/15.
  */
+@Singleton
 public class UserListPresenter extends BasePresenter<UserListView> {
 
     UserService mUserService;

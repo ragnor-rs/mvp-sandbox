@@ -1,9 +1,7 @@
-package io.reist.sandbox.test.users;
+package io.reist.sandbox.users.view;
 
 import android.app.Activity;
 import android.os.Bundle;
-
-import io.reist.sandbox.users.view.UserListFragment;
 
 /**
  * Created by m039 on 11/25/15.

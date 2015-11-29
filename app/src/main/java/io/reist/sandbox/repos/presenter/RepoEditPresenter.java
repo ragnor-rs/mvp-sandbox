@@ -3,6 +3,7 @@ package io.reist.sandbox.repos.presenter;
 import android.widget.Toast;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
@@ -17,6 +18,7 @@ import rx.Subscriber;
 /**
  * Created by defuera on 10/11/2015.
  */
+@Singleton
 public class RepoEditPresenter extends BasePresenter<RepoEditView> {
 
     public static final String EXTRA_REPO_ID = "io.reist.sandbox.extra_repo_id";

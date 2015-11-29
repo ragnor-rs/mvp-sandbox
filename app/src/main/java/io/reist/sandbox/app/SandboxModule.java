@@ -43,7 +43,7 @@ public class SandboxModule {
     private static final String TAG = SandboxModule.class.getName();
 
     @Provides @Singleton
-    protected StorIOSQLite storIoSqLite(Context context) {
+    StorIOSQLite storIoSqLite(Context context) {
 
         DbOpenHelper dbOpenHelper = new DbOpenHelper(context);
 
@@ -71,7 +71,7 @@ public class SandboxModule {
     }
 
     @Provides @Singleton
-    protected GitHubApi gitHubApi() {
+    GitHubApi gitHubApi() {
 
         Gson gson = new GsonBuilder()
                 .registerTypeHierarchyAdapter(Object.class, new NestedFieldNameAdapter())

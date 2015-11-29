@@ -1,4 +1,4 @@
-package io.reist.sandbox.test.users;
+package io.reist.sandbox.users.presenter;
 
 import android.app.Instrumentation;
 import android.content.Context;
@@ -26,7 +26,7 @@ import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.users.model.UserService;
-import io.reist.sandbox.users.presenter.UserListPresenter;
+import io.reist.sandbox.users.view.UserListActivity;
 import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.visum.BaseModule;
 import io.reist.visum.ComponentCache;
@@ -46,7 +46,7 @@ public class UserListPresenterTest extends ActivityUnitTestCase<UserListActivity
         super(UserListActivity.class);
     }
 
-    UserListActivity mTestUsersActivity;
+    private UserListActivity mTestUsersActivity;
 
     @Before
     public void setUp() throws Exception {
@@ -56,12 +56,6 @@ public class UserListPresenterTest extends ActivityUnitTestCase<UserListActivity
         SandboxApplication sandboxApplication = (SandboxApplication) instrumentation
                 .getTargetContext()
                 .getApplicationContext();
-
-        TestComponent modelComponent = DaggerUserListPresenterTest_TestComponent
-                .builder()
-                .sandboxModule(new SandboxModule())
-                .baseModule(new BaseModule(sandboxApplication))
-                .build();
 
         sandboxApplication.setComponentCache(new TestComponentCache(sandboxApplication));
 
