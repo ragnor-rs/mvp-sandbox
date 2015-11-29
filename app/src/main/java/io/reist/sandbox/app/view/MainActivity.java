@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.repo.view.RepoListFragment;
-import io.reist.sandbox.user.view.UsersFragment;
+import io.reist.sandbox.user.view.UserListFragment;
 import io.reist.visum.view.BaseActivity;
 
 public class MainActivity extends BaseActivity
@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity
                 showFragment(RepoListFragment.newInstance(), true, true);
                 break;
             case R.id.nav_users:
-                showFragment(UsersFragment.newInstance(), true, true);
+                showFragment(UserListFragment.newInstance(), true, true);
                 break;
         }
 

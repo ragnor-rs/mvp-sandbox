@@ -3,11 +3,10 @@ package io.reist.sandbox.user.presenter;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.user.model.UserService;
-import io.reist.sandbox.user.view.UsersView;
+import io.reist.sandbox.user.view.UserListView;
 import io.reist.visum.model.Response;
 import io.reist.visum.presenter.BasePresenter;
 import rx.Observer;
@@ -15,14 +14,13 @@ import rx.Observer;
 /**
  * Created by m039 on 11/12/15.
  */
-@Singleton
-public class UsersPresenter extends BasePresenter<UsersView> {
+public class UserListPresenter extends BasePresenter<UserListView> {
 
     UserService mUserService;
     private boolean mIsDataLoaded = false;
 
     @Inject
-    UsersPresenter(UserService userService) {
+    UserListPresenter(UserService userService) {
         mUserService = userService;
     }
 
@@ -49,7 +47,7 @@ public class UsersPresenter extends BasePresenter<UsersView> {
 
         @Override
         public void onNext(Response<List<User>> response) {
-            UsersView view = view();
+            UserListView view = view();
             if (response.isSuccessful()) {
                 view.displayData(response.getResult());
                 view.showLoader(false);

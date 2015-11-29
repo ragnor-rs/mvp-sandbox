@@ -6,12 +6,12 @@ import io.reist.visum.model.CachedService;
 /**
  * Created by m039 on 11/12/15.
  */
-public class UserCachedService
+public class CachedUserService
         extends CachedService<User>
         implements UserService
 {
 
-    public UserCachedService(UserService local, UserService remote) {
+    public CachedUserService(UserService local, UserService remote) {
         super(local, remote);
     }
 

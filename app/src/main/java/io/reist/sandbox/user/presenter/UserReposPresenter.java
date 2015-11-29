@@ -6,7 +6,6 @@ import android.widget.Toast;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
@@ -16,7 +15,6 @@ import io.reist.visum.model.Response;
 import io.reist.visum.presenter.BasePresenter;
 import rx.Observer;
 
-@Singleton
 public class UserReposPresenter extends BasePresenter<UserReposView> {
 
     private static final String TAG = UserReposPresenter.class.getName();

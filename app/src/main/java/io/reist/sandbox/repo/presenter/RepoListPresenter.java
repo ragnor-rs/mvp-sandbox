@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Random;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
@@ -17,7 +16,6 @@ import io.reist.sandbox.repo.view.RepoListView;
 import io.reist.visum.Error;
 import io.reist.visum.presenter.BasePresenter;
 
-@Singleton
 public class RepoListPresenter extends BasePresenter<RepoListView> {
 
     private static final String TAG = RepoListPresenter.class.getName();

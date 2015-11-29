@@ -17,7 +17,7 @@ import butterknife.OnClick;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.view.widget.LoaderView;
-import io.reist.sandbox.repo.ReposFragmentComponent;
+import io.reist.sandbox.repo.ReposComponent;
 import io.reist.sandbox.repo.presenter.RepoEditPresenter;
 import io.reist.sandbox.repo.presenter.RepoListAdapter;
 import io.reist.sandbox.repo.presenter.RepoListPresenter;
@@ -66,7 +66,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
 
     @Override
     protected void inject(Object from) {
-        ((ReposFragmentComponent) from).inject(this);
+        ((ReposComponent) from).inject(this);
     }
 
     @Override

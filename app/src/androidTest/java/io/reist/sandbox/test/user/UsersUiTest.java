@@ -32,13 +32,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
 
 /**
  * Created by m039 on 11/20/15.
  */
 @RunWith(AndroidJUnit4.class)
-public class UserUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class UsersUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     /**
      * Should take into consideration delays during network operations
@@ -47,7 +46,7 @@ public class UserUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     MainActivity mMainActivity;
 
-    public UserUiTest() {
+    public UsersUiTest() {
         super(MainActivity.class);
     }
 
@@ -80,7 +79,7 @@ public class UserUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
         // is first repo liked?
         boolean isLiked = isRepoLiked(R.id.recycler, 0);
 
-        Log.i(UserUiTest.class.getName(), "isRepoLiked = " + isLiked);
+        Log.i(UsersUiTest.class.getName(), "isRepoLiked = " + isLiked);
 
         // click on like button
         onView(withId(R.id.recycler))
@@ -148,26 +147,24 @@ public class UserUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     static void waitForItems(RecyclerView recyclerView, long timeoutMillis) {
         long end = SystemClock.uptimeMillis() + timeoutMillis;
-
         while (end >= SystemClock.uptimeMillis()) {
             RecyclerView.Adapter adapter = recyclerView.getAdapter();
             if (adapter != null && adapter.getItemCount() > 0) {
                 return;
             }
-
-            try { Thread.sleep(10); } catch (InterruptedException e) {}
+            try { Thread.sleep(10); } catch (InterruptedException ignored) {}
         }
     }
 
     static void waitForMs(long milliseconds) {
         try {
             Thread.sleep(milliseconds);
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
     }
 
     static ViewAction clickOnId(final @IdRes int resId) {
         return new ViewAction() {
+
             @Override
             public org.hamcrest.Matcher<View> getConstraints() {
                 return null;
@@ -182,6 +179,7 @@ public class UserUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
             public void perform(UiController uiController, View view) {
                 view.findViewById(resId).performClick();
             }
+
         };
     }
 

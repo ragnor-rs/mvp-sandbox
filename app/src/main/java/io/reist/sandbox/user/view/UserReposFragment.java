@@ -17,9 +17,9 @@ import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.view.widget.LoaderView;
-import io.reist.visum.view.BaseFragment;
-import io.reist.sandbox.user.UserFragmentComponent;
+import io.reist.sandbox.user.UsersComponent;
 import io.reist.sandbox.user.presenter.UserReposPresenter;
+import io.reist.visum.view.BaseFragment;
 
 /**
  * Created by Reist on 10/13/15.
@@ -88,7 +88,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
 
     @Override
     protected void inject(Object from) {
-        ((UserFragmentComponent) from).inject(this);
+        ((UsersComponent) from).inject(this);
     }
 
     @NonNull

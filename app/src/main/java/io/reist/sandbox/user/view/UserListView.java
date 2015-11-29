@@ -8,7 +8,7 @@ import io.reist.visum.view.BaseView;
 /**
  * Created by m039 on 11/12/15.
  */
-public interface UsersView extends BaseView {
+public interface UserListView extends BaseView {
 
     void showLoader(boolean show);
 

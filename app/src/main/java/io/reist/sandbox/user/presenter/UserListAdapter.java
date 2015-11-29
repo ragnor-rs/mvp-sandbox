@@ -1,4 +1,4 @@
-package io.reist.sandbox.user.view;
+package io.reist.sandbox.user.presenter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +18,7 @@ import io.reist.sandbox.app.model.User;
 /**
  * Created by m039 on 11/12/15.
  */
-public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
+public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder>
         implements View.OnClickListener {
 
     public interface OnUserClickListener {
@@ -28,7 +28,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>
     private List<User> mUsers = new ArrayList<>();
     private OnUserClickListener mOnUserClickListener;
 
-    public UsersAdapter() {
+    public UserListAdapter() {
     }
 
     public void setUsers(List<User> users) {

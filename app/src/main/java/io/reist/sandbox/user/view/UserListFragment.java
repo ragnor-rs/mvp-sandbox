@@ -15,23 +15,24 @@ import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.view.widget.LoaderView;
-import io.reist.sandbox.user.UserFragmentComponent;
-import io.reist.sandbox.user.presenter.UsersPresenter;
+import io.reist.sandbox.user.UsersComponent;
+import io.reist.sandbox.user.presenter.UserListAdapter;
+import io.reist.sandbox.user.presenter.UserListPresenter;
 import io.reist.visum.view.BaseFragment;
 
 /**
  * Created by m039 on 11/12/15.
  */
-public class UsersFragment extends BaseFragment<UsersPresenter>
-    implements UsersView
+public class UserListFragment extends BaseFragment<UserListPresenter>
+    implements UserListView
 {
 
-    public static UsersFragment newInstance() {
-        return newInstance(UsersFragment.class, R.layout.fragment_users);
+    public static UserListFragment newInstance() {
+        return newInstance(UserListFragment.class, R.layout.fragment_users);
     }
 
     @Inject
-    UsersPresenter mPresenter;
+    UserListPresenter mPresenter;
 
     @Bind(R.id.recycler)
     RecyclerView mRecyclerView;
@@ -39,7 +40,7 @@ public class UsersFragment extends BaseFragment<UsersPresenter>
     @Bind(R.id.loader)
     LoaderView mLoaderView;
 
-    UsersAdapter mAdapter;
+    UserListAdapter mAdapter;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -48,20 +49,20 @@ public class UsersFragment extends BaseFragment<UsersPresenter>
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mAdapter = new UsersAdapter());
+        mRecyclerView.setAdapter(mAdapter = new UserListAdapter());
 
         mAdapter.setOnUserClickListener(user -> getFragmentController().showFragment(UserReposFragment.newInstance(user.id), true));
     }
 
     @NonNull
     @Override
-    public UsersPresenter getPresenter() {
+    public UserListPresenter getPresenter() {
         return mPresenter;
     }
 
     @Override
     protected void inject(Object from) {
-        ((UserFragmentComponent) from).inject(this);
+        ((UsersComponent) from).inject(this);
     }
 
     @Override
