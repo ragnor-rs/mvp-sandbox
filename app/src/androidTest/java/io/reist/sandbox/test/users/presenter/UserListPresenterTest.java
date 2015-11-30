@@ -1,7 +1,6 @@
 package io.reist.sandbox.test.users.presenter;
 
 import android.app.Instrumentation;
-import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -12,37 +11,24 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Singleton;
-
-import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
 import io.reist.sandbox.app.DaggerSandboxComponent;
-import dagger.Subcomponent;
 import io.reist.sandbox.app.SandboxApplication;
 import io.reist.sandbox.app.SandboxComponent;
 import io.reist.sandbox.app.SandboxComponentCache;
-import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-import io.reist.sandbox.repos.ReposModule;
-import io.reist.sandbox.users.UsersComponent;
+import io.reist.sandbox.test.users.view.UserListActivity;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.presenter.UserListPresenter;
-import io.reist.sandbox.test.users.view.UserListActivity;
 import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.visum.BaseModule;
-import io.reist.visum.ComponentCache;
-import io.reist.visum.model.Response;
 import io.reist.visum.model.BaseResponse;
-import io.reist.visum.view.BaseView;
 import rx.Observable;
 
 import static org.assertj.core.api.Assertions.assertThat;

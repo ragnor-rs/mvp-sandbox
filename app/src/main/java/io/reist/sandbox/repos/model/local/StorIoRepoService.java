@@ -10,8 +10,8 @@ import java.util.List;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.sandbox.repos.model.RepoService;
-import io.reist.visum.model.Response;
 import io.reist.visum.model.BaseResponse;
+import io.reist.visum.model.Response;
 import io.reist.visum.model.local.StorIoService;
 import rx.Observable;
 

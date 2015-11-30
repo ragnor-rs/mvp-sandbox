@@ -1,11 +1,9 @@
 package io.reist.sandbox.test.repos.presenter;
 
 import android.app.Instrumentation;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.ActivityInstrumentationTestCase2;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,13 +23,13 @@ import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.view.MainActivity;
-
 import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.presenter.RepoEditPresenter;
 import io.reist.sandbox.repos.presenter.RepoListPresenter;
 import io.reist.sandbox.test.core.ActivityInstrumentationTestCase;
 import io.reist.visum.BaseModule;
+import io.reist.visum.model.BaseResponse;
 import io.reist.visum.model.Response;
 import io.reist.visum.presenter.BasePresenter;
 import io.reist.visum.view.BaseFragment;
@@ -45,9 +43,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static io.reist.sandbox.test.core.TestUtils.waitForMs;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.allOf;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by m039 on 11/27/15.
@@ -88,7 +83,6 @@ public class ReposPresentersTest extends ActivityInstrumentationTestCase<MainAct
         @Override
         protected RepoService repoService(@Named(SandboxModule.LOCAL_SERVICE) RepoService local,
                                           @Named(SandboxModule.REMOTE_SERVICE) RepoService remote) {
-            RepoService mockedRepoService = mock(RepoService.class);
 
             List<Repo> repos = new ArrayList<>();
 
@@ -112,16 +106,68 @@ public class ReposPresentersTest extends ActivityInstrumentationTestCase<MainAct
             repos.add(repo1);
             repos.add(repo2);
 
-            when(mockedRepoService.list())
-                    .thenReturn(Observable.just(new Response<>(repos)));
+            final Observable<? extends Response<Repo>> repoResult = Observable.just(new BaseResponse<>(repo1));
+            final Observable<? extends Response<List<Repo>>> listReposResult = Observable.just(new BaseResponse<>(repos));
 
-            when(mockedRepoService.byId(any()))
-                    .thenReturn(Observable.just(new Response<>(repo1)));
+            // FIXME when().then() doesn't work here - needs more investigation
+            return new RepoService() {
 
-            return mockedRepoService;
+                @Override
+                public Observable<? extends Response<List<Repo>>> list() {
+                    return listReposResult;
+                }
+
+                @Override
+                public Observable<? extends Response<Repo>> byId(Long id) {
+                    return repoResult;
+                }
+
+                @Override
+                public Observable<? extends Response<List<Repo>>> save(List<Repo> list) {
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                public Observable<? extends Response<Repo>> save(Repo repo) {
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                public Observable<? extends Response<Integer>> delete(Long id) {
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                public Response<List<Repo>> saveSync(List<Repo> list) {
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                public Response<Repo> saveSync(Repo repo) {
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                public Observable<? extends Response<List<Repo>>> findReposByUserId(Long userId) {
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                public Observable<? extends Response<Repo>> like(Repo repo) {
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                public Observable<? extends Response<Repo>> unlike(Repo repo) {
+                    throw new UnsupportedOperationException();
+                }
+
+            };
+
         }
 
     }
+
 
     @Test
     public void testPresenters() {

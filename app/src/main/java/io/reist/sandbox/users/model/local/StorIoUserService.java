@@ -5,12 +5,11 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
-import io.reist.visum.model.Response;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.local.UserTable;
 import io.reist.sandbox.users.model.UserService;
-import io.reist.visum.model.Response;
 import io.reist.visum.model.BaseResponse;
+import io.reist.visum.model.Response;
 import io.reist.visum.model.local.StorIoService;
 import rx.Observable;
 
@@ -26,9 +25,9 @@ public class StorIoUserService extends StorIoService<User>
     }
 
     @Override
-    public Observable<Response<User>> byId(Long id) {
+    public Observable<? extends Response<User>> byId(Long id) {
         return unique(User.class, UserTable.NAME, id)
-                .map(Response<User>::new);
+                .map(BaseResponse<User>::new);
     }
 
     @Override

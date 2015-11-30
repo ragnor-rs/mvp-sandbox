@@ -18,6 +18,10 @@ public class GitHubResponse<T> implements Response<T> {
     @SerializedName("error")
     private GitHubError error;
 
+    public GitHubResponse(T result) {
+        this.result = result;
+    }
+
     @Nullable
     @Override
     public T getResult() {

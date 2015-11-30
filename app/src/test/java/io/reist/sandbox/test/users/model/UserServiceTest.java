@@ -24,6 +24,7 @@ import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
 
+import io.reist.sandbox.app.model.remote.GitHubResponse;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.CachedUserService;
 import io.reist.sandbox.test.users.model.DaggerUserServiceTest_TestComponent;
@@ -31,6 +32,7 @@ import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.model.local.StorIoUserService;
 import io.reist.sandbox.users.model.remote.RetrofitUserService;
 import io.reist.visum.BaseModule;
+import io.reist.visum.model.BaseResponse;
 import io.reist.visum.model.Response;
 import rx.Observable;
 import rx.observers.TestSubscriber;
@@ -131,7 +133,7 @@ public class UserServiceTest {
         users.add(user);
 
         when(sMockedGitHubApi.listUsers())
-                .thenReturn(Observable.just(new Response<>(users)));
+                .thenReturn(Observable.just(new GitHubResponse<>(users)));
     }
 
     void secondTestCase() {
