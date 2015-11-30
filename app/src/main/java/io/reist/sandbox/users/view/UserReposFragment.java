@@ -19,10 +19,8 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.users.UsersComponent;
 import io.reist.sandbox.users.presenter.UserReposPresenter;
-import io.reist.sandbox.users.view.UserReposAdapter;
-import io.reist.sandbox.users.view.UserReposView;
-import io.reist.visum.view.BaseFragment;
 import io.reist.visum.model.Error;
+import io.reist.visum.view.BaseFragment;
 
 /**
  * Created by Reist on 10/13/15.

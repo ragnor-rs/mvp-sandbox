@@ -1,40 +1,34 @@
-package io.reist.sandbox.users.presenter;
+package io.reist.sandbox.test.users.presenter;
 
 import android.app.Instrumentation;
-import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityUnitTestCase;
 
+import com.pushtorefresh.storio.sqlite.StorIOSQLite;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Singleton;
-
-import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
-import dagger.Subcomponent;
+import io.reist.sandbox.app.DaggerSandboxComponent;
 import io.reist.sandbox.app.SandboxApplication;
-import io.reist.sandbox.app.SandboxModule;
+import io.reist.sandbox.app.SandboxComponent;
+import io.reist.sandbox.app.SandboxComponentCache;
 import io.reist.sandbox.app.model.User;
-import io.reist.sandbox.repos.ReposModule;
-import io.reist.sandbox.users.UsersComponent;
+import io.reist.sandbox.app.model.remote.GitHubApi;
+import io.reist.sandbox.test.users.view.UserListActivity;
+import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.UserService;
-import io.reist.sandbox.users.view.UserListActivity;
+import io.reist.sandbox.users.presenter.UserListPresenter;
 import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.visum.BaseModule;
-import io.reist.visum.ComponentCache;
-import io.reist.visum.model.Response;
 import io.reist.visum.model.BaseResponse;
-import io.reist.visum.view.BaseView;
 import rx.Observable;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,7 +54,13 @@ public class UserListPresenterTest extends ActivityUnitTestCase<UserListActivity
                 .getTargetContext()
                 .getApplicationContext();
 
-        sandboxApplication.setComponentCache(new TestComponentCache(sandboxApplication));
+        SandboxComponent sandboxComponent = DaggerSandboxComponent
+                .builder()
+                .usersModule(new TestUsersModule())
+                .baseModule(new BaseModule(sandboxApplication))
+                .build();
+
+        sandboxApplication.setComponentCache(new SandboxComponentCache(sandboxComponent));
 
         injectInstrumentation(instrumentation);
         setApplication(sandboxApplication);
@@ -78,29 +78,10 @@ public class UserListPresenterTest extends ActivityUnitTestCase<UserListActivity
 
     }
 
-    @Singleton
-    @Component(modules = SandboxModule.class)
-    public interface TestComponent {
+    public static class TestUsersModule extends UsersModule {
 
-        TestUsersComponent usersComponent();
-
-    }
-
-    @Singleton
-    @Subcomponent(modules = TestUsersModule.class)
-    public interface TestUsersComponent extends UsersComponent {
-
-        void inject(UserListFragment userFragment);
-
-    }
-
-    @Module(includes = ReposModule.class)
-    public static class TestUsersModule {
-
-        @Provides
-        @Singleton
-        UserService userService() {
-
+        @Override
+        protected UserService userService(GitHubApi gitHubApi, StorIOSQLite storIOSQLite) {
             UserService mockedUserService = Mockito.mock(UserService.class);
 
             List<User> users = new ArrayList<>();
@@ -118,7 +99,6 @@ public class UserListPresenterTest extends ActivityUnitTestCase<UserListActivity
             Mockito.doReturn(Observable.just(new BaseResponse<>(users))).when(mockedUserService).list();
 
             return mockedUserService;
-
         }
 
     }
@@ -134,28 +114,6 @@ public class UserListPresenterTest extends ActivityUnitTestCase<UserListActivity
 
         assertThat(presenter).isNotNull();
         assertTrue(presenter.isDataLoaded());
-
-    }
-
-    private static class TestComponentCache extends ComponentCache {
-
-        private final TestComponent testComponent;
-
-        public TestComponentCache(Context context) {
-            this.testComponent  = DaggerUserListPresenterTest_TestComponent.builder()
-                    .sandboxModule(new SandboxModule())
-                    .baseModule(new BaseModule(context))
-                    .build();
-        }
-
-        @Override
-        public Object buildComponentFor(Class<? extends BaseView> viewClass) {
-            if (UserListFragment.class.isAssignableFrom(viewClass)) {
-                return testComponent.usersComponent();
-            } else {
-                throw new RuntimeException("Unknown view class: " + viewClass.getName());
-            }
-        }
 
     }
 

@@ -16,12 +16,12 @@ import io.reist.sandbox.users.model.remote.RetrofitUserService;
 /**
  * Created by m039 on 11/12/15.
  */
-@Module(includes = ReposModule.class)
+@Module
 public class UsersModule {
 
     @Singleton
     @Provides
-    UserService userService(GitHubApi gitHubApi, StorIOSQLite storIOSQLite) {
+    protected UserService userService(GitHubApi gitHubApi, StorIOSQLite storIOSQLite) {
         return new CachedUserService(new StorIoUserService(storIOSQLite), new RetrofitUserService(gitHubApi));
     }
 

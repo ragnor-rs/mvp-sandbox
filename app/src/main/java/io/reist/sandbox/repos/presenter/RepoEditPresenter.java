@@ -24,7 +24,7 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
     public static final String EXTRA_REPO_ID = "io.reist.sandbox.extra_repo_id";
 
     private RepoService repoService;
-
+    private boolean mIsDataLoaded;
     private Repo repo;
 
     @Inject
@@ -34,6 +34,8 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
 
     @Override
     protected void onViewAttached() {
+        mIsDataLoaded = false;
+
         long repoId = view().extras().getLong(EXTRA_REPO_ID);
         view().showLoader(true);
         subscribe(repoService.byId(repoId), new ResponseObserver<Repo>() {
@@ -46,12 +48,17 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
 
             @Override
             protected void onSuccess(Repo result) {
+                mIsDataLoaded = true;
                 view().showLoader(false);
                 repo = result;
                 view().displayData(result);
             }
 
         });
+    }
+
+    public boolean isDataLoaded() {
+        return mIsDataLoaded;
     }
 
     public void saveRepo(String name, String author, String url) {

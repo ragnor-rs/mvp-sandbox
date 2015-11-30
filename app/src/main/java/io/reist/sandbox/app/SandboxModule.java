@@ -26,13 +26,20 @@ import io.reist.sandbox.app.model.UserStorIOSQLitePutResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoGetResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoPutResolver;
 import io.reist.sandbox.app.model.remote.GitHubApi;
+
+import io.reist.sandbox.repos.ReposModule;
+import io.reist.sandbox.users.UsersModule;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.remote.NestedFieldNameAdapter;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 
-@Module(includes = BaseModule.class)
+@Module(includes = {
+        BaseModule.class,
+        UsersModule.class,
+        ReposModule.class
+})
 public class SandboxModule {
 
     public static final String REMOTE_SERVICE = "remote";
@@ -103,7 +110,6 @@ public class SandboxModule {
                 .build();
 
         return retrofit.create(GitHubApi.class);
-
     }
 
 }

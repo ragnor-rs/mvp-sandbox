@@ -7,7 +7,7 @@ import io.reist.sandbox.repos.view.RepoEditFragment;
 import io.reist.sandbox.repos.view.RepoListFragment;
 
 @Singleton
-@Subcomponent(modules = ReposModule.class)
+@Subcomponent
 public interface ReposComponent {
 
     void inject(RepoListFragment view);

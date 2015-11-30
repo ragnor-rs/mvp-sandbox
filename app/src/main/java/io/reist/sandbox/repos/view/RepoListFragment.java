@@ -21,8 +21,8 @@ import io.reist.sandbox.repos.ReposComponent;
 import io.reist.sandbox.repos.presenter.RepoEditPresenter;
 import io.reist.sandbox.repos.presenter.RepoListAdapter;
 import io.reist.sandbox.repos.presenter.RepoListPresenter;
-import io.reist.visum.view.BaseFragment;
 import io.reist.visum.model.Error;
+import io.reist.visum.view.BaseFragment;
 
 /**
  * Created by Reist on 10/13/15.

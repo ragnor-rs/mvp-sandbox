@@ -1,6 +1,5 @@
-package io.reist.sandbox.users.model;
+package io.reist.sandbox.test.repos.model;
 
-import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,22 +11,19 @@ import org.robolectric.annotation.Config;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
-import dagger.Subcomponent;
 import io.reist.sandbox.BuildConfig;
-import io.reist.sandbox.app.SandboxApplication;
+import io.reist.sandbox.app.SandboxComponent;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-import io.reist.sandbox.repos.model.CachedRepoService;
+
+import io.reist.sandbox.repos.ReposModule;
+import io.reist.sandbox.test.repos.model.DaggerRepoServiceTest_TestComponent;
 import io.reist.sandbox.repos.model.RepoService;
-import io.reist.sandbox.repos.model.local.StorIoRepoService;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.Response;
 import rx.Observable;
@@ -38,6 +34,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+
 /**
  * Created by m039 on 11/19/15.
  *
@@ -46,51 +43,32 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class UserServiceTest {
+public class RepoServiceTest {
 
     @Inject
     RepoService repoService;
 
     @Before
     public void setup() {
+        TestComponent modelComponent = DaggerRepoServiceTest_TestComponent
+                .builder()
+                .reposModule(new TestReposModule())
+                .baseModule(new BaseModule(RuntimeEnvironment.application))
+                .build();
 
-        SandboxApplication sandboxApplication = (SandboxApplication) RuntimeEnvironment.application;
-
-        DaggerUserServiceTest_TestComponent.builder()
-                .sandboxModule(new SandboxModule())
-                .baseModule(new BaseModule(sandboxApplication))
-                .build()
-                .reposComponent()
-                .inject(this);
-
+        modelComponent.inject(this);
     }
 
     @Singleton
     @Component(modules = SandboxModule.class)
-    public interface TestComponent {
-
-        TestReposComponent reposComponent();
-
+    public interface TestComponent extends SandboxComponent {
+        void inject(RepoServiceTest baseTest);
     }
 
-    @Singleton
-    @Subcomponent(modules = TestReposModule.class)
-    public interface TestReposComponent {
+    private static class TestReposModule extends ReposModule {
 
-        void inject(UserServiceTest userServiceTest);
-
-    }
-
-    @Module
-    public static class TestReposModule {
-
-        @Provides @Singleton @Named(SandboxModule.LOCAL_SERVICE)
-        RepoService localRepoService(StorIOSQLite storIoSqLite) {
-            return new StorIoRepoService(storIoSqLite);
-        }
-
-        @Provides @Singleton @Named(SandboxModule.REMOTE_SERVICE)
-        RepoService remoteRepoService(GitHubApi gitHubApi) {
+        @Override
+        protected RepoService remoteRepoService(GitHubApi gitHubApi) {
             RepoService mockedRepoService = mock(RepoService.class);
 
             when(mockedRepoService.like(any()))
@@ -105,14 +83,6 @@ public class UserServiceTest {
             return mockedRepoService;
         }
 
-        @Provides @Singleton
-        RepoService repoService(
-                @Named(SandboxModule.LOCAL_SERVICE) RepoService local,
-                @Named(SandboxModule.REMOTE_SERVICE) RepoService remote
-        ) {
-            return new CachedRepoService(local, remote);
-        }
-
     }
 
     @Test
@@ -122,7 +92,6 @@ public class UserServiceTest {
     }
 
     private void testOfflineLike(boolean like) {
-
         TestSubscriber<Response<Repo>> subscriber;
 
         subscriber = new TestSubscriber<>();
@@ -148,24 +117,21 @@ public class UserServiceTest {
 
         assertThat(repo.id).isEqualTo(REPO_ID);
         assertThat(repo.likedByMe).isEqualTo(like);
-
     }
 
     private static final long REPO_ID = 12345L;
     private static final long USER_ID = 43215L;
 
     private static Repo newRepo() {
-
         Repo repo = new Repo();
 
         repo.id = REPO_ID;
 
         User owner = new User();
+
         owner.id = USER_ID;
         repo.owner = owner;
 
         return repo;
-
     }
-
 }
