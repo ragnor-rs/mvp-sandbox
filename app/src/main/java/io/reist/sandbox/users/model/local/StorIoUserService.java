@@ -9,6 +9,8 @@ import io.reist.visum.model.Response;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.local.UserTable;
 import io.reist.sandbox.users.model.UserService;
+import io.reist.visum.model.Response;
+import io.reist.visum.model.BaseResponse;
 import io.reist.visum.model.local.StorIoService;
 import rx.Observable;
 
@@ -44,6 +46,6 @@ public class StorIoUserService extends StorIoService<User>
                         .build())
                 .prepare()
                 .createObservable()
-                .map(Response::new);
+                .map(BaseResponse::new);
     }
 }

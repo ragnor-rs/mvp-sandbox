@@ -10,7 +10,7 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.ResponseObserver;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.view.RepoEditView;
-import io.reist.visum.Error;
+import io.reist.visum.model.Error;
 import io.reist.visum.model.Response;
 import io.reist.visum.presenter.BasePresenter;
 import rx.Subscriber;

@@ -12,6 +12,7 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.visum.BaseModule;
 import io.reist.visum.ComponentCache;
 import io.reist.visum.model.Response;
+import io.reist.visum.model.BaseResponse;
 import io.reist.visum.view.BaseView;
 import rx.Observable;
 
@@ -108,8 +110,7 @@ public class UserListPresenterTest extends ActivityUnitTestCase<UserListActivity
             user2.name = "Frank";
             users.add(user2);
 
-            Mockito.when(mockedUserService.list())
-                    .thenReturn(Observable.just(new Response<>(users)));
+            Mockito.doReturn(Observable.just(new BaseResponse<>(users))).when(mockedUserService).list();
 
             return mockedUserService;
         }

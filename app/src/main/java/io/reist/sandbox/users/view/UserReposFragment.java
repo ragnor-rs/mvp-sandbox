@@ -19,7 +19,10 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.users.UsersComponent;
 import io.reist.sandbox.users.presenter.UserReposPresenter;
+import io.reist.sandbox.users.view.UserReposAdapter;
+import io.reist.sandbox.users.view.UserReposView;
 import io.reist.visum.view.BaseFragment;
+import io.reist.visum.model.Error;
 
 /**
  * Created by Reist on 10/13/15.
@@ -108,7 +111,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
     }
 
     @Override
-    public void displayError(io.reist.visum.Error error) {
+    public void displayError(Error error) {
         if (adapter == null || adapter.getItemCount() == 0) {
             loaderView.showNetworkError();
         } else {

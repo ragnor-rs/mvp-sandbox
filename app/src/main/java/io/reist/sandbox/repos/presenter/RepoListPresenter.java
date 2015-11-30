@@ -14,7 +14,7 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.ResponseObserver;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.view.RepoListView;
-import io.reist.visum.Error;
+import io.reist.visum.model.Error;
 import io.reist.visum.presenter.BasePresenter;
 
 @Singleton
@@ -45,7 +45,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
         subscribe(repoService.list(), new ResponseObserver<List<Repo>>() {
 
             @Override
-            protected void onFail(io.reist.visum.Error error) {
+            protected void onFail(Error error) {
                 view().showLoader(false);
                 view().displayError(error);
             }

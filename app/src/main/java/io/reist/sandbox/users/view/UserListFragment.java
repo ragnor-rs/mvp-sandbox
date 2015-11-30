@@ -72,7 +72,7 @@ public class UserListFragment extends BaseFragment<UserListPresenter>
     }
 
     @Override
-    public void displayError(io.reist.visum.Error error) {
+    public void displayError(io.reist.visum.model.Error error) {
         if (mAdapter == null || mAdapter.getItemCount() == 0) {
             mLoaderView.showNetworkError();
         } else {
