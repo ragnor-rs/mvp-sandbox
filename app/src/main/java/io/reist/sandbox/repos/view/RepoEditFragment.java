@@ -14,6 +14,7 @@ import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.repos.ReposComponent;
 import io.reist.sandbox.repos.presenter.RepoEditPresenter;
 import io.reist.visum.view.BaseFragment;
+import io.reist.visum.model.Error;
 
 /**
  * Created by defuera on 10/11/2015.
@@ -66,7 +67,7 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     }
 
     @Override
-    public void displayError(io.reist.visum.Error error) {
+    public void displayError(Error error) {
         loaderView.showNetworkError();
     }
 

@@ -32,6 +32,7 @@ import io.reist.sandbox.repos.presenter.RepoEditPresenter;
 import io.reist.sandbox.repos.presenter.RepoListPresenter;
 import io.reist.sandbox.test.core.ActivityInstrumentationTestCase;
 import io.reist.visum.BaseModule;
+import io.reist.visum.model.BaseResponse;
 import io.reist.visum.model.Response;
 import io.reist.visum.presenter.BasePresenter;
 import io.reist.visum.view.BaseFragment;
@@ -46,6 +47,7 @@ import static io.reist.sandbox.test.core.TestUtils.waitForMs;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -112,11 +114,13 @@ public class ReposPresentersTest extends ActivityInstrumentationTestCase<MainAct
             repos.add(repo1);
             repos.add(repo2);
 
-            when(mockedRepoService.list())
-                    .thenReturn(Observable.just(new Response<>(repos)));
+            doReturn(Observable.just(new BaseResponse<>(repos)))
+                    .when(mockedRepoService)
+                    .list();
 
-            when(mockedRepoService.byId(any()))
-                    .thenReturn(Observable.just(new Response<>(repo1)));
+            doReturn(Observable.just(new BaseResponse<>(repo1)))
+                    .when(mockedRepoService)
+                    .byId(any());
 
             return mockedRepoService;
         }

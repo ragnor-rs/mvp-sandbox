@@ -11,6 +11,7 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.visum.model.Response;
+import io.reist.visum.model.BaseResponse;
 import io.reist.visum.model.local.StorIoService;
 import rx.Observable;
 
@@ -27,14 +28,14 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 .withQuery(Query.builder().table(ReposTable.NAME).build())
                 .prepare()
                 .createObservable()
-                .map(Response::new);
+                .map(BaseResponse::new);
     }
 
     @RxLogObservable
     @Override
     public Observable<Response<Repo>> byId(Long id) {
         return unique(Repo.class, ReposTable.NAME, id)
-                .map(Response<Repo>::new);
+                .map(BaseResponse::new);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 )
                 .prepare() // BTW: it will use transaction!
                 .createObservable()
-                .map(t -> new Response<>(t.numberOfRowsDeleted()));
+                .map(t -> new BaseResponse<>(t.numberOfRowsDeleted()));
     }
 
     @RxLogObservable
@@ -67,7 +68,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                                 .build())
                 .prepare()
                 .createObservable()
-                .map(Response::new);
+                .map(BaseResponse::new);
     }
 
     @Override
@@ -94,7 +95,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 .prepare()
                 .executeAsBlocking();
 
-        return Observable.just(repo).map(Response::new);
+        return Observable.just(repo).map(BaseResponse::new);
     }
 
 }

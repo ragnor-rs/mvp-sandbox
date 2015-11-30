@@ -21,7 +21,7 @@ public class RetrofitUserService extends RetrofitService<User> implements UserSe
     }
 
     @Override
-    public Observable<Response<List<User>>> list() {
+    public Observable<? extends Response<List<User>>> list() {
         return gitHubApi.listUsers();
     }
 

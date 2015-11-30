@@ -31,6 +31,7 @@ import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.model.local.StorIoUserService;
 import io.reist.sandbox.users.model.remote.RetrofitUserService;
 import io.reist.visum.BaseModule;
+import io.reist.visum.model.BaseResponse;
 import io.reist.visum.model.Response;
 import rx.Observable;
 import rx.observers.TestSubscriber;
@@ -130,8 +131,9 @@ public class UserServiceTest {
 
         users.add(user);
 
-        when(sMockedGitHubApi.listUsers())
-                .thenReturn(Observable.just(new Response<>(users)));
+        doReturn(Observable.just(new BaseResponse<>(users)))
+                .when(sMockedGitHubApi)
+                .listUsers();
     }
 
     void secondTestCase() {

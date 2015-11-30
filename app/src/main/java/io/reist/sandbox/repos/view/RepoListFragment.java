@@ -22,6 +22,7 @@ import io.reist.sandbox.repos.presenter.RepoEditPresenter;
 import io.reist.sandbox.repos.presenter.RepoListAdapter;
 import io.reist.sandbox.repos.presenter.RepoListPresenter;
 import io.reist.visum.view.BaseFragment;
+import io.reist.visum.model.Error;
 
 /**
  * Created by Reist on 10/13/15.
@@ -80,7 +81,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     }
 
     @Override
-    public void displayError(io.reist.visum.Error error) {
+    public void displayError(Error error) {
         if (adapter == null || adapter.getItemCount() == 0) {
             loaderView.showNetworkError();
         } else {
