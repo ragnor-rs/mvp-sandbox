@@ -12,7 +12,6 @@ import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -27,12 +26,9 @@ import io.reist.sandbox.app.model.UserStorIOSQLitePutResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoGetResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoPutResolver;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-import io.reist.sandbox.repo.RepoModule;
-import io.reist.sandbox.repo.model.CachedRepoService;
-import io.reist.sandbox.repo.model.RepoService;
-import io.reist.sandbox.repo.model.local.StorIoRepoService;
-import io.reist.sandbox.repo.model.remote.RetrofitRepoService;
-import io.reist.sandbox.user.UserModule;
+
+import io.reist.sandbox.repos.ReposModule;
+import io.reist.sandbox.users.UsersModule;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.remote.NestedFieldNameAdapter;
 import retrofit.GsonConverterFactory;
@@ -41,8 +37,8 @@ import retrofit.RxJavaCallAdapterFactory;
 
 @Module(includes = {
         BaseModule.class,
-        UserModule.class,
-        RepoModule.class
+        UsersModule.class,
+        ReposModule.class
 })
 public class SandboxModule {
 
@@ -54,7 +50,7 @@ public class SandboxModule {
     private static final String TAG = SandboxModule.class.getName();
 
     @Provides @Singleton
-    protected StorIOSQLite storIoSqLite(Context context) {
+    StorIOSQLite storIoSqLite(Context context) {
 
         DbOpenHelper dbOpenHelper = new DbOpenHelper(context);
 
@@ -82,7 +78,7 @@ public class SandboxModule {
     }
 
     @Provides @Singleton
-    protected GitHubApi gitHubApi() {
+    GitHubApi gitHubApi() {
 
         Gson gson = new GsonBuilder()
                 .registerTypeHierarchyAdapter(Object.class, new NestedFieldNameAdapter())
@@ -91,18 +87,19 @@ public class SandboxModule {
         OkHttpClient httpClient = new OkHttpClient();
 
         httpClient.interceptors().add(chain -> {
+
             Request request = chain.request();
             HttpUrl httpUrl = request
                     .httpUrl()
                     .newBuilder()
                     .addQueryParameter("user_id", "1")
                     .build();
-
             request = request.newBuilder().url(httpUrl).build();
 
             Log.i(TAG, request.toString());
 
             return chain.proceed(request);
+
         });
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -111,7 +108,6 @@ public class SandboxModule {
                 .baseUrl(GIT_HUB_BASE_URL)
                 .client(httpClient)
                 .build();
-
 
         return retrofit.create(GitHubApi.class);
     }
