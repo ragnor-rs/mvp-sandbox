@@ -1,4 +1,4 @@
-package io.reist.sandbox.test.repos.model;
+package io.reist.sandbox.repos.model;
 
 
 import org.junit.Before;
@@ -22,8 +22,6 @@ import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
 
 import io.reist.sandbox.repos.ReposModule;
-import io.reist.sandbox.test.repos.model.DaggerRepoServiceTest_TestComponent;
-import io.reist.sandbox.repos.model.RepoService;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.Response;
 import rx.Observable;
@@ -102,13 +100,13 @@ public class RepoServiceTest {
             repoService.unlike(newRepo()).subscribe(subscriber);
         }
 
-        subscriber.awaitTerminalEventAndUnsubscribeOnTimeout(100, TimeUnit.MILLISECONDS);
+        subscriber.awaitTerminalEventAndUnsubscribeOnTimeout(1000, TimeUnit.MILLISECONDS);
 
         subscriber = new TestSubscriber<>();
 
         repoService.byId(REPO_ID).subscribe(subscriber);
 
-        subscriber.awaitTerminalEventAndUnsubscribeOnTimeout(100, TimeUnit.MILLISECONDS);
+        subscriber.awaitTerminalEventAndUnsubscribeOnTimeout(1000, TimeUnit.MILLISECONDS);
 
         assertThat(subscriber.getOnErrorEvents())
                 .isEmpty();

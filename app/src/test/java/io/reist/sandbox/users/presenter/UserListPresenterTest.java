@@ -1,80 +1,73 @@
-package io.reist.sandbox.test.users.presenter;
+package io.reist.sandbox.users.presenter;
 
 import android.app.Instrumentation;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityUnitTestCase;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import dagger.Component;
+import io.reist.sandbox.BuildConfig;
 import io.reist.sandbox.app.DaggerSandboxComponent;
 import io.reist.sandbox.app.SandboxApplication;
 import io.reist.sandbox.app.SandboxComponent;
 import io.reist.sandbox.app.SandboxComponentCache;
+import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-import io.reist.sandbox.test.users.view.UserListActivity;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.presenter.UserListPresenter;
 import io.reist.sandbox.users.view.UserListFragment;
+import io.reist.sandbox.users.view.UserListView;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.BaseResponse;
 import rx.Observable;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by m039 on 11/25/15.
  */
-@RunWith(AndroidJUnit4.class)
-public class UserListPresenterTest extends ActivityUnitTestCase<UserListActivity> {
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21)
+public class UserListPresenterTest {
 
-    public UserListPresenterTest() {
-        super(UserListActivity.class);
-    }
-
-    private UserListActivity mTestUsersActivity;
+    @Inject
+    UserListPresenter mUserListPresenter;
 
     @Before
     public void setUp() throws Exception {
-
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-
-        SandboxApplication sandboxApplication = (SandboxApplication) instrumentation
-                .getTargetContext()
-                .getApplicationContext();
-
-        SandboxComponent sandboxComponent = DaggerSandboxComponent
+        DaggerUserListPresenterTest_TestComponent
                 .builder()
                 .usersModule(new TestUsersModule())
-                .baseModule(new BaseModule(sandboxApplication))
-                .build();
+                .baseModule(new BaseModule(RuntimeEnvironment.application))
+                .build()
+                .inject(this);
+    }
 
-        sandboxApplication.setComponentCache(new SandboxComponentCache(sandboxComponent));
+    @Singleton
+    @Component(modules = SandboxModule.class)
+    public interface TestComponent {
 
-        injectInstrumentation(instrumentation);
-        setApplication(sandboxApplication);
-
-        super.setUp();
-
-        instrumentation.runOnMainSync(() -> {
-            Intent intent = new Intent(sandboxApplication, UserListActivity.class);
-            startActivity(intent, null, null);
-        });
-
-        try { Thread.sleep(1000); } catch (Exception ignored) {}
-
-        mTestUsersActivity = getActivity();
+        void inject(UserListPresenterTest userListPresenterTest);
 
     }
 
@@ -82,7 +75,7 @@ public class UserListPresenterTest extends ActivityUnitTestCase<UserListActivity
 
         @Override
         protected UserService userService(GitHubApi gitHubApi, StorIOSQLite storIOSQLite) {
-            UserService mockedUserService = Mockito.mock(UserService.class);
+            UserService mockedUserService = mock(UserService.class);
 
             List<User> users = new ArrayList<>();
 
@@ -104,17 +97,15 @@ public class UserListPresenterTest extends ActivityUnitTestCase<UserListActivity
     }
 
     @Test
-    public void testPresenter() {
+    public void testPresenter() throws InterruptedException {
+        assertThat(mUserListPresenter).isNotNull();
 
-        UserListFragment userListFragment = (UserListFragment) mTestUsersActivity
-                .getFragmentManager()
-                .findFragmentById(android.R.id.content);
+        mUserListPresenter.setView(mock(UserListView.class));
+        mUserListPresenter.onViewAttached();
 
-        final UserListPresenter presenter = userListFragment.getPresenter();
+        Thread.sleep(1000);
 
-        assertThat(presenter).isNotNull();
-        assertTrue(presenter.isDataLoaded());
-
+        assertThat(mUserListPresenter.isDataLoaded()).isTrue();
     }
 
 }

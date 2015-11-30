@@ -1,4 +1,4 @@
-package io.reist.sandbox.test.users.model;
+package io.reist.sandbox.users.model;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 
@@ -27,7 +27,7 @@ import io.reist.sandbox.app.model.remote.GitHubApi;
 import io.reist.sandbox.app.model.remote.GitHubResponse;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.CachedUserService;
-import io.reist.sandbox.test.users.model.DaggerUserServiceTest_TestComponent;
+import io.reist.sandbox.users.model.DaggerUserServiceTest_TestComponent;
 import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.model.local.StorIoUserService;
 import io.reist.sandbox.users.model.remote.RetrofitUserService;
@@ -108,7 +108,7 @@ public class UserServiceTest {
         TestSubscriber<Response<List<User>>> testSubscriber = new TestSubscriber<>();
         userService.list().subscribe(testSubscriber);
 
-        testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(100, TimeUnit.MILLISECONDS);
+        testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(1000, TimeUnit.MILLISECONDS);
 
         assertThat(testSubscriber.getOnNextEvents().get(0).getResult().isEmpty())
                 .isFalse();
@@ -118,7 +118,7 @@ public class UserServiceTest {
         TestSubscriber<Response<User>> testSubscriber = new TestSubscriber<>();
         userService.byId(USER_ID).subscribe(testSubscriber);
 
-        testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(100, TimeUnit.MILLISECONDS);
+        testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(1000, TimeUnit.MILLISECONDS);
 
         assertThat(testSubscriber.getOnNextEvents().get(0).getResult().id)
                 .isEqualTo(USER_ID);

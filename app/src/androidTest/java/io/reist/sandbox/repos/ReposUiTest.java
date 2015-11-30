@@ -1,4 +1,4 @@
-package io.reist.sandbox.test.repos.view;
+package io.reist.sandbox.repos;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.DrawerActions;
@@ -14,7 +14,7 @@ import java.util.Random;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.view.MainActivity;
-import io.reist.sandbox.test.core.ActivityInstrumentationTestCase;
+import io.reist.sandbox.core.ActivityInstrumentationTestCase;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -26,7 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static io.reist.sandbox.test.core.TestUtils.waitForMs;
+import static io.reist.sandbox.core.TestUtils.waitForMs;
 import static org.hamcrest.Matchers.allOf;
 
 /**

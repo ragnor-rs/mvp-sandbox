@@ -1,19 +1,27 @@
-package io.reist.sandbox.test.repos.presenter;
+package io.reist.sandbox.repos.presenter;
 
 import android.app.Instrumentation;
-import android.support.test.espresso.contrib.DrawerActions;
-import android.support.test.espresso.contrib.RecyclerViewActions;
-import android.support.test.runner.AndroidJUnit4;
+import android.os.Bundle;
+
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
+import dagger.Component;
+import io.reist.sandbox.BuildConfig;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.DaggerSandboxComponent;
 import io.reist.sandbox.app.SandboxApplication;
@@ -27,7 +35,11 @@ import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.presenter.RepoEditPresenter;
 import io.reist.sandbox.repos.presenter.RepoListPresenter;
-import io.reist.sandbox.test.core.ActivityInstrumentationTestCase;
+import io.reist.sandbox.repos.view.RepoEditView;
+import io.reist.sandbox.repos.view.RepoListView;
+import io.reist.sandbox.users.presenter.DaggerUserListPresenterTest_TestComponent;
+import io.reist.sandbox.users.presenter.UserListPresenter;
+import io.reist.sandbox.users.view.UserListView;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.BaseResponse;
 import io.reist.visum.model.Response;
@@ -35,14 +47,8 @@ import io.reist.visum.presenter.BasePresenter;
 import io.reist.visum.view.BaseFragment;
 import rx.Observable;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static io.reist.sandbox.test.core.TestUtils.waitForMs;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -51,35 +57,32 @@ import static org.mockito.Mockito.when;
 /**
  * Created by m039 on 11/27/15.
  */
-@RunWith(AndroidJUnit4.class)
-public class ReposPresentersTest extends ActivityInstrumentationTestCase<MainActivity> {
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21)
+public class ReposPresentersTest {
 
-    public ReposPresentersTest() {
-        super(MainActivity.class);
-    }
+    @Inject
+    RepoListPresenter mRepoListPresenter;
 
-    private MainActivity mMainActivity;
+    @Inject
+    RepoEditPresenter mRepoEditPresenter;
 
     @Before
-    @Override
     public void setUp() throws Exception {
-        super.setUp();
-
-        Instrumentation instrumentation = getInstrumentation();
-
-        SandboxApplication sandboxApplication = (SandboxApplication) instrumentation
-                .getTargetContext()
-                .getApplicationContext();
-
-        SandboxComponent sandboxComponent = DaggerSandboxComponent
+        DaggerReposPresentersTest_TestComponent
                 .builder()
                 .reposModule(new TestReposModule())
-                .baseModule(new BaseModule(sandboxApplication))
-                .build();
+                .baseModule(new BaseModule(RuntimeEnvironment.application))
+                .build()
+                .inject(this);
+    }
 
-        sandboxApplication.setComponentCache(new SandboxComponentCache(sandboxComponent));
+    @Singleton
+    @Component(modules = SandboxModule.class)
+    public interface TestComponent {
 
-        mMainActivity = getActivity();
+        void inject(ReposPresentersTest reposPresentersTest);
+
     }
 
     public static class TestReposModule extends ReposModule {
@@ -124,31 +127,35 @@ public class ReposPresentersTest extends ActivityInstrumentationTestCase<MainAct
 
     }
 
-
     @Test
-    public void testPresenters() {
-        onView(withId(R.id.drawer_layout))
-                .perform(DrawerActions.open());
+    public void testRepoListPresenter() throws InterruptedException {
+        assertThat(mRepoListPresenter).isNotNull();
 
-        onView(allOf(isDescendantOfA(withId(R.id.nav_view)), withText(R.string.menu_repos)))
-                .perform(click());
+        mRepoListPresenter.setView(mock(RepoListView.class));
+        mRepoListPresenter.onViewAttached();
 
-        waitForMs(1000);
+        Thread.sleep(1000);
 
-        assertThat(((RepoListPresenter) getCurrentPresenter()).isDataLoaded()).isTrue();
-
-        waitForMs(1000);
-
-        onView(withId(R.id.daggertest_repo_recycler_view))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-
-        waitForMs(1000);
-
-        assertThat(((RepoEditPresenter) getCurrentPresenter()).isDataLoaded()).isTrue();
+        assertThat(mRepoListPresenter.isDataLoaded()).isTrue();
     }
 
-    BasePresenter getCurrentPresenter() {
-        return ((BaseFragment) mMainActivity.getFragmentManager().findFragmentById(R.id.fragment_container))
-                .getPresenter();
+    @Test
+    public void testRepoEditPresenter() throws InterruptedException {
+        assertThat(mRepoEditPresenter).isNotNull();
+
+        RepoEditView mockedRepoEditView = mock(RepoEditView.class);
+
+        Bundle extras = new Bundle();
+
+        extras.putLong(RepoEditPresenter.EXTRA_REPO_ID, 1L);
+
+        when(mockedRepoEditView.extras()).thenReturn(extras);
+
+        mRepoEditPresenter.setView(mockedRepoEditView);
+        mRepoEditPresenter.onViewAttached();
+
+        Thread.sleep(1000);
+
+        assertThat(mRepoEditPresenter.isDataLoaded()).isTrue();
     }
 }

@@ -1,4 +1,4 @@
-package io.reist.sandbox.test.core;
+package io.reist.sandbox.core;
 
 import android.app.Activity;
 import android.app.Fragment;

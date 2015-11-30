@@ -1,13 +1,11 @@
-package io.reist.sandbox.test.users.view;
+package io.reist.sandbox.users;
 
 import android.app.Activity;
 import android.support.annotation.IdRes;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
-import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -19,15 +17,15 @@ import org.junit.runner.RunWith;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.view.MainActivity;
-import io.reist.sandbox.test.core.ActivityInstrumentationTestCase;
+import io.reist.sandbox.core.ActivityInstrumentationTestCase;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static io.reist.sandbox.test.core.TestUtils.clickOnId;
-import static io.reist.sandbox.test.core.TestUtils.waitForMs;
+import static io.reist.sandbox.core.TestUtils.clickOnId;
+import static io.reist.sandbox.core.TestUtils.waitForMs;
 import static org.hamcrest.Matchers.allOf;
 
 /**
