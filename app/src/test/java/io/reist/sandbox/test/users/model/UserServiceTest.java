@@ -132,8 +132,9 @@ public class UserServiceTest {
 
         users.add(user);
 
-        when(sMockedGitHubApi.listUsers())
-                .thenReturn(Observable.just(new GitHubResponse<>(users)));
+        doReturn(Observable.just(new BaseResponse<>(users)))
+                .when(sMockedGitHubApi)
+                .listUsers();
     }
 
     void secondTestCase() {
