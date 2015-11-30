@@ -41,6 +41,7 @@ import io.reist.visum.model.BaseResponse;
 import rx.Observable;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -89,7 +90,7 @@ public class UserListPresenterTest {
             user2.name = "Frank";
             users.add(user2);
 
-            Mockito.doReturn(Observable.just(new BaseResponse<>(users))).when(mockedUserService).list();
+            doReturn(Observable.just(new BaseResponse<>(users))).when(mockedUserService).list();
 
             return mockedUserService;
         }

@@ -48,19 +48,19 @@ public class ReposUiTest extends ActivityInstrumentationTestCase<MainActivity> {
     }
 
     @Test
-    public void testRepo() {
+    public void testRepo() throws InterruptedException {
         onView(withId(R.id.drawer_layout))
                 .perform(DrawerActions.open());
 
         onView(allOf(isDescendantOfA(withId(R.id.nav_view)), withText(R.string.menu_repos)))
                 .perform(click());
 
-        waitForMs(1000);
+        Thread.sleep(1000);
 
         onView(withId(R.id.daggertest_repo_recycler_view))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        waitForMs(1000);
+        Thread.sleep(1000);
 
         String generatedRepoName = generateRepoName();
 
@@ -70,9 +70,10 @@ public class ReposUiTest extends ActivityInstrumentationTestCase<MainActivity> {
 
         onView(withId(R.id.save)).perform(click());
 
-        onView(withContentDescription("Navigate up")).perform(click());
+        onView(withContentDescription(android.support.v7.appcompat.R.string.abc_action_bar_up_description))
+                .perform(click());
 
-        waitForMs(1000);
+        Thread.sleep(1000);
 
         onView(withText(generatedRepoName)).check(matches(isDisplayed()));
     }
