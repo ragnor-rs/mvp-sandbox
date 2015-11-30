@@ -22,7 +22,7 @@ import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
 
 import io.reist.sandbox.repos.ReposModule;
-import io.reist.sandbox.repos.model.DaggerRepoServiceTest_TestComponent;
+import io.reist.sandbox.test.repos.model.DaggerRepoServiceTest_TestComponent;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.Response;

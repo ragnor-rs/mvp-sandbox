@@ -26,7 +26,7 @@ import io.reist.sandbox.app.model.remote.GitHubApi;
 
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.CachedUserService;
-import io.reist.sandbox.users.model.DaggerUserServiceTest_TestComponent;
+import io.reist.sandbox.test.users.model.DaggerUserServiceTest_TestComponent;
 import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.model.local.StorIoUserService;
 import io.reist.sandbox.users.model.remote.RetrofitUserService;

@@ -30,6 +30,7 @@ import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.presenter.RepoEditPresenter;
 import io.reist.sandbox.repos.presenter.RepoListPresenter;
+import io.reist.sandbox.test.core.ActivityInstrumentationTestCase;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.Response;
 import io.reist.visum.presenter.BasePresenter;
@@ -52,7 +53,7 @@ import static org.mockito.Mockito.when;
  * Created by m039 on 11/27/15.
  */
 @RunWith(AndroidJUnit4.class)
-public class ReposPresentersTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class ReposPresentersTest extends ActivityInstrumentationTestCase<MainActivity> {
 
     public ReposPresentersTest() {
         super(MainActivity.class);
@@ -65,7 +66,7 @@ public class ReposPresentersTest extends ActivityInstrumentationTestCase2<MainAc
     public void setUp() throws Exception {
         super.setUp();
 
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        Instrumentation instrumentation = getInstrumentation();
 
         SandboxApplication sandboxApplication = (SandboxApplication) instrumentation
                 .getTargetContext()
@@ -79,7 +80,6 @@ public class ReposPresentersTest extends ActivityInstrumentationTestCase2<MainAc
 
         sandboxApplication.setComponentCache(new SandboxComponentCache(sandboxComponent));
 
-        injectInstrumentation(instrumentation);
         mMainActivity = getActivity();
     }
 

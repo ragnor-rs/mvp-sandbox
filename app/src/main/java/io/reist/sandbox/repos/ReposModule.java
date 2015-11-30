@@ -21,17 +21,17 @@ import io.reist.sandbox.repos.model.remote.RetrofitRepoService;
 public class ReposModule {
 
     @Provides @Singleton @Named(SandboxModule.LOCAL_SERVICE)
-    RepoService localRepoService(StorIOSQLite storIoSqLite) {
+    protected RepoService localRepoService(StorIOSQLite storIoSqLite) {
         return new StorIoRepoService(storIoSqLite);
     }
 
     @Provides @Singleton @Named(SandboxModule.REMOTE_SERVICE)
-    RepoService remoteRepoService(GitHubApi gitHubApi) {
+    protected RepoService remoteRepoService(GitHubApi gitHubApi) {
         return new RetrofitRepoService(gitHubApi);
     }
 
     @Provides @Singleton
-    RepoService repoService(
+    protected RepoService repoService(
             @Named(SandboxModule.LOCAL_SERVICE) RepoService local,
             @Named(SandboxModule.REMOTE_SERVICE) RepoService remote
     ) {

@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.view.MainActivity;
+import io.reist.sandbox.test.core.ActivityInstrumentationTestCase;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -33,7 +34,7 @@ import static org.hamcrest.Matchers.allOf;
  * Created by m039 on 11/20/15.
  */
 @RunWith(AndroidJUnit4.class)
-public class UsersUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class UsersUiTest extends ActivityInstrumentationTestCase<MainActivity> {
 
     /**
      * Should take into consideration delays during network operations
@@ -49,7 +50,6 @@ public class UsersUiTest extends ActivityInstrumentationTestCase2<MainActivity> 
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
         mMainActivity = getActivity();
     }
 
