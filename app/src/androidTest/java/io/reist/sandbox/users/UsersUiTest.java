@@ -1,20 +1,12 @@
 package io.reist.sandbox.users;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.os.SystemClock;
 import android.support.annotation.IdRes;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
-import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import junit.framework.Assert;
@@ -25,19 +17,22 @@ import org.junit.runner.RunWith;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.view.MainActivity;
+import io.reist.sandbox.core.ActivityInstrumentationTestCase;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static io.reist.sandbox.core.TestUtils.clickOnId;
+import static io.reist.sandbox.core.TestUtils.waitForMs;
 import static org.hamcrest.Matchers.allOf;
 
 /**
  * Created by m039 on 11/20/15.
  */
 @RunWith(AndroidJUnit4.class)
-public class UsersUiTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class UsersUiTest extends ActivityInstrumentationTestCase<MainActivity> {
 
     /**
      * Should take into consideration delays during network operations
@@ -53,7 +48,6 @@ public class UsersUiTest extends ActivityInstrumentationTestCase2<MainActivity> 
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
         mMainActivity = getActivity();
     }
 
@@ -119,68 +113,4 @@ public class UsersUiTest extends ActivityInstrumentationTestCase2<MainActivity> 
             return false;
         }
     }
-
-    void waitForItems(@IdRes int recylerViewId, long timeOutMillis) {
-        waitForItems((RecyclerView) mMainActivity.findViewById(recylerViewId), timeOutMillis);
-    }
-
-    void waitForFragment(Class<? extends Fragment> fragmentClass) {
-        waitForFragment(mMainActivity, fragmentClass, R.id.fragment_container, 1000);
-    }
-
-    static void waitForFragment(Activity activity, Class<? extends Fragment> fragmentClass, @IdRes int fragmentResId, long timeOutMillis) {
-        FragmentManager fm = activity.getFragmentManager();
-
-        long end = SystemClock.uptimeMillis() + timeOutMillis;
-
-        while (SystemClock.uptimeMillis() <= end) {
-            Fragment fragment = fm.findFragmentById(fragmentResId);
-            if (fragment != null && fragmentClass.isAssignableFrom(fragment.getClass())) {
-                return;
-            }
-
-            try { Thread.sleep(10); } catch (InterruptedException e) {}
-        }
-
-        throw new RuntimeException("waitForFragment: timeout for " + fragmentClass);
-    }
-
-    static void waitForItems(RecyclerView recyclerView, long timeoutMillis) {
-        long end = SystemClock.uptimeMillis() + timeoutMillis;
-        while (end >= SystemClock.uptimeMillis()) {
-            RecyclerView.Adapter adapter = recyclerView.getAdapter();
-            if (adapter != null && adapter.getItemCount() > 0) {
-                return;
-            }
-            try { Thread.sleep(10); } catch (InterruptedException ignored) {}
-        }
-    }
-
-    static void waitForMs(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (Exception ignored) {}
-    }
-
-    static ViewAction clickOnId(final @IdRes int resId) {
-        return new ViewAction() {
-
-            @Override
-            public org.hamcrest.Matcher<View> getConstraints() {
-                return null;
-            }
-
-            @Override
-            public String getDescription() {
-                return "Click on a child view with " + resId;
-            }
-
-            @Override
-            public void perform(UiController uiController, View view) {
-                view.findViewById(resId).performClick();
-            }
-
-        };
-    }
-
 }

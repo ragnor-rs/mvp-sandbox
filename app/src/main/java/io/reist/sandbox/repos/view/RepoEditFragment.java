@@ -13,8 +13,8 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.repos.ReposComponent;
 import io.reist.sandbox.repos.presenter.RepoEditPresenter;
-import io.reist.visum.view.BaseFragment;
 import io.reist.visum.model.Error;
+import io.reist.visum.view.BaseFragment;
 
 /**
  * Created by defuera on 10/11/2015.

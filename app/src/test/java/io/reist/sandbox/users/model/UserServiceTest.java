@@ -2,6 +2,7 @@ package io.reist.sandbox.users.model;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,163 +10,147 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
-import dagger.Subcomponent;
 import io.reist.sandbox.BuildConfig;
 import io.reist.sandbox.app.SandboxApplication;
 import io.reist.sandbox.app.SandboxModule;
-import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-import io.reist.sandbox.repos.model.CachedRepoService;
-import io.reist.sandbox.repos.model.RepoService;
-import io.reist.sandbox.repos.model.local.StorIoRepoService;
+
+import io.reist.sandbox.app.model.remote.GitHubResponse;
+import io.reist.sandbox.core.RobolectricTestCase;
+import io.reist.sandbox.core.RobolectricTestRunner;
+import io.reist.sandbox.users.UsersModule;
+import io.reist.sandbox.users.model.CachedUserService;
+import io.reist.sandbox.users.model.DaggerUserServiceTest_TestComponent;
+import io.reist.sandbox.users.model.UserService;
+import io.reist.sandbox.users.model.local.StorIoUserService;
+import io.reist.sandbox.users.model.remote.RetrofitUserService;
 import io.reist.visum.BaseModule;
+import io.reist.visum.model.BaseResponse;
 import io.reist.visum.model.Response;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by m039 on 11/19/15.
- *
- * To work on unit tests, switch the Test Artifact in the Build Variants view.
- *
+ * Created by m039 on 11/27/15.
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class UserServiceTest {
+public class UserServiceTest extends RobolectricTestCase {
 
     @Inject
-    RepoService repoService;
+    UserService userService;
+
+    TestComponent testComponent;
 
     @Before
-    public void setup() {
-
+    @Override
+    public void setUp() {
+        super.setUp();
         SandboxApplication sandboxApplication = (SandboxApplication) RuntimeEnvironment.application;
 
-        DaggerUserServiceTest_TestComponent.builder()
-                .sandboxModule(new SandboxModule())
+        testComponent = DaggerUserServiceTest_TestComponent
+                .builder()
                 .baseModule(new BaseModule(sandboxApplication))
-                .build()
-                .reposComponent()
-                .inject(this);
+                .usersModule(new TestUsersModule())
+                .build();
 
+        testComponent.inject(this);
+        assertThat(userService).isNotNull();
+    }
+
+    @After
+    @Override
+    public void tearDown() {
+        super.tearDown();
     }
 
     @Singleton
     @Component(modules = SandboxModule.class)
     public interface TestComponent {
 
-        TestReposComponent reposComponent();
-
-    }
-
-    @Singleton
-    @Subcomponent(modules = TestReposModule.class)
-    public interface TestReposComponent {
-
         void inject(UserServiceTest userServiceTest);
 
     }
 
-    @Module
-    public static class TestReposModule {
+    public static class TestUsersModule extends UsersModule {
 
-        @Provides @Singleton @Named(SandboxModule.LOCAL_SERVICE)
-        RepoService localRepoService(StorIOSQLite storIoSqLite) {
-            return new StorIoRepoService(storIoSqLite);
-        }
+        @Override
+        protected UserService userService(GitHubApi ignored, StorIOSQLite storIOSQLite) {
+            RetrofitUserService retrofitUserService = spy(new RetrofitUserService(sMockedGitHubApi));
 
-        @Provides @Singleton @Named(SandboxModule.REMOTE_SERVICE)
-        RepoService remoteRepoService(GitHubApi gitHubApi) {
-            RepoService mockedRepoService = mock(RepoService.class);
+            doReturn(Observable.empty()).when(retrofitUserService).byId(any());
 
-            when(mockedRepoService.like(any()))
-                    .thenReturn(Observable.empty());
-
-            when(mockedRepoService.unlike(any()))
-                    .thenReturn(Observable.empty());
-
-            when(mockedRepoService.byId(any()))
-                    .thenReturn(Observable.empty());
-
-            return mockedRepoService;
-        }
-
-        @Provides @Singleton
-        RepoService repoService(
-                @Named(SandboxModule.LOCAL_SERVICE) RepoService local,
-                @Named(SandboxModule.REMOTE_SERVICE) RepoService remote
-        ) {
-            return new CachedRepoService(local, remote);
+            return new CachedUserService(new StorIoUserService(storIOSQLite), retrofitUserService);
         }
 
     }
+
+    private static final GitHubApi sMockedGitHubApi = mock(GitHubApi.class);
+    private static final long USER_ID = -(new Random().nextLong());
 
     @Test
-    public void testCachedService() {
-        testOfflineLike(false);
-        testOfflineLike(true);
+    public void testUserService() {
+        firstTestCase();
+        testIfUsersExist();
+        testIfUserWithUserIdExist();
+
+        secondTestCase();
+        testIfUserWithUserIdExist();
     }
 
-    private void testOfflineLike(boolean like) {
+    void testIfUsersExist() {
+        TestSubscriber<Response<List<User>>> testSubscriber = new TestSubscriber<>();
+        userService.list().subscribe(testSubscriber);
 
-        TestSubscriber<Response<Repo>> subscriber;
+        testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(500, TimeUnit.MILLISECONDS);
 
-        subscriber = new TestSubscriber<>();
-
-        if (like) {
-            repoService.like(newRepo()).subscribe(subscriber);
-        } else {
-            repoService.unlike(newRepo()).subscribe(subscriber);
-        }
-
-        subscriber.awaitTerminalEventAndUnsubscribeOnTimeout(100, TimeUnit.MILLISECONDS);
-
-        subscriber = new TestSubscriber<>();
-
-        repoService.byId(REPO_ID).subscribe(subscriber);
-
-        subscriber.awaitTerminalEventAndUnsubscribeOnTimeout(100, TimeUnit.MILLISECONDS);
-
-        assertThat(subscriber.getOnErrorEvents())
-                .isEmpty();
-
-        Repo repo = subscriber.getOnNextEvents().get(0).getResult();
-
-        assertThat(repo.id).isEqualTo(REPO_ID);
-        assertThat(repo.likedByMe).isEqualTo(like);
-
+        assertThat(testSubscriber.getOnNextEvents().get(0).getResult().isEmpty())
+                .isFalse();
     }
 
-    private static final long REPO_ID = 12345L;
-    private static final long USER_ID = 43215L;
+    void testIfUserWithUserIdExist() {
+        TestSubscriber<Response<User>> testSubscriber = new TestSubscriber<>();
+        userService.byId(USER_ID).subscribe(testSubscriber);
 
-    private static Repo newRepo() {
+        testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(500, TimeUnit.MILLISECONDS);
 
-        Repo repo = new Repo();
+        assertThat(testSubscriber.getOnNextEvents().get(0).getResult().id)
+                .isEqualTo(USER_ID);
+    }
 
-        repo.id = REPO_ID;
+    void firstTestCase() {
+        List<User> users = new ArrayList<>();
 
-        User owner = new User();
-        owner.id = USER_ID;
-        repo.owner = owner;
+        User user = new User();
+        user.id = USER_ID;
 
-        return repo;
+        users.add(user);
 
+        doReturn(Observable.just(new BaseResponse<>(users)))
+                .when(sMockedGitHubApi)
+                .listUsers();
+    }
+
+    void secondTestCase() {
+        when(sMockedGitHubApi.listUsers())
+                .thenReturn(Observable.empty());
     }
 
 }

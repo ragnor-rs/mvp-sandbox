@@ -11,6 +11,8 @@ import io.reist.sandbox.users.view.UserListView;
 import io.reist.visum.model.Response;
 import io.reist.visum.presenter.BasePresenter;
 import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by m039 on 11/12/15.

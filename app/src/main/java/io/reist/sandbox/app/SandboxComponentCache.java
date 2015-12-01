@@ -18,10 +18,11 @@ public class SandboxComponentCache extends ComponentCache {
     private final SandboxComponent sandboxComponent;
 
     public SandboxComponentCache(Context context) {
-        this.sandboxComponent  = DaggerSandboxComponent.builder()
-                .sandboxModule(new SandboxModule())
-                .baseModule(new BaseModule(context))
-                .build();
+        this(DaggerSandboxComponent.builder().baseModule(new BaseModule(context)).build());
+    }
+
+    public SandboxComponentCache(SandboxComponent sandboxComponent) {
+        this.sandboxComponent = sandboxComponent;
     }
 
     @Override

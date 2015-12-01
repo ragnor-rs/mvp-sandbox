@@ -23,6 +23,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
     private static final String TAG = RepoListPresenter.class.getName();
 
     private final RepoService repoService;
+    private boolean mIsDataLoaded = false;
 
     @Inject
     public RepoListPresenter(RepoService repoService) {
@@ -31,8 +32,13 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
 
     @Override
     protected void onViewAttached() {
+        mIsDataLoaded = false;
         view().showLoader(true);
         loadData();
+    }
+
+    public boolean isDataLoaded() {
+        return mIsDataLoaded;
     }
 
     public void loadData() {
@@ -46,6 +52,7 @@ public class RepoListPresenter extends BasePresenter<RepoListView> {
 
             @Override
             protected void onSuccess(List<Repo> result) {
+                mIsDataLoaded = true;
                 view().showLoader(false);
                 view().displayData(result); //cur need to check if view detached or crash can occure
             }
