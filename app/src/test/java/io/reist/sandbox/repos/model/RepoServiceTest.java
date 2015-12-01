@@ -1,10 +1,10 @@
 package io.reist.sandbox.repos.model;
 
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
@@ -21,6 +21,8 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
 
+import io.reist.sandbox.core.RobolectricTestCase;
+import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.repos.ReposModule;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.Response;
@@ -39,15 +41,18 @@ import static org.mockito.Mockito.when;
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
  *
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class RepoServiceTest {
+public class RepoServiceTest extends RobolectricTestCase {
 
     @Inject
     RepoService repoService;
 
     @Before
-    public void setup() {
+    @Override
+    public void setUp() {
+        super.setUp();
+
         TestComponent modelComponent = DaggerRepoServiceTest_TestComponent
                 .builder()
                 .reposModule(new TestReposModule())
@@ -55,6 +60,12 @@ public class RepoServiceTest {
                 .build();
 
         modelComponent.inject(this);
+    }
+
+    @After
+    @Override
+    public void tearDown() {
+        super.tearDown();
     }
 
     @Singleton
@@ -70,13 +81,13 @@ public class RepoServiceTest {
             RepoService mockedRepoService = mock(RepoService.class);
 
             when(mockedRepoService.like(any()))
-                    .thenReturn(Observable.empty());
+                    .thenReturn(Observable.never());
 
             when(mockedRepoService.unlike(any()))
-                    .thenReturn(Observable.empty());
+                    .thenReturn(Observable.never());
 
             when(mockedRepoService.byId(any()))
-                    .thenReturn(Observable.empty());
+                    .thenReturn(Observable.never());
 
             return mockedRepoService;
         }

@@ -4,6 +4,7 @@ import android.app.Instrumentation;
 import android.os.Bundle;
 
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +13,7 @@ import org.mockito.Mockito;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,8 @@ import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.view.MainActivity;
+import io.reist.sandbox.core.RobolectricTestCase;
+import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.presenter.RepoEditPresenter;
@@ -57,9 +61,9 @@ import static org.mockito.Mockito.when;
 /**
  * Created by m039 on 11/27/15.
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class ReposPresentersTest {
+public class ReposPresentersTest extends RobolectricTestCase {
 
     @Inject
     RepoListPresenter mRepoListPresenter;
@@ -68,13 +72,22 @@ public class ReposPresentersTest {
     RepoEditPresenter mRepoEditPresenter;
 
     @Before
-    public void setUp() throws Exception {
+    @Override
+    public void setUp() {
+        super.setUp();
+
         DaggerReposPresentersTest_TestComponent
                 .builder()
                 .reposModule(new TestReposModule())
                 .baseModule(new BaseModule(RuntimeEnvironment.application))
                 .build()
                 .inject(this);
+    }
+
+    @After
+    @Override
+    public void tearDown() {
+        super.tearDown();
     }
 
     @Singleton
@@ -132,7 +145,6 @@ public class ReposPresentersTest {
         assertThat(mRepoListPresenter).isNotNull();
 
         mRepoListPresenter.setView(mock(RepoListView.class));
-        mRepoListPresenter.onViewAttached();
 
         Thread.sleep(1000);
 
@@ -152,7 +164,6 @@ public class ReposPresentersTest {
         when(mockedRepoEditView.extras()).thenReturn(extras);
 
         mRepoEditPresenter.setView(mockedRepoEditView);
-        mRepoEditPresenter.onViewAttached();
 
         Thread.sleep(1000);
 

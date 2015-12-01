@@ -2,6 +2,7 @@ package io.reist.sandbox.users.model;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +26,8 @@ import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
 
 import io.reist.sandbox.app.model.remote.GitHubResponse;
+import io.reist.sandbox.core.RobolectricTestCase;
+import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.CachedUserService;
 import io.reist.sandbox.users.model.DaggerUserServiceTest_TestComponent;
@@ -47,9 +50,9 @@ import static org.mockito.Mockito.when;
 /**
  * Created by m039 on 11/27/15.
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class UserServiceTest {
+public class UserServiceTest extends RobolectricTestCase {
 
     @Inject
     UserService userService;
@@ -57,7 +60,9 @@ public class UserServiceTest {
     TestComponent testComponent;
 
     @Before
-    public void setup() {
+    @Override
+    public void setUp() {
+        super.setUp();
         SandboxApplication sandboxApplication = (SandboxApplication) RuntimeEnvironment.application;
 
         testComponent = DaggerUserServiceTest_TestComponent
@@ -68,6 +73,12 @@ public class UserServiceTest {
 
         testComponent.inject(this);
         assertThat(userService).isNotNull();
+    }
+
+    @After
+    @Override
+    public void tearDown() {
+        super.tearDown();
     }
 
     @Singleton
@@ -108,7 +119,7 @@ public class UserServiceTest {
         TestSubscriber<Response<List<User>>> testSubscriber = new TestSubscriber<>();
         userService.list().subscribe(testSubscriber);
 
-        testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(1000, TimeUnit.MILLISECONDS);
+        testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(500, TimeUnit.MILLISECONDS);
 
         assertThat(testSubscriber.getOnNextEvents().get(0).getResult().isEmpty())
                 .isFalse();
@@ -118,7 +129,7 @@ public class UserServiceTest {
         TestSubscriber<Response<User>> testSubscriber = new TestSubscriber<>();
         userService.byId(USER_ID).subscribe(testSubscriber);
 
-        testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(1000, TimeUnit.MILLISECONDS);
+        testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(500, TimeUnit.MILLISECONDS);
 
         assertThat(testSubscriber.getOnNextEvents().get(0).getResult().id)
                 .isEqualTo(USER_ID);

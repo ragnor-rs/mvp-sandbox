@@ -7,6 +7,7 @@ import android.test.ActivityUnitTestCase;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 
 import org.assertj.core.api.Assertions;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,8 @@ import io.reist.sandbox.app.SandboxComponentCache;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
+import io.reist.sandbox.core.RobolectricTestCase;
+import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.presenter.UserListPresenter;
@@ -47,21 +50,29 @@ import static org.mockito.Mockito.mock;
 /**
  * Created by m039 on 11/25/15.
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class UserListPresenterTest {
+public class UserListPresenterTest extends RobolectricTestCase {
 
     @Inject
     UserListPresenter mUserListPresenter;
 
     @Before
-    public void setUp() throws Exception {
+    @Override
+    public void setUp() {
+        super.setUp();
         DaggerUserListPresenterTest_TestComponent
                 .builder()
                 .usersModule(new TestUsersModule())
                 .baseModule(new BaseModule(RuntimeEnvironment.application))
                 .build()
                 .inject(this);
+    }
+
+    @After
+    @Override
+    public void tearDown() {
+        super.tearDown();
     }
 
     @Singleton
@@ -102,7 +113,6 @@ public class UserListPresenterTest {
         assertThat(mUserListPresenter).isNotNull();
 
         mUserListPresenter.setView(mock(UserListView.class));
-        mUserListPresenter.onViewAttached();
 
         Thread.sleep(1000);
 
