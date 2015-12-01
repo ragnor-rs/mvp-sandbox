@@ -12,8 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import io.reist.sandbox.R;
-import io.reist.sandbox.repo.view.RepoListFragment;
-import io.reist.sandbox.user.view.UsersFragment;
+import io.reist.sandbox.repos.view.RepoListFragment;
+import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.visum.view.BaseActivity;
 
 public class MainActivity extends BaseActivity
@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_camara);
+        navigationView.setCheckedItem(R.id.nav_repos);
 
         fragmentManager.addOnBackStackChangedListener(this);
 
@@ -91,11 +91,11 @@ public class MainActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.nav_camara:
+            case R.id.nav_repos:
                 showFragment(RepoListFragment.newInstance(), true, true);
                 break;
-            case R.id.nav_gallery:
-                showFragment(UsersFragment.newInstance(), true, true);
+            case R.id.nav_users:
+                showFragment(UserListFragment.newInstance(), true, true);
                 break;
         }
 

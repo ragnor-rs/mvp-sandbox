@@ -1,6 +1,7 @@
 package io.reist.sandbox.app.model;
 
-import io.reist.visum.Error;
+import io.reist.visum.model.BaseError;
+import io.reist.visum.model.Error;
 import io.reist.visum.model.Response;
 import rx.Observer;
 
@@ -23,7 +24,7 @@ public abstract class ResponseObserver<T> implements Observer<Response<T>> {
 
     @Override
     public void onError(Throwable e) {
-        onFail(new Error(e.getMessage()));
+        onFail(new BaseError(e));
     }
 
     @Override

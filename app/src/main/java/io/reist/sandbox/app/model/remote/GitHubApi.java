@@ -3,7 +3,6 @@ package io.reist.sandbox.app.model.remote;
 import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
-import io.reist.visum.model.Response;
 import io.reist.sandbox.app.model.User;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
@@ -18,27 +17,27 @@ import rx.Observable;
 public interface GitHubApi {
 
     @GET("/repos")
-    Observable<Response<List<Repo>>> listRepos();
+    Observable<GitHubResponse<List<Repo>>> listRepos();
 
     @GET("/repos/{id}")
-    Observable<Response<Repo>> repoById(@Path("id") Long id);
+    Observable<GitHubResponse<Repo>> repoById(@Path("id") Long id);
 
     @POST("/repos")
-    Observable<Response<Repo>> save(@Body Repo repo);
+    Observable<GitHubResponse<Repo>> save(@Body Repo repo);
 
     @DELETE("/repos/{id}")
-    Observable<Response<Integer>> deleteRepo(@Path("id") Long id);
+    Observable<GitHubResponse<Integer>> deleteRepo(@Path("id") Long id);
 
     @POST("/repos/{id}/like")
-    Observable<Response<Repo>> like(@Path("id") Long repoId);
+    Observable<GitHubResponse<Repo>> like(@Path("id") Long repoId);
 
     @POST("/repos/{id}/unlike")
-    Observable<Response<Repo>> unlike(@Path("id") Long repoId);
+    Observable<GitHubResponse<Repo>> unlike(@Path("id") Long repoId);
 
     @GET("/users")
-    Observable<Response<List<User>>> listUsers();
+    Observable<GitHubResponse<List<User>>> listUsers();
 
     @GET("/users/{id}/repos")
-    Observable<Response<List<Repo>>> reposByUserId(@Path("id") Long userId);
+    Observable<GitHubResponse<List<Repo>>> reposByUserId(@Path("id") Long userId);
 
 }

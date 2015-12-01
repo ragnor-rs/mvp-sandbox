@@ -12,7 +12,6 @@ import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -27,17 +26,20 @@ import io.reist.sandbox.app.model.UserStorIOSQLitePutResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoGetResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoPutResolver;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-import io.reist.sandbox.repo.model.CachedRepoService;
-import io.reist.sandbox.repo.model.RepoService;
-import io.reist.sandbox.repo.model.local.StorIoRepoService;
-import io.reist.sandbox.repo.model.remote.RetrofitRepoService;
+
+import io.reist.sandbox.repos.ReposModule;
+import io.reist.sandbox.users.UsersModule;
 import io.reist.visum.BaseModule;
 import io.reist.visum.model.remote.NestedFieldNameAdapter;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 
-@Module(includes = BaseModule.class)
+@Module(includes = {
+        BaseModule.class,
+        UsersModule.class,
+        ReposModule.class
+})
 public class SandboxModule {
 
     public static final String REMOTE_SERVICE = "remote";
@@ -85,23 +87,19 @@ public class SandboxModule {
         OkHttpClient httpClient = new OkHttpClient();
 
         httpClient.interceptors().add(chain -> {
+
             Request request = chain.request();
             HttpUrl httpUrl = request
                     .httpUrl()
                     .newBuilder()
                     .addQueryParameter("user_id", "1")
                     .build();
-
             request = request.newBuilder().url(httpUrl).build();
 
             Log.i(TAG, request.toString());
 
-            //print request body
-//            Buffer buffer = new Buffer();
-//            request.body().writeTo(buffer);
-//            Log.i(TAG, buffer.readUtf8());
-
             return chain.proceed(request);
+
         });
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -111,27 +109,7 @@ public class SandboxModule {
                 .client(httpClient)
                 .build();
 
-
         return retrofit.create(GitHubApi.class);
-
-    }
-
-    @Provides @Singleton @Named(SandboxModule.LOCAL_SERVICE)
-    RepoService localRepoService(StorIOSQLite storIoSqLite) {
-        return new StorIoRepoService(storIoSqLite);
-    }
-
-    @Provides @Singleton @Named(SandboxModule.REMOTE_SERVICE)
-    RepoService remoteRepoService(GitHubApi gitHubApi) {
-        return new RetrofitRepoService(gitHubApi);
-    }
-
-    @Provides @Singleton
-    RepoService repoService(
-            @Named(SandboxModule.LOCAL_SERVICE) RepoService local,
-            @Named(SandboxModule.REMOTE_SERVICE) RepoService remote
-    ) {
-        return new CachedRepoService(local, remote);
     }
 
 }

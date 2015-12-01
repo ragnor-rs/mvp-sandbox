@@ -3,21 +3,16 @@ package io.reist.sandbox.app;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import io.reist.sandbox.repo.RepoEditComponent;
-import io.reist.sandbox.repo.ReposFragmentComponent;
-import io.reist.sandbox.user.UserFragmentComponent;
+
+import io.reist.sandbox.repos.ReposComponent;
+import io.reist.sandbox.users.UsersComponent;
 
 @Singleton
 @Component(modules = SandboxModule.class)
 public interface SandboxComponent {
 
-    //region View scope components
+    ReposComponent reposComponent();
 
-    ReposFragmentComponent reposFragmentComponent();
+    UsersComponent usersComponent();
 
-    RepoEditComponent editReposComponent();
-
-    UserFragmentComponent userFragmentComponent();
-
-    //endregion
 }
