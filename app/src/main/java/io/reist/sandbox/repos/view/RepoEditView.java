@@ -16,4 +16,6 @@ public interface RepoEditView extends BaseView {
     void showLoader(boolean show);
 
     void back();
+
+    long getRepoId();
 }
