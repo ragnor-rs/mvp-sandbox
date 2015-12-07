@@ -27,7 +27,7 @@ import io.reist.visum.view.BaseFragment;
  */
 public class UserReposFragment extends BaseFragment<UserReposPresenter> implements UserReposView {
 
-    private static final String ARG_USER = "arg_user";
+    public static final String ARG_USER = "arg_user";
 
     @Bind(R.id.recycler)
     RecyclerView mRecyclerView;
@@ -41,18 +41,12 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
     private UserReposAdapter adapter;
     private Long mUserId;
 
-    public static UserReposFragment newInstance(Long userId) {
-        UserReposFragment f = newInstance(UserReposFragment.class, R.layout.fragment_user_repos);
-
-        f.getArguments().putLong(ARG_USER, userId);
-
-        return f;
+    public UserReposFragment() {
+        super(R.layout.fragment_user_repos);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    protected void ready() {
         mUserId = getArguments().getLong(ARG_USER);
     }
 

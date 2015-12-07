@@ -39,8 +39,8 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     @Inject
     RepoEditPresenter presenter;
 
-    public static RepoEditFragment newInstance() {
-        return newInstance(RepoEditFragment.class, R.layout.fragment_edit_repo);
+    public RepoEditFragment(){
+        super(R.layout.fragment_edit_repo);
     }
 
     @Override
@@ -51,6 +51,11 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     @Override
     public RepoEditPresenter getPresenter() {
         return presenter;
+    }
+
+    @Override
+    protected void ready() {
+
     }
 
     @OnClick(R.id.save)

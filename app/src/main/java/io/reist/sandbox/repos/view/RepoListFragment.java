@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -40,14 +37,13 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
 
     private RepoListAdapter adapter;
 
-    public static RepoListFragment newInstance() {
-        return newInstance(RepoListFragment.class, R.layout.github_fragment);
+    public RepoListFragment() {
+        super(R.layout.github_fragment);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
 
+    @Override
+    protected void ready() {
         // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -57,7 +53,6 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         loaderView.setOnRetryClickListener(v -> presenter.loadData());
-        return view;
     }
 
     @OnClick(R.id.create_repo_button)
@@ -97,8 +92,11 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         loaderView.hide();
         adapter = new RepoListAdapter(data);
         adapter.setItemClickListener(repo -> {
-            RepoEditFragment fragment = RepoEditFragment.newInstance();
-            fragment.getArguments().putLong(RepoEditPresenter.EXTRA_REPO_ID, repo.id);
+            RepoEditFragment fragment = new RepoEditFragment();
+            Bundle bundle = new Bundle();
+            bundle.putLong(RepoEditPresenter.EXTRA_REPO_ID, repo.id);
+
+            fragment.setArguments(bundle);
             getFragmentController().showFragment(fragment, false);
         });
         mRecyclerView.setAdapter(adapter);
