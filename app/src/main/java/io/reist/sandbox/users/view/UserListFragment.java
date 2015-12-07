@@ -1,11 +1,9 @@
 package io.reist.sandbox.users.view;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import java.util.List;
 
@@ -24,11 +22,10 @@ import io.reist.visum.view.BaseFragment;
  * Created by m039 on 11/12/15.
  */
 public class UserListFragment extends BaseFragment<UserListPresenter>
-    implements UserListView
-{
+        implements UserListView {
 
-    public static UserListFragment newInstance() {
-        return newInstance(UserListFragment.class, R.layout.fragment_users);
+    public UserListFragment() {
+        super(R.layout.fragment_users);
     }
 
     @Inject
@@ -43,15 +40,14 @@ public class UserListFragment extends BaseFragment<UserListPresenter>
     UserListAdapter mAdapter;
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+    protected void ready() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter = new UserListAdapter());
 
-        mAdapter.setOnUserClickListener(user -> getFragmentController().showFragment(UserReposFragment.newInstance(user.id), true));
+        mAdapter.setOnUserClickListener(user ->
+                getFragmentController().showFragment(UserReposFragment.newInstance(user.id), true));
     }
 
     @NonNull
