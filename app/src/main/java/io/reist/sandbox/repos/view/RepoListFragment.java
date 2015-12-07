@@ -1,6 +1,5 @@
 package io.reist.sandbox.repos.view;
 
-import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +14,6 @@ import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.repos.ReposComponent;
-import io.reist.sandbox.repos.presenter.RepoEditPresenter;
 import io.reist.sandbox.repos.presenter.RepoListAdapter;
 import io.reist.sandbox.repos.presenter.RepoListPresenter;
 import io.reist.visum.model.Error;
@@ -92,12 +90,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         loaderView.hide();
         adapter = new RepoListAdapter(data);
         adapter.setItemClickListener(repo -> {
-            RepoEditFragment fragment = new RepoEditFragment();
-            Bundle bundle = new Bundle();
-            bundle.putLong(RepoEditPresenter.EXTRA_REPO_ID, repo.id);
-
-            fragment.setArguments(bundle);
-            getFragmentController().showFragment(fragment, false);
+            getFragmentController().showFragment(RepoEditFragment.newInstance(repo.id), false);
         });
         mRecyclerView.setAdapter(adapter);
     }

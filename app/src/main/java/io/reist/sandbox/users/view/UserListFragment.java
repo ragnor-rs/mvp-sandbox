@@ -1,6 +1,5 @@
 package io.reist.sandbox.users.view;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,15 +46,8 @@ public class UserListFragment extends BaseFragment<UserListPresenter>
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter = new UserListAdapter());
 
-        mAdapter.setOnUserClickListener(user -> {
-            Bundle bundle = new Bundle();
-            bundle.putLong(UserReposFragment.ARG_USER, user.id);
-
-            BaseFragment userReposFragment = new UserReposFragment();
-            userReposFragment.setArguments(bundle);
-
-            getFragmentController().showFragment(userReposFragment, true);
-        });
+        mAdapter.setOnUserClickListener(user ->
+                getFragmentController().showFragment(UserReposFragment.newInstance(user.id), true));
     }
 
     @NonNull

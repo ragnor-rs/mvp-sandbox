@@ -27,7 +27,7 @@ import io.reist.visum.view.BaseFragment;
  */
 public class UserReposFragment extends BaseFragment<UserReposPresenter> implements UserReposView {
 
-    public static final String ARG_USER = "arg_user";
+    private static final String ARG_USER = "arg_user";
 
     @Bind(R.id.recycler)
     RecyclerView mRecyclerView;
@@ -40,6 +40,16 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
 
     private UserReposAdapter adapter;
     private Long mUserId;
+
+    public static BaseFragment newInstance(Long userId) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(UserReposFragment.ARG_USER, userId);
+
+        BaseFragment userReposFragment = new UserReposFragment();
+        userReposFragment.setArguments(bundle);
+
+        return userReposFragment;
+    }
 
     public UserReposFragment() {
         super(R.layout.fragment_user_repos);
@@ -119,5 +129,4 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
         loaderView.hide();
         adapter.setRepos(data);
     }
-
 }

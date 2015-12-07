@@ -1,5 +1,6 @@
 package io.reist.sandbox.repos.view;
 
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,6 +22,8 @@ import io.reist.visum.view.BaseFragment;
  */
 public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements RepoEditView {
 
+    private static final String EXTRA_REPO_ID = "io.reist.sandbox.extra_repo_id";
+
     @Bind(R.id.repo_name)
     TextView repoName;
 
@@ -39,7 +42,16 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     @Inject
     RepoEditPresenter presenter;
 
-    public RepoEditFragment(){
+    public static BaseFragment newInstance(Long userId) {
+        RepoEditFragment fragment = new RepoEditFragment();
+        Bundle bundle = new Bundle();
+        bundle.putLong(EXTRA_REPO_ID, userId);
+
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public RepoEditFragment() {
         super(R.layout.fragment_edit_repo);
     }
 
@@ -93,4 +105,10 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     public void back() {
         getFragmentManager().popBackStackImmediate();
     }
+
+    @Override
+    public long getRepoId() {
+        return getArguments().getLong(EXTRA_REPO_ID);
+    }
+
 }
