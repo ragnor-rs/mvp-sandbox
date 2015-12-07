@@ -15,12 +15,19 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontnote android.net.http.**
+-dontnote org.apache.http.**
+-dontnote com.google.vending.licensing.**
+-dontnote com.android.vending.licensing.**
+-keepattributes InnerClasses
+-keepattributes Signature
+-keepattributes Exceptions
+-keepattributes *Annotation*
+-keepattributes EnclosingMethod
 
 # Retrofit
 -dontwarn retrofit.**
 -keep class retrofit.** { *; }
--keepattributes Signature
--keepattributes Exceptions
 
 # Butter Knife
 -keep class butterknife.** { *; }
@@ -33,5 +40,36 @@
     @butterknife.* <methods>;
 }
 
-# retrolambda
+# Retrolambda
 -dontwarn java.lang.invoke.*
+
+# Okio
+-keep class okio.**
+-dontwarn okio.**
+
+# RxJava
+-dontwarn sun.misc.**
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+   long producerIndex;
+   long consumerIndex;
+}
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
+}
+-keep class rx.Subscriber
+
+# OkHttp
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+-dontwarn com.squareup.okhttp.**
+
+# Android Support
+-keep class android.support.v4.**
+-keep class android.support.v7.**
+-keep class android.support.design.**
+
+# Gson
+-keep class com.google.gson.**

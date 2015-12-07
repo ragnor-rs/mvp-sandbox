@@ -39,6 +39,7 @@ import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.presenter.RepoEditPresenter;
 import io.reist.sandbox.repos.presenter.RepoListPresenter;
+import io.reist.sandbox.repos.view.RepoEditFragment;
 import io.reist.sandbox.repos.view.RepoEditView;
 import io.reist.sandbox.repos.view.RepoListView;
 import io.reist.sandbox.users.presenter.DaggerUserListPresenterTest_TestComponent;
@@ -157,11 +158,7 @@ public class ReposPresentersTest extends RobolectricTestCase {
 
         RepoEditView mockedRepoEditView = mock(RepoEditView.class);
 
-        Bundle extras = new Bundle();
-
-        extras.putLong(RepoEditPresenter.EXTRA_REPO_ID, 1L);
-
-        when(mockedRepoEditView.extras()).thenReturn(extras);
+        when(mockedRepoEditView.getRepoId()).thenReturn(1L);
 
         mRepoEditPresenter.setView(mockedRepoEditView);
 
