@@ -39,7 +39,6 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
     UserReposPresenter presenter;
 
     private UserReposAdapter adapter;
-    private Long mUserId;
 
     public static BaseFragment newInstance(Long userId) {
         Bundle bundle = new Bundle();
@@ -56,9 +55,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
     }
 
     @Override
-    protected void ready() {
-        mUserId = getArguments().getLong(ARG_USER);
-    }
+    protected void ready() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -109,7 +106,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
 
     @Override
     public Long getUserId() {
-        return mUserId;
+        return getArguments().getLong(ARG_USER);
     }
 
     @Override
