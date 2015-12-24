@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2015  Zvooq LTD.
+ * Authors: Renat Sarymsakov, Dmitriy Mozgin, Denis Volyntsev.
+ *
+ * This file is part of MVP-Sandbox.
+ *
+ * MVP-Sandbox is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MVP-Sandbox is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MVP-Sandbox.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package io.reist.sandbox.repos.view;
 
 import android.support.design.widget.Snackbar;
@@ -39,6 +59,9 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         super(R.layout.github_fragment);
     }
 
+    public static RepoListFragment newInstance() {
+        return new RepoListFragment();
+    }
 
     @Override
     protected void ready() {
@@ -68,6 +91,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         return presenter;
     }
 
+
     @Override
     public void showLoader(boolean show) {
         loaderView.showLoading(show);
@@ -89,9 +113,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     public void displayData(List<Repo> data) {
         loaderView.hide();
         adapter = new RepoListAdapter(data);
-        adapter.setItemClickListener(repo -> {
-            getFragmentController().showFragment(RepoEditFragment.newInstance(repo.id), false);
-        });
+        adapter.setItemClickListener(repo -> getFragmentController().showFragment(RepoEditFragment.newInstance(repo.id), false));
         mRecyclerView.setAdapter(adapter);
     }
 

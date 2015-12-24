@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2015  Zvooq LTD.
+ * Authors: Renat Sarymsakov, Dmitriy Mozgin, Denis Volyntsev.
+ *
+ * This file is part of MVP-Sandbox.
+ *
+ * MVP-Sandbox is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MVP-Sandbox is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MVP-Sandbox.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package io.reist.sandbox.repos.view;
 
 import android.os.Bundle;
@@ -42,17 +62,16 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     @Inject
     RepoEditPresenter presenter;
 
-    public static BaseFragment newInstance(Long userId) {
-        RepoEditFragment fragment = new RepoEditFragment();
-        Bundle bundle = new Bundle();
-        bundle.putLong(EXTRA_REPO_ID, userId);
-
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
     public RepoEditFragment() {
         super(R.layout.fragment_edit_repo);
+    }
+
+    public static BaseFragment newInstance(Long repoId) {
+        RepoEditFragment fragment = new RepoEditFragment();
+        Bundle bundle = new Bundle();
+        bundle.putLong(EXTRA_REPO_ID, repoId);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -110,5 +129,4 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     public long getRepoId() {
         return getArguments().getLong(EXTRA_REPO_ID);
     }
-
 }

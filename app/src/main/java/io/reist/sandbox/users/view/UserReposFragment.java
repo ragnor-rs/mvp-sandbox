@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2015  Zvooq LTD.
+ * Authors: Renat Sarymsakov, Dmitriy Mozgin, Denis Volyntsev.
+ *
+ * This file is part of MVP-Sandbox.
+ *
+ * MVP-Sandbox is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MVP-Sandbox is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MVP-Sandbox.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package io.reist.sandbox.users.view;
 
 import android.os.Bundle;
@@ -5,9 +25,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -40,27 +57,18 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
 
     private UserReposAdapter adapter;
 
-    public static BaseFragment newInstance(Long userId) {
-        Bundle bundle = new Bundle();
-        bundle.putLong(UserReposFragment.ARG_USER, userId);
-
-        BaseFragment userReposFragment = new UserReposFragment();
-        userReposFragment.setArguments(bundle);
-
-        return userReposFragment;
-    }
-
     public UserReposFragment() {
         super(R.layout.fragment_user_repos);
     }
 
-    @Override
-    protected void ready() {}
+    public static UserReposFragment newInstance(Long userId) {
+        UserReposFragment f = new UserReposFragment();
+        f.getArguments().putLong(ARG_USER, userId);
+        return f;
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
+    protected void ready() {
         // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -85,7 +93,6 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
         });
 
         loaderView.setOnRetryClickListener(v -> presenter.loadData());
-        return view;
     }
 
     @Override
