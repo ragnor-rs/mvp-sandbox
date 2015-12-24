@@ -1,10 +1,28 @@
+/*
+ * Copyright (c) 2015  Zvooq LTD.
+ * Authors: Renat Sarymsakov, Dmitriy Mozgin, Denis Volyntsev.
+ *
+ * This file is part of MVP-Sandbox.
+ *
+ * MVP-Sandbox is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MVP-Sandbox is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MVP-Sandbox.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package io.reist.sandbox.repos;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.ActivityInstrumentationTestCase2;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +44,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static io.reist.sandbox.core.TestUtils.waitForMs;
 import static org.hamcrest.Matchers.allOf;
 
 /**
