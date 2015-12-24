@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity
 
         fragmentManager.addOnBackStackChangedListener(this);
 
-        showFragment(RepoListFragment.newInstance(), false);
+        showFragment(new RepoListFragment(), false);
 
     }
 
@@ -112,10 +112,10 @@ public class MainActivity extends BaseActivity
 
         switch (item.getItemId()) {
             case R.id.nav_repos:
-                showFragment(RepoListFragment.newInstance(), true, true);
+                showFragment(new RepoListFragment(), true, true);
                 break;
             case R.id.nav_users:
-                showFragment(UserListFragment.newInstance(), true, true);
+                showFragment(new UserListFragment(), true, true);
                 break;
         }
 

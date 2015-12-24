@@ -56,7 +56,6 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
     UserReposPresenter presenter;
 
     private UserReposAdapter adapter;
-    private Long mUserId;
 
     public UserReposFragment() {
         super(R.layout.fragment_user_repos);
@@ -66,12 +65,6 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
         UserReposFragment f = new UserReposFragment();
         f.getArguments().putLong(ARG_USER, userId);
         return f;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mUserId = getArguments().getLong(ARG_USER);
     }
 
     @Override
@@ -120,7 +113,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
 
     @Override
     public Long getUserId() {
-        return mUserId;
+        return getArguments().getLong(ARG_USER);
     }
 
     @Override
@@ -140,5 +133,4 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
         loaderView.hide();
         adapter.setRepos(data);
     }
-
 }

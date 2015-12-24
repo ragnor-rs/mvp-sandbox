@@ -41,7 +41,6 @@ import rx.Subscriber;
 @Singleton
 public class RepoEditPresenter extends BasePresenter<RepoEditView> {
 
-
     private RepoService repoService;
     private boolean mIsDataLoaded;
     private Repo repo;

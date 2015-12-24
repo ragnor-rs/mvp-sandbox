@@ -66,7 +66,7 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
         super(R.layout.fragment_edit_repo);
     }
 
-    public static RepoEditFragment newInstance(Long repoId) {
+    public static BaseFragment newInstance(Long repoId) {
         RepoEditFragment fragment = new RepoEditFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(EXTRA_REPO_ID, repoId);
