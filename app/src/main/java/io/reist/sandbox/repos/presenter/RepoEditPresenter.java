@@ -21,7 +21,6 @@ import rx.Subscriber;
 @Singleton
 public class RepoEditPresenter extends BasePresenter<RepoEditView> {
 
-    public static final String EXTRA_REPO_ID = "io.reist.sandbox.extra_repo_id";
 
     private RepoService repoService;
     private boolean mIsDataLoaded;
@@ -36,7 +35,7 @@ public class RepoEditPresenter extends BasePresenter<RepoEditView> {
     protected void onViewAttached() {
         mIsDataLoaded = false;
 
-        long repoId = view().extras().getLong(EXTRA_REPO_ID);
+        long repoId = view().getRepoId();
         view().showLoader(true);
         subscribe(repoService.byId(repoId), new ResponseObserver<Repo>() {
 

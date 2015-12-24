@@ -5,9 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -41,25 +38,24 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
     private UserReposAdapter adapter;
     private Long mUserId;
 
+    public UserReposFragment() {
+        super(R.layout.fragment_user_repos);
+    }
+
     public static UserReposFragment newInstance(Long userId) {
-        UserReposFragment f = newInstance(UserReposFragment.class, R.layout.fragment_user_repos);
-
+        UserReposFragment f = new UserReposFragment();
         f.getArguments().putLong(ARG_USER, userId);
-
         return f;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mUserId = getArguments().getLong(ARG_USER);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
+    protected void ready() {
         // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -84,7 +80,6 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
         });
 
         loaderView.setOnRetryClickListener(v -> presenter.loadData());
-        return view;
     }
 
     @Override

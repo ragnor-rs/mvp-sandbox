@@ -1,12 +1,8 @@
 package io.reist.sandbox.repos.view;
 
-import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -18,7 +14,6 @@ import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.repos.ReposComponent;
-import io.reist.sandbox.repos.presenter.RepoEditPresenter;
 import io.reist.sandbox.repos.presenter.RepoListAdapter;
 import io.reist.sandbox.repos.presenter.RepoListPresenter;
 import io.reist.visum.model.Error;
@@ -40,14 +35,16 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
 
     private RepoListAdapter adapter;
 
+    public RepoListFragment() {
+        super(R.layout.github_fragment);
+    }
+
     public static RepoListFragment newInstance() {
-        return newInstance(RepoListFragment.class, R.layout.github_fragment);
+        return new RepoListFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
+    protected void ready() {
         // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -57,7 +54,6 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         loaderView.setOnRetryClickListener(v -> presenter.loadData());
-        return view;
     }
 
     @OnClick(R.id.create_repo_button)
@@ -74,6 +70,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     public RepoListPresenter getPresenter() {
         return presenter;
     }
+
 
     @Override
     public void showLoader(boolean show) {
@@ -96,11 +93,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     public void displayData(List<Repo> data) {
         loaderView.hide();
         adapter = new RepoListAdapter(data);
-        adapter.setItemClickListener(repo -> {
-            RepoEditFragment fragment = RepoEditFragment.newInstance();
-            fragment.getArguments().putLong(RepoEditPresenter.EXTRA_REPO_ID, repo.id);
-            getFragmentController().showFragment(fragment, false);
-        });
+        adapter.setItemClickListener(repo -> getFragmentController().showFragment(RepoEditFragment.newInstance(repo.id), false));
         mRecyclerView.setAdapter(adapter);
     }
 
