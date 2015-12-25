@@ -63,7 +63,9 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
 
     public static UserReposFragment newInstance(Long userId) {
         UserReposFragment f = new UserReposFragment();
-        f.getArguments().putLong(ARG_USER, userId);
+        Bundle bundle = new Bundle();
+        bundle.putLong(ARG_USER, userId);
+        f.setArguments(bundle);
         return f;
     }
 
