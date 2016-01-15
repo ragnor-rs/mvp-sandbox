@@ -35,12 +35,12 @@ import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.repos.ReposComponent;
 import io.reist.sandbox.repos.presenter.RepoEditPresenter;
 import io.reist.visum.model.Error;
-import io.reist.visum.view.BaseFragment;
+import io.reist.visum.view.VisumFragment;
 
 /**
  * Created by defuera on 10/11/2015.
  */
-public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements RepoEditView {
+public class RepoEditFragment extends VisumFragment<RepoEditPresenter> implements RepoEditView {
 
     private static final String EXTRA_REPO_ID = "io.reist.sandbox.extra_repo_id";
 
@@ -66,7 +66,7 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
         super(R.layout.fragment_edit_repo);
     }
 
-    public static BaseFragment newInstance(Long repoId) {
+    public static VisumFragment newInstance(Long repoId) {
         RepoEditFragment fragment = new RepoEditFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(EXTRA_REPO_ID, repoId);

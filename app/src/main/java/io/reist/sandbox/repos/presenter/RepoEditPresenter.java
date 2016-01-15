@@ -32,14 +32,14 @@ import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.view.RepoEditView;
 import io.reist.visum.model.Error;
 import io.reist.visum.model.Response;
-import io.reist.visum.presenter.BasePresenter;
+import io.reist.visum.presenter.VisumPresenter;
 import rx.Subscriber;
 
 /**
  * Created by defuera on 10/11/2015.
  */
 @Singleton
-public class RepoEditPresenter extends BasePresenter<RepoEditView> {
+public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
 
     private RepoService repoService;
     private boolean mIsDataLoaded;

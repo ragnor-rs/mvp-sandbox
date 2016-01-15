@@ -35,10 +35,10 @@ import io.reist.sandbox.app.model.ResponseObserver;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.view.RepoListView;
 import io.reist.visum.model.Error;
-import io.reist.visum.presenter.BasePresenter;
+import io.reist.visum.presenter.VisumPresenter;
 
 @Singleton
-public class RepoListPresenter extends BasePresenter<RepoListView> {
+public class RepoListPresenter extends VisumPresenter<RepoListView> {
 
     private static final String TAG = RepoListPresenter.class.getName();
 

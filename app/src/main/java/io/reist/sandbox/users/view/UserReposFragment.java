@@ -37,12 +37,12 @@ import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.users.UsersComponent;
 import io.reist.sandbox.users.presenter.UserReposPresenter;
 import io.reist.visum.model.Error;
-import io.reist.visum.view.BaseFragment;
+import io.reist.visum.view.VisumFragment;
 
 /**
  * Created by Reist on 10/13/15.
  */
-public class UserReposFragment extends BaseFragment<UserReposPresenter> implements UserReposView {
+public class UserReposFragment extends VisumFragment<UserReposPresenter> implements UserReposView {
 
     private static final String ARG_USER = "arg_user";
 

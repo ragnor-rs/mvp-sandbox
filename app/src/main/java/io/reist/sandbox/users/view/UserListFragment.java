@@ -36,12 +36,12 @@ import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.users.UsersComponent;
 import io.reist.sandbox.users.presenter.UserListAdapter;
 import io.reist.sandbox.users.presenter.UserListPresenter;
-import io.reist.visum.view.BaseFragment;
+import io.reist.visum.view.VisumFragment;
 
 /**
  * Created by m039 on 11/12/15.
  */
-public class UserListFragment extends BaseFragment<UserListPresenter>
+public class UserListFragment extends VisumFragment<UserListPresenter>
         implements UserListView {
 
     @Inject

@@ -24,12 +24,12 @@ import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
 import io.reist.visum.model.Error;
-import io.reist.visum.view.BaseView;
+import io.reist.visum.view.VisumView;
 
 /**
  * Created by defuera on 05/11/2015.
  */
-public interface RepoListView extends BaseView {
+public interface RepoListView extends VisumView {
     void showLoader(boolean show);
 
     void displayError(Error error);
