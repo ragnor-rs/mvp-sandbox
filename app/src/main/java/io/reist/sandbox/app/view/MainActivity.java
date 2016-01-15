@@ -34,9 +34,9 @@ import android.view.MenuItem;
 import io.reist.sandbox.R;
 import io.reist.sandbox.repos.view.RepoListFragment;
 import io.reist.sandbox.users.view.UserListFragment;
-import io.reist.visum.view.BaseActivity;
+import io.reist.visum.view.VisumActivity;
 
-public class MainActivity extends BaseActivity
+public class MainActivity extends VisumActivity
         implements NavigationView.OnNavigationItemSelectedListener, android.app.FragmentManager.OnBackStackChangedListener {
 
     private DrawerLayout drawerLayout;

@@ -48,14 +48,14 @@ import io.reist.sandbox.app.model.local.resolvers.RepoPutResolver;
 import io.reist.sandbox.app.model.remote.GitHubApi;
 import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.users.UsersModule;
-import io.reist.visum.BaseModule;
+import io.reist.visum.VisumModule;
 import io.reist.visum.model.remote.NestedFieldNameAdapter;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 
 @Module(includes = {
-        BaseModule.class,
+        VisumModule.class,
         UsersModule.class,
         ReposModule.class
 })

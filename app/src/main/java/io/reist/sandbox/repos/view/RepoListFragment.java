@@ -37,12 +37,12 @@ import io.reist.sandbox.repos.ReposComponent;
 import io.reist.sandbox.repos.presenter.RepoListAdapter;
 import io.reist.sandbox.repos.presenter.RepoListPresenter;
 import io.reist.visum.model.Error;
-import io.reist.visum.view.BaseFragment;
+import io.reist.visum.view.VisumFragment;
 
 /**
  * Created by Reist on 10/13/15.
  */
-public class RepoListFragment extends BaseFragment<RepoListPresenter> implements RepoListView {
+public class RepoListFragment extends VisumFragment<RepoListPresenter> implements RepoListView {
 
     @Bind(R.id.daggertest_repo_recycler_view)
     RecyclerView mRecyclerView;

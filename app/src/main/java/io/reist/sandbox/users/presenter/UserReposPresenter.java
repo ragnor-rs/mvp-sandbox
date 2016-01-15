@@ -33,11 +33,11 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.users.view.UserReposView;
 import io.reist.visum.model.Response;
-import io.reist.visum.presenter.BasePresenter;
+import io.reist.visum.presenter.VisumPresenter;
 import rx.Observer;
 
 @Singleton
-public class UserReposPresenter extends BasePresenter<UserReposView> {
+public class UserReposPresenter extends VisumPresenter<UserReposView> {
 
     private static final String TAG = UserReposPresenter.class.getName();
 
@@ -84,7 +84,7 @@ public class UserReposPresenter extends BasePresenter<UserReposView> {
 
         @Override
         public void onError(Throwable e) {
-            Toast.makeText(getContext(), like? R.string.error_to_like : R.string.error_to_unlike, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), like ? R.string.error_to_like : R.string.error_to_unlike, Toast.LENGTH_SHORT).show();
         }
     }
 
