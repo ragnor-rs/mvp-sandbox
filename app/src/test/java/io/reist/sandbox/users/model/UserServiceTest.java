@@ -6,7 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
@@ -24,17 +23,12 @@ import io.reist.sandbox.app.SandboxApplication;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-
-import io.reist.sandbox.app.model.remote.GitHubResponse;
 import io.reist.sandbox.core.RobolectricTestCase;
 import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.users.UsersModule;
-import io.reist.sandbox.users.model.CachedUserService;
-import io.reist.sandbox.users.model.DaggerUserServiceTest_TestComponent;
-import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.model.local.StorIoUserService;
 import io.reist.sandbox.users.model.remote.RetrofitUserService;
-import io.reist.visum.BaseModule;
+import io.reist.visum.VisumModule;
 import io.reist.visum.model.BaseResponse;
 import io.reist.visum.model.Response;
 import rx.Observable;
@@ -67,7 +61,7 @@ public class UserServiceTest extends RobolectricTestCase {
 
         testComponent = DaggerUserServiceTest_TestComponent
                 .builder()
-                .baseModule(new BaseModule(sandboxApplication))
+                .visumModule(new VisumModule(sandboxApplication))
                 .usersModule(new TestUsersModule())
                 .build();
 

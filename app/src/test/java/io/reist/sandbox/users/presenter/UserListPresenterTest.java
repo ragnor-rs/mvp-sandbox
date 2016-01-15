@@ -1,19 +1,11 @@
 package io.reist.sandbox.users.presenter;
 
-import android.app.Instrumentation;
-import android.content.Intent;
-import android.test.ActivityUnitTestCase;
-
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 
-import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
@@ -25,10 +17,6 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import io.reist.sandbox.BuildConfig;
-import io.reist.sandbox.app.DaggerSandboxComponent;
-import io.reist.sandbox.app.SandboxApplication;
-import io.reist.sandbox.app.SandboxComponent;
-import io.reist.sandbox.app.SandboxComponentCache;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
@@ -36,10 +24,8 @@ import io.reist.sandbox.core.RobolectricTestCase;
 import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.UserService;
-import io.reist.sandbox.users.presenter.UserListPresenter;
-import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.sandbox.users.view.UserListView;
-import io.reist.visum.BaseModule;
+import io.reist.visum.VisumModule;
 import io.reist.visum.model.BaseResponse;
 import rx.Observable;
 
@@ -64,7 +50,7 @@ public class UserListPresenterTest extends RobolectricTestCase {
         DaggerUserListPresenterTest_TestComponent
                 .builder()
                 .usersModule(new TestUsersModule())
-                .baseModule(new BaseModule(RuntimeEnvironment.application))
+                .visumModule(new VisumModule(RuntimeEnvironment.application))
                 .build()
                 .inject(this);
     }

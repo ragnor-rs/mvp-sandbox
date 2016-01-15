@@ -20,11 +20,10 @@ import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.GitHubApi;
-
 import io.reist.sandbox.core.RobolectricTestCase;
 import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.repos.ReposModule;
-import io.reist.visum.BaseModule;
+import io.reist.visum.VisumModule;
 import io.reist.visum.model.Response;
 import rx.Observable;
 import rx.observers.TestSubscriber;
@@ -56,7 +55,7 @@ public class RepoServiceTest extends RobolectricTestCase {
         TestComponent modelComponent = DaggerRepoServiceTest_TestComponent
                 .builder()
                 .reposModule(new TestReposModule())
-                .baseModule(new BaseModule(RuntimeEnvironment.application))
+                .visumModule(new VisumModule(RuntimeEnvironment.application))
                 .build();
 
         modelComponent.inject(this);

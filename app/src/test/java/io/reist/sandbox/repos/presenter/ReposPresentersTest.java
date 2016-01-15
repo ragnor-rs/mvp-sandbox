@@ -1,19 +1,11 @@
 package io.reist.sandbox.repos.presenter;
 
-import android.app.Instrumentation;
-import android.os.Bundle;
-
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,34 +16,18 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import io.reist.sandbox.BuildConfig;
-import io.reist.sandbox.R;
-import io.reist.sandbox.app.DaggerSandboxComponent;
-import io.reist.sandbox.app.SandboxApplication;
-import io.reist.sandbox.app.SandboxComponent;
-import io.reist.sandbox.app.SandboxComponentCache;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.User;
-import io.reist.sandbox.app.view.MainActivity;
 import io.reist.sandbox.core.RobolectricTestCase;
 import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.repos.model.RepoService;
-import io.reist.sandbox.repos.presenter.RepoEditPresenter;
-import io.reist.sandbox.repos.presenter.RepoListPresenter;
-import io.reist.sandbox.repos.view.RepoEditFragment;
 import io.reist.sandbox.repos.view.RepoEditView;
 import io.reist.sandbox.repos.view.RepoListView;
-import io.reist.sandbox.users.presenter.DaggerUserListPresenterTest_TestComponent;
-import io.reist.sandbox.users.presenter.UserListPresenter;
-import io.reist.sandbox.users.view.UserListView;
-import io.reist.visum.BaseModule;
+import io.reist.visum.VisumModule;
 import io.reist.visum.model.BaseResponse;
-import io.reist.visum.model.Response;
-import io.reist.visum.presenter.BasePresenter;
-import io.reist.visum.view.BaseFragment;
 import rx.Observable;
-
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -80,7 +56,7 @@ public class ReposPresentersTest extends RobolectricTestCase {
         DaggerReposPresentersTest_TestComponent
                 .builder()
                 .reposModule(new TestReposModule())
-                .baseModule(new BaseModule(RuntimeEnvironment.application))
+                .visumModule(new VisumModule(RuntimeEnvironment.application))
                 .build()
                 .inject(this);
     }
