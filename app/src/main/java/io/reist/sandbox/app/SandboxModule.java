@@ -45,17 +45,15 @@ import io.reist.sandbox.app.model.UserStorIOSQLiteGetResolver;
 import io.reist.sandbox.app.model.UserStorIOSQLitePutResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoGetResolver;
 import io.reist.sandbox.app.model.local.resolvers.RepoPutResolver;
-import io.reist.sandbox.app.model.remote.GitHubApi;
+import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.users.UsersModule;
-import io.reist.visum.VisumModule;
 import io.reist.visum.model.remote.NestedFieldNameAdapter;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 
 @Module(includes = {
-        VisumModule.class,
         UsersModule.class,
         ReposModule.class
 })
@@ -68,8 +66,14 @@ public class SandboxModule {
 
     private static final String TAG = SandboxModule.class.getName();
 
+    private final Context context;
+
+    public SandboxModule(Context context) {
+        this.context = context;
+    }
+
     @Provides @Singleton
-    StorIOSQLite storIoSqLite(Context context) {
+    StorIOSQLite storIoSqLite() {
 
         DbOpenHelper dbOpenHelper = new DbOpenHelper(context);
 
@@ -97,7 +101,7 @@ public class SandboxModule {
     }
 
     @Provides @Singleton
-    GitHubApi gitHubApi() {
+    SandboxApi gitHubApi() {
 
         Gson gson = new GsonBuilder()
                 .registerTypeHierarchyAdapter(Object.class, new NestedFieldNameAdapter())
@@ -128,7 +132,8 @@ public class SandboxModule {
                 .client(httpClient)
                 .build();
 
-        return retrofit.create(GitHubApi.class);
+        return retrofit.create(SandboxApi.class);
+
     }
 
 }

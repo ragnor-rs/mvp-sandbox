@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.view.UserListView;
-import io.reist.visum.model.Response;
+import io.reist.visum.model.VisumResponse;
 import io.reist.visum.presenter.VisumPresenter;
 import rx.Observer;
 
@@ -65,10 +65,10 @@ public class UserListPresenter extends VisumPresenter<UserListView> {
         return mIsDataLoaded;
     }
 
-    private class UsersObserver implements Observer<Response<List<User>>> {
+    private class UsersObserver implements Observer<VisumResponse<List<User>>> {
 
         @Override
-        public void onNext(Response<List<User>> response) {
+        public void onNext(VisumResponse<List<User>> response) {
             UserListView view = view();
             if (response.isSuccessful()) {
                 view.displayData(response.getResult());
@@ -81,9 +81,7 @@ public class UserListPresenter extends VisumPresenter<UserListView> {
         }
 
         @Override
-        public void onCompleted() {
-
-        }
+        public void onCompleted() {}
 
         @Override
         public void onError(Throwable e) {

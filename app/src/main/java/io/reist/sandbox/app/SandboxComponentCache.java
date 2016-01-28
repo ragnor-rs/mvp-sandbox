@@ -27,7 +27,6 @@ import io.reist.sandbox.repos.view.RepoListFragment;
 import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.sandbox.users.view.UserReposFragment;
 import io.reist.visum.ComponentCache;
-import io.reist.visum.VisumModule;
 import io.reist.visum.view.VisumView;
 
 /**
@@ -38,7 +37,7 @@ public class SandboxComponentCache extends ComponentCache {
     private final SandboxComponent sandboxComponent;
 
     public SandboxComponentCache(Context context) {
-        this(DaggerSandboxComponent.builder().visumModule(new VisumModule(context)).build());
+        this(DaggerSandboxComponent.builder().sandboxModule(new SandboxModule(context)).build());
     }
 
     public SandboxComponentCache(SandboxComponent sandboxComponent) {
@@ -49,13 +48,13 @@ public class SandboxComponentCache extends ComponentCache {
     public Object buildComponentFor(Class<? extends VisumView> viewClass) {
         if (
                 RepoListFragment.class.isAssignableFrom(viewClass) ||
-                        RepoEditFragment.class.isAssignableFrom(viewClass)
-                ) {
+                RepoEditFragment.class.isAssignableFrom(viewClass)
+        ) {
             return sandboxComponent.reposComponent();
         } else if (
                 UserListFragment.class.isAssignableFrom(viewClass) ||
-                        UserReposFragment.class.isAssignableFrom(viewClass)
-                ) {
+                UserReposFragment.class.isAssignableFrom(viewClass)
+        ) {
             return sandboxComponent.usersComponent();
         } else {
             throw new RuntimeException("Unknown view class: " + viewClass.getName());

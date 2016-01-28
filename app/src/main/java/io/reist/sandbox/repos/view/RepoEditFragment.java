@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -34,7 +35,7 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.repos.ReposComponent;
 import io.reist.sandbox.repos.presenter.RepoEditPresenter;
-import io.reist.visum.model.Error;
+import io.reist.visum.model.VisumError;
 import io.reist.visum.view.VisumFragment;
 
 /**
@@ -75,7 +76,7 @@ public class RepoEditFragment extends VisumFragment<RepoEditPresenter> implement
     }
 
     @Override
-    protected void inject(Object from) {
+    public void inject(Object from) {
         ((ReposComponent) from).inject(this);
     }
 
@@ -85,9 +86,7 @@ public class RepoEditFragment extends VisumFragment<RepoEditPresenter> implement
     }
 
     @Override
-    protected void ready() {
-
-    }
+    public void ready() {}
 
     @OnClick(R.id.save)
     void onSaveButtonClick() {
@@ -103,7 +102,7 @@ public class RepoEditFragment extends VisumFragment<RepoEditPresenter> implement
     }
 
     @Override
-    public void displayError(Error error) {
+    public void displayError(VisumError error) {
         loaderView.showNetworkError();
     }
 
@@ -115,7 +114,7 @@ public class RepoEditFragment extends VisumFragment<RepoEditPresenter> implement
     }
 
     @Override
-    public void showLoader(boolean show) {
+    public void displayLoader(boolean show) {
         repoContainer.setVisibility(show ? View.GONE : View.VISIBLE);
         loaderView.showLoading(show);
     }
@@ -129,4 +128,10 @@ public class RepoEditFragment extends VisumFragment<RepoEditPresenter> implement
     public long getRepoId() {
         return getArguments().getLong(EXTRA_REPO_ID);
     }
+
+    @Override
+    public void displayEditSuccess() {
+        Toast.makeText(getActivity(), R.string.repo_saved, Toast.LENGTH_SHORT).show();
+    }
+
 }

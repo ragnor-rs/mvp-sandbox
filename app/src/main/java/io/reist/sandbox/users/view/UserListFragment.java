@@ -36,6 +36,7 @@ import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.users.UsersComponent;
 import io.reist.sandbox.users.presenter.UserListAdapter;
 import io.reist.sandbox.users.presenter.UserListPresenter;
+import io.reist.visum.model.VisumError;
 import io.reist.visum.view.VisumFragment;
 
 /**
@@ -64,7 +65,7 @@ public class UserListFragment extends VisumFragment<UserListPresenter>
     }
 
     @Override
-    protected void ready() {
+    public void ready() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         mRecyclerView.setLayoutManager(layoutManager);
@@ -81,7 +82,7 @@ public class UserListFragment extends VisumFragment<UserListPresenter>
     }
 
     @Override
-    protected void inject(Object from) {
+    public void inject(Object from) {
         ((UsersComponent) from).inject(this);
     }
 
@@ -92,7 +93,7 @@ public class UserListFragment extends VisumFragment<UserListPresenter>
     }
 
     @Override
-    public void displayError(io.reist.visum.model.Error error) {
+    public void displayError(VisumError error) {
         if (mAdapter == null || mAdapter.getItemCount() == 0) {
             mLoaderView.showNetworkError();
         } else {

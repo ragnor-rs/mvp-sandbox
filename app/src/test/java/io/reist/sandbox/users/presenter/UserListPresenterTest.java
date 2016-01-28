@@ -19,13 +19,12 @@ import dagger.Component;
 import io.reist.sandbox.BuildConfig;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.User;
-import io.reist.sandbox.app.model.remote.GitHubApi;
+import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.core.RobolectricTestCase;
 import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.view.UserListView;
-import io.reist.visum.VisumModule;
 import io.reist.visum.model.BaseResponse;
 import rx.Observable;
 
@@ -50,7 +49,7 @@ public class UserListPresenterTest extends RobolectricTestCase {
         DaggerUserListPresenterTest_TestComponent
                 .builder()
                 .usersModule(new TestUsersModule())
-                .visumModule(new VisumModule(RuntimeEnvironment.application))
+                .sandboxModule(new SandboxModule(RuntimeEnvironment.application))
                 .build()
                 .inject(this);
     }
@@ -64,15 +63,13 @@ public class UserListPresenterTest extends RobolectricTestCase {
     @Singleton
     @Component(modules = SandboxModule.class)
     public interface TestComponent {
-
         void inject(UserListPresenterTest userListPresenterTest);
-
     }
 
     public static class TestUsersModule extends UsersModule {
 
         @Override
-        protected UserService userService(GitHubApi gitHubApi, StorIOSQLite storIOSQLite) {
+        protected UserService userService(SandboxApi sandboxApi, StorIOSQLite storIOSQLite) {
             UserService mockedUserService = mock(UserService.class);
 
             List<User> users = new ArrayList<>();

@@ -21,7 +21,6 @@
 package io.reist.sandbox.repos.presenter;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.List;
 import java.util.Random;
@@ -29,12 +28,10 @@ import java.util.Random;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.ResponseObserver;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.view.RepoListView;
-import io.reist.visum.model.Error;
+import io.reist.visum.model.VisumError;
 import io.reist.visum.presenter.VisumPresenter;
 
 @Singleton
@@ -65,7 +62,7 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
         subscribe(repoService.list(), new ResponseObserver<List<Repo>>() {
 
             @Override
-            protected void onFail(Error error) {
+            protected void onFail(VisumError error) {
                 view().showLoader(false);
                 view().displayError(error);
             }
@@ -92,17 +89,18 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
     }
 
     private class AddRepoSubscriber extends ResponseObserver<Repo> {
+
         @Override
-        protected void onFail(Error error) {
+        protected void onFail(VisumError error) {
             Log.e(TAG, "Error saving data" + error.getMessage());
-            Toast.makeText(getContext(), R.string.github_repo_saving_list_error, Toast.LENGTH_LONG).show();
+            view().displayError(error);
             view().showLoader(false);
         }
 
         @Override
         protected void onSuccess(Repo result) {
             Log.i(TAG, "success add repo subscriber");
-            Toast.makeText(getContext(), R.string.repo_saved, Toast.LENGTH_LONG).show();
+            view().displaySuccess();
             view().showLoader(false);
         }
 

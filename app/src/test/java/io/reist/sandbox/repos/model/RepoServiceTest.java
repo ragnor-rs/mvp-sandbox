@@ -19,12 +19,11 @@ import io.reist.sandbox.app.SandboxComponent;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.User;
-import io.reist.sandbox.app.model.remote.GitHubApi;
+import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.core.RobolectricTestCase;
 import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.repos.ReposModule;
-import io.reist.visum.VisumModule;
-import io.reist.visum.model.Response;
+import io.reist.visum.model.VisumResponse;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
@@ -55,7 +54,7 @@ public class RepoServiceTest extends RobolectricTestCase {
         TestComponent modelComponent = DaggerRepoServiceTest_TestComponent
                 .builder()
                 .reposModule(new TestReposModule())
-                .visumModule(new VisumModule(RuntimeEnvironment.application))
+                .sandboxModule(new SandboxModule(RuntimeEnvironment.application))
                 .build();
 
         modelComponent.inject(this);
@@ -76,7 +75,7 @@ public class RepoServiceTest extends RobolectricTestCase {
     private static class TestReposModule extends ReposModule {
 
         @Override
-        protected RepoService remoteRepoService(GitHubApi gitHubApi) {
+        protected RepoService remoteRepoService(SandboxApi sandboxApi) {
             RepoService mockedRepoService = mock(RepoService.class);
 
             when(mockedRepoService.like(any()))
@@ -100,9 +99,7 @@ public class RepoServiceTest extends RobolectricTestCase {
     }
 
     private void testOfflineLike(boolean like) {
-        TestSubscriber<Response<Repo>> subscriber;
-
-        subscriber = new TestSubscriber<>();
+        TestSubscriber<VisumResponse<Repo>> subscriber = new TestSubscriber<>();
 
         if (like) {
             repoService.like(newRepo()).subscribe(subscriber);
@@ -142,4 +139,5 @@ public class RepoServiceTest extends RobolectricTestCase {
 
         return repo;
     }
+
 }

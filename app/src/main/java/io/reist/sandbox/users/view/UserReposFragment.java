@@ -36,7 +36,7 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.users.UsersComponent;
 import io.reist.sandbox.users.presenter.UserReposPresenter;
-import io.reist.visum.model.Error;
+import io.reist.visum.model.VisumError;
 import io.reist.visum.view.VisumFragment;
 
 /**
@@ -70,7 +70,7 @@ public class UserReposFragment extends VisumFragment<UserReposPresenter> impleme
     }
 
     @Override
-    protected void ready() {
+    public void ready() {
         // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -98,7 +98,7 @@ public class UserReposFragment extends VisumFragment<UserReposPresenter> impleme
     }
 
     @Override
-    protected void inject(Object from) {
+    public void inject(Object from) {
         ((UsersComponent) from).inject(this);
     }
 
@@ -119,7 +119,7 @@ public class UserReposFragment extends VisumFragment<UserReposPresenter> impleme
     }
 
     @Override
-    public void displayError(Error error) {
+    public void displayError(VisumError error) {
         if (adapter == null || adapter.getItemCount() == 0) {
             loaderView.showNetworkError();
         } else {
@@ -135,4 +135,5 @@ public class UserReposFragment extends VisumFragment<UserReposPresenter> impleme
         loaderView.hide();
         adapter.setRepos(data);
     }
+
 }

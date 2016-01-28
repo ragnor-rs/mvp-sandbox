@@ -18,44 +18,36 @@
  * along with MVP-Sandbox.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.reist.sandbox.app.model.remote;
+package io.reist.sandbox.repos.presenter;
 
-import android.support.annotation.Nullable;
-
-import com.google.gson.annotations.SerializedName;
-
-import io.reist.visum.model.Error;
-import io.reist.visum.model.Response;
+import io.reist.visum.model.BaseError;
+import io.reist.visum.model.VisumError;
+import io.reist.visum.model.VisumResponse;
+import rx.Observer;
 
 /**
- * Created by m039 on 11/26/15.
+ * Created by defuera on 12/11/2015.
  */
-public class GitHubResponse<T> implements Response<T> {
+public abstract class ResponseObserver<T> implements Observer<VisumResponse<T>> {
 
-    @SerializedName("result")
-    private T result;
-
-    @SerializedName("error")
-    private GitHubError error;
-
-    public GitHubResponse(T result) {
-        this.result = result;
+    @Override
+    public void onNext(VisumResponse<T> response) {
+        if (response.isSuccessful())
+            onSuccess(response.getResult());
+        else
+            onFail(response.getError());
     }
 
-    @Nullable
-    @Override
-    public T getResult() {
-        return result;
-    }
+    protected abstract void onFail(VisumError error);
 
-    @Nullable
+    protected abstract void onSuccess(T result);
+
     @Override
-    public Error getError() {
-        return error;
+    public void onError(Throwable e) {
+        onFail(new BaseError(e));
     }
 
     @Override
-    public boolean isSuccessful() {
-        return error == null;
-    }
+    public void onCompleted() {}
+
 }

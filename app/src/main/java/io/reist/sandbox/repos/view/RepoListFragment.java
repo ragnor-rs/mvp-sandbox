@@ -23,6 +23,7 @@ package io.reist.sandbox.repos.view;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.repos.ReposComponent;
 import io.reist.sandbox.repos.presenter.RepoListAdapter;
 import io.reist.sandbox.repos.presenter.RepoListPresenter;
-import io.reist.visum.model.Error;
+import io.reist.visum.model.VisumError;
 import io.reist.visum.view.VisumFragment;
 
 /**
@@ -64,7 +65,7 @@ public class RepoListFragment extends VisumFragment<RepoListPresenter> implement
     }
 
     @Override
-    protected void ready() {
+    public void ready() {
         // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -82,7 +83,7 @@ public class RepoListFragment extends VisumFragment<RepoListPresenter> implement
     }
 
     @Override
-    protected void inject(Object from) {
+    public void inject(Object from) {
         ((ReposComponent) from).inject(this);
     }
 
@@ -98,7 +99,7 @@ public class RepoListFragment extends VisumFragment<RepoListPresenter> implement
     }
 
     @Override
-    public void displayError(Error error) {
+    public void displayError(VisumError error) {
         if (adapter == null || adapter.getItemCount() == 0) {
             loaderView.showNetworkError();
         } else {
@@ -115,6 +116,11 @@ public class RepoListFragment extends VisumFragment<RepoListPresenter> implement
         adapter = new RepoListAdapter(data);
         adapter.setItemClickListener(repo -> getFragmentController().showFragment(RepoEditFragment.newInstance(repo.id), false));
         mRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void displaySuccess() {
+        Toast.makeText(getActivity(), R.string.repo_saved, Toast.LENGTH_LONG).show();
     }
 
 }

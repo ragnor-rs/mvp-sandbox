@@ -25,7 +25,6 @@ import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.view.RepoEditView;
 import io.reist.sandbox.repos.view.RepoListView;
-import io.reist.visum.VisumModule;
 import io.reist.visum.model.BaseResponse;
 import rx.Observable;
 
@@ -56,7 +55,7 @@ public class ReposPresentersTest extends RobolectricTestCase {
         DaggerReposPresentersTest_TestComponent
                 .builder()
                 .reposModule(new TestReposModule())
-                .visumModule(new VisumModule(RuntimeEnvironment.application))
+                .sandboxModule(new SandboxModule(RuntimeEnvironment.application))
                 .build()
                 .inject(this);
     }
@@ -142,4 +141,5 @@ public class ReposPresentersTest extends RobolectricTestCase {
 
         assertThat(mRepoEditPresenter.isDataLoaded()).isTrue();
     }
+
 }

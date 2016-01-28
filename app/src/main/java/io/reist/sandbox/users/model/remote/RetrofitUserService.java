@@ -23,9 +23,9 @@ package io.reist.sandbox.users.model.remote;
 import java.util.List;
 
 import io.reist.sandbox.app.model.User;
-import io.reist.sandbox.app.model.remote.GitHubApi;
+import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.users.model.UserService;
-import io.reist.visum.model.Response;
+import io.reist.visum.model.VisumResponse;
 import io.reist.visum.model.remote.RetrofitService;
 import rx.Observable;
 
@@ -34,34 +34,34 @@ import rx.Observable;
  */
 public class RetrofitUserService extends RetrofitService<User> implements UserService {
 
-    protected final GitHubApi gitHubApi;
+    protected final SandboxApi sandboxApi;
 
-    public RetrofitUserService(GitHubApi gitHubApi) {
-        this.gitHubApi = gitHubApi;
+    public RetrofitUserService(SandboxApi sandboxApi) {
+        this.sandboxApi = sandboxApi;
     }
 
     @Override
-    public Observable<? extends Response<List<User>>> list() {
-        return gitHubApi.listUsers();
+    public Observable<? extends VisumResponse<List<User>>> list() {
+        return sandboxApi.listUsers();
     }
 
     @Override
-    public Response<User> saveSync(User user) {
+    public VisumResponse<User> saveSync(User user) {
         throw new IllegalStateException("Unsupported");
     }
 
     @Override
-    public Observable<Response<User>> byId(Long id) {
+    public Observable<VisumResponse<User>> byId(Long id) {
         throw new IllegalStateException("Unsupported");
     }
 
     @Override
-    public Observable<Response<Integer>> delete(Long id) {
+    public Observable<VisumResponse<Integer>> delete(Long id) {
         throw new IllegalStateException("Unsupported");
     }
 
     @Override
-    public Response<List<User>> saveSync(List<User> list) {
+    public VisumResponse<List<User>> saveSync(List<User> list) {
         throw new IllegalStateException("Unsupported");
     }
 

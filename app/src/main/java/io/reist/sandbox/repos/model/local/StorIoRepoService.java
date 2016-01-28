@@ -31,7 +31,7 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.visum.model.BaseResponse;
-import io.reist.visum.model.Response;
+import io.reist.visum.model.VisumResponse;
 import io.reist.visum.model.local.StorIoService;
 import rx.Observable;
 
@@ -43,7 +43,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
 
     @RxLogObservable
     @Override
-    public Observable<Response<List<Repo>>> list() {
+    public Observable<VisumResponse<List<Repo>>> list() {
         return preparedGetBuilder(Repo.class)
                 .withQuery(Query.builder().table(ReposTable.NAME).build())
                 .prepare()
@@ -53,13 +53,13 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
 
     @RxLogObservable
     @Override
-    public Observable<Response<Repo>> byId(Long id) {
+    public Observable<VisumResponse<Repo>> byId(Long id) {
         return unique(Repo.class, ReposTable.NAME, id)
                 .map(BaseResponse::new);
     }
 
     @Override
-    public Observable<Response<Integer>>  delete(Long id) {
+    public Observable<VisumResponse<Integer>>  delete(Long id) {
         return storIoSqLite        //cur if that's fine to make storIoSqLite protected?
                 .delete()
                 .byQuery(
@@ -76,7 +76,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
 
     @RxLogObservable
     @Override
-    public Observable<Response<List<Repo>>> findReposByUserId(Long userId) {
+    public Observable<VisumResponse<List<Repo>>> findReposByUserId(Long userId) {
         return preparedGetBuilder(Repo.class)
                 .withQuery(
                         Query
@@ -92,16 +92,16 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
     }
 
     @Override
-    public Observable<Response<Repo>> unlike(Repo repo) {
+    public Observable<VisumResponse<Repo>> unlike(Repo repo) {
         return like(repo, false);
     }
 
     @Override
-    public Observable<Response<Repo>> like(Repo repo) {
+    public Observable<VisumResponse<Repo>> like(Repo repo) {
         return like(repo, true);
     }
 
-    private Observable<Response<Repo>> like(final Repo repo, boolean likedByMe) {
+    private Observable<VisumResponse<Repo>> like(final Repo repo, boolean likedByMe) {
         if (likedByMe) {
             repo.likeCount += 1;
         } else {

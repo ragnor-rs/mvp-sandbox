@@ -18,31 +18,44 @@
  * along with MVP-Sandbox.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.reist.sandbox.app.model.remote;
+package io.reist.sandbox.app.model;
 
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
-import io.reist.visum.model.Error;
+import io.reist.visum.model.VisumResponse;
 
 /**
  * Created by m039 on 11/26/15.
  */
-public class GitHubError implements Error {
+public class SandboxResponse<T> implements VisumResponse<T> {
 
-    @SerializedName("message")
-    private String message;
+    @SerializedName("result")
+    private T result;
 
-    @Nullable
-    @Override
-    public Throwable getThrowable() {
-        return null;
+    @SerializedName("error")
+    private SandboxError error;
+
+    public SandboxResponse(T result) {
+        this.result = result;
     }
 
     @Nullable
     @Override
-    public String getMessage() {
-        return message;
+    public T getResult() {
+        return result;
     }
+
+    @Nullable
+    @Override
+    public SandboxError getError() {
+        return error;
+    }
+
+    @Override
+    public boolean isSuccessful() {
+        return error == null;
+    }
+
 }

@@ -20,18 +20,14 @@
 
 package io.reist.sandbox.repos.presenter;
 
-import android.widget.Toast;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.ResponseObserver;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.view.RepoEditView;
-import io.reist.visum.model.Error;
-import io.reist.visum.model.Response;
+import io.reist.visum.model.VisumError;
+import io.reist.visum.model.VisumResponse;
 import io.reist.visum.presenter.VisumPresenter;
 import rx.Subscriber;
 
@@ -55,19 +51,19 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
         mIsDataLoaded = false;
 
         long repoId = view().getRepoId();
-        view().showLoader(true);
+        view().displayLoader(true);
         subscribe(repoService.byId(repoId), new ResponseObserver<Repo>() {
 
             @Override
-            protected void onFail(Error error) {
-                view().showLoader(false);
+            protected void onFail(VisumError error) {
+                view().displayLoader(false);
                 view().displayError(error);
             }
 
             @Override
             protected void onSuccess(Repo result) {
                 mIsDataLoaded = true;
-                view().showLoader(false);
+                view().displayLoader(false);
                 repo = result;
                 view().displayData(result);
             }
@@ -87,20 +83,20 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
         subscribe(repoService.save(repo), new ResponseObserver<Repo>() {
 
             @Override
-            protected void onFail(Error error) {
-                Toast.makeText(view().context(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            protected void onFail(VisumError error) {
+                view().displayError(error);
             }
 
             @Override
             protected void onSuccess(Repo result) {
-                Toast.makeText(view().context(), R.string.repo_saved, Toast.LENGTH_SHORT).show();
+                view().displayEditSuccess();
             }
 
         });
     }
 
     public void deleteRepo() {
-        subscribe(repoService.delete(repo.id), new Subscriber<Response<Integer>>() {
+        subscribe(repoService.delete(repo.id), new Subscriber<VisumResponse<Integer>>() {
 
             @Override
             public void onCompleted() {}
@@ -109,7 +105,7 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
             public void onError(Throwable e) {}
 
             @Override
-            public void onNext(Response<Integer> response) {
+            public void onNext(VisumResponse<Integer> response) {
                 view().back();
             }
 

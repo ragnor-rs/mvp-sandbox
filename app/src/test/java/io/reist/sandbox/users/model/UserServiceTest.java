@@ -22,15 +22,14 @@ import io.reist.sandbox.BuildConfig;
 import io.reist.sandbox.app.SandboxApplication;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.User;
-import io.reist.sandbox.app.model.remote.GitHubApi;
+import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.core.RobolectricTestCase;
 import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.local.StorIoUserService;
 import io.reist.sandbox.users.model.remote.RetrofitUserService;
-import io.reist.visum.VisumModule;
 import io.reist.visum.model.BaseResponse;
-import io.reist.visum.model.Response;
+import io.reist.visum.model.VisumResponse;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
@@ -61,7 +60,7 @@ public class UserServiceTest extends RobolectricTestCase {
 
         testComponent = DaggerUserServiceTest_TestComponent
                 .builder()
-                .visumModule(new VisumModule(sandboxApplication))
+                .sandboxModule(new SandboxModule(sandboxApplication))
                 .usersModule(new TestUsersModule())
                 .build();
 
@@ -86,8 +85,8 @@ public class UserServiceTest extends RobolectricTestCase {
     public static class TestUsersModule extends UsersModule {
 
         @Override
-        protected UserService userService(GitHubApi ignored, StorIOSQLite storIOSQLite) {
-            RetrofitUserService retrofitUserService = spy(new RetrofitUserService(sMockedGitHubApi));
+        protected UserService userService(SandboxApi ignored, StorIOSQLite storIOSQLite) {
+            RetrofitUserService retrofitUserService = spy(new RetrofitUserService(S_MOCKED_MVP_SANDBOX_API));
 
             doReturn(Observable.empty()).when(retrofitUserService).byId(any());
 
@@ -96,7 +95,7 @@ public class UserServiceTest extends RobolectricTestCase {
 
     }
 
-    private static final GitHubApi sMockedGitHubApi = mock(GitHubApi.class);
+    private static final SandboxApi S_MOCKED_MVP_SANDBOX_API = mock(SandboxApi.class);
     private static final long USER_ID = -(new Random().nextLong());
 
     @Test
@@ -110,7 +109,7 @@ public class UserServiceTest extends RobolectricTestCase {
     }
 
     void testIfUsersExist() {
-        TestSubscriber<Response<List<User>>> testSubscriber = new TestSubscriber<>();
+        TestSubscriber<VisumResponse<List<User>>> testSubscriber = new TestSubscriber<>();
         userService.list().subscribe(testSubscriber);
 
         testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(500, TimeUnit.MILLISECONDS);
@@ -120,7 +119,7 @@ public class UserServiceTest extends RobolectricTestCase {
     }
 
     void testIfUserWithUserIdExist() {
-        TestSubscriber<Response<User>> testSubscriber = new TestSubscriber<>();
+        TestSubscriber<VisumResponse<User>> testSubscriber = new TestSubscriber<>();
         userService.byId(USER_ID).subscribe(testSubscriber);
 
         testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(500, TimeUnit.MILLISECONDS);
@@ -138,12 +137,12 @@ public class UserServiceTest extends RobolectricTestCase {
         users.add(user);
 
         doReturn(Observable.just(new BaseResponse<>(users)))
-                .when(sMockedGitHubApi)
+                .when(S_MOCKED_MVP_SANDBOX_API)
                 .listUsers();
     }
 
     void secondTestCase() {
-        when(sMockedGitHubApi.listUsers())
+        when(S_MOCKED_MVP_SANDBOX_API.listUsers())
                 .thenReturn(Observable.empty());
     }
 

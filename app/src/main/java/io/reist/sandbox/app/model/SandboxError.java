@@ -20,34 +20,30 @@
 
 package io.reist.sandbox.app.model;
 
-import io.reist.visum.model.BaseError;
-import io.reist.visum.model.Error;
-import io.reist.visum.model.Response;
-import rx.Observer;
+import android.support.annotation.Nullable;
+
+import com.google.gson.annotations.SerializedName;
+
+import io.reist.visum.model.VisumError;
 
 /**
- * Created by defuera on 12/11/2015.
+ * Created by m039 on 11/26/15.
  */
-public abstract class ResponseObserver<T> implements Observer<Response<T>> {
+public class SandboxError implements VisumError {
 
+    @SerializedName("message")
+    private String message;
+
+    @Nullable
     @Override
-    public void onNext(Response<T> response) {
-        if (response.isSuccessful())
-            onSuccess(response.getResult());
-        else
-            onFail(response.getError());
+    public Throwable getThrowable() {
+        return null;
     }
 
-    protected abstract void onFail(Error error);
-
-    protected abstract void onSuccess(T result);
-
+    @Nullable
     @Override
-    public void onError(Throwable e) {
-        onFail(new BaseError(e));
+    public String getMessage() {
+        return message;
     }
-
-    @Override
-    public void onCompleted() {}
 
 }

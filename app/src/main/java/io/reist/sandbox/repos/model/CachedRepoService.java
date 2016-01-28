@@ -26,7 +26,7 @@ import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
 import io.reist.visum.model.CachedService;
-import io.reist.visum.model.Response;
+import io.reist.visum.model.VisumResponse;
 import rx.Observable;
 
 public class CachedRepoService extends CachedService<Repo> implements RepoService {
@@ -43,32 +43,36 @@ public class CachedRepoService extends CachedService<Repo> implements RepoServic
 
     @RxLogObservable
     @Override
-    public Observable<Response<List<Repo>>> findReposByUserId(final Long userId) {
-        return Observable.merge(
-                local.findReposByUserId(userId),
-                remote.findReposByUserId(userId).compose(new SaveAndEmitErrorsListTransformer<>(local)))
-                .filter(new FilterListResponse<>());
+    public Observable<VisumResponse<List<Repo>>> findReposByUserId(final Long userId) {
+        return Observable
+                .merge(
+                        local.findReposByUserId(userId),
+                        remote.findReposByUserId(userId).compose(new SaveAndEmitErrorsListTransformer<>(local))
+                )
+                .filter(new ListResponseFilter<>());
     }
 
     @RxLogObservable
     @Override
-    public Observable<Response<Repo>> like(Repo repo) {
+    public Observable<VisumResponse<Repo>> like(Repo repo) {
         return like(repo, true);
     }
 
     @RxLogObservable
     @Override
-    public Observable<Response<Repo>> unlike(Repo repo) {
+    public Observable<VisumResponse<Repo>> unlike(Repo repo) {
         return like(repo, false);
     }
 
     @RxLogObservable
-    private Observable<Response<Repo>> like(Repo repo, boolean like) {
-        return Observable.merge(
-                (like ? local.like(repo) : local.unlike(repo)),
-                (like ? remote.like(repo) : remote.unlike(repo))
-                        .compose(new SaveAndEmitErrorsTransformer<>(local)))
-                .filter(new FilterResponse<>());
+    private Observable<VisumResponse<Repo>> like(Repo repo, boolean like) {
+        return Observable
+                .merge(
+                        (like ? local.like(repo) : local.unlike(repo)),
+                        (like ? remote.like(repo) : remote.unlike(repo)
+                )
+                .compose(new SaveAndEmitErrorsTransformer<>(local)))
+                .filter(new ResponseFilter<>());
     }
 
 }

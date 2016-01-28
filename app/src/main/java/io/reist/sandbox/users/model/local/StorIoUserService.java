@@ -29,7 +29,7 @@ import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.local.UserTable;
 import io.reist.sandbox.users.model.UserService;
 import io.reist.visum.model.BaseResponse;
-import io.reist.visum.model.Response;
+import io.reist.visum.model.VisumResponse;
 import io.reist.visum.model.local.StorIoService;
 import rx.Observable;
 
@@ -45,18 +45,18 @@ public class StorIoUserService extends StorIoService<User>
     }
 
     @Override
-    public Observable<? extends Response<User>> byId(Long id) {
+    public Observable<? extends VisumResponse<User>> byId(Long id) {
         return unique(User.class, UserTable.NAME, id)
                 .map(BaseResponse<User>::new);
     }
 
     @Override
-    public Observable<Response<Integer>> delete(Long id) {
+    public Observable<VisumResponse<Integer>> delete(Long id) {
         throw new IllegalStateException("Unsupported");
     }
 
     @Override
-    public Observable<Response<List<User>>> list() {
+    public Observable<VisumResponse<List<User>>> list() {
         return preparedGetBuilder(User.class)
                 .withQuery(Query
                         .builder()

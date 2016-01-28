@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.reist.sandbox.app.SandboxModule;
-import io.reist.sandbox.app.model.remote.GitHubApi;
+import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.repos.model.CachedRepoService;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.model.local.StorIoRepoService;
@@ -46,8 +46,8 @@ public class ReposModule {
     }
 
     @Provides @Singleton @Named(SandboxModule.REMOTE_SERVICE)
-    protected RepoService remoteRepoService(GitHubApi gitHubApi) {
-        return new RetrofitRepoService(gitHubApi);
+    protected RepoService remoteRepoService(SandboxApi sandboxApi) {
+        return new RetrofitRepoService(sandboxApi);
     }
 
     @Provides @Singleton

@@ -23,17 +23,16 @@ package io.reist.sandbox.users.view;
 import java.util.List;
 
 import io.reist.sandbox.app.model.User;
-import io.reist.visum.model.Error;
-import io.reist.visum.view.VisumView;
+import io.reist.visum.model.VisumError;
 
 /**
  * Created by m039 on 11/12/15.
  */
-public interface UserListView extends VisumView {
+public interface UserListView {
 
     void showLoader(boolean show);
 
-    void displayError(Error error);
+    void displayError(VisumError error);
 
     void displayData(List<User> users);
 

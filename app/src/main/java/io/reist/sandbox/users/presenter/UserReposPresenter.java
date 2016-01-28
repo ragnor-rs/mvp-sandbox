@@ -21,18 +21,17 @@
 package io.reist.sandbox.users.presenter;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.users.view.UserReposView;
-import io.reist.visum.model.Response;
+import io.reist.visum.model.BaseError;
+import io.reist.visum.model.VisumResponse;
 import io.reist.visum.presenter.VisumPresenter;
 import rx.Observer;
 
@@ -66,7 +65,7 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
         subscribe(repoService.findReposByUserId(view().getUserId()), new RepoListObserver());
     }
 
-    private class LikeObserver implements Observer<Response<Repo>> {
+    private class LikeObserver implements Observer<VisumResponse<Repo>> {
 
         final boolean like;
 
@@ -75,23 +74,22 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
         }
 
         @Override
-        public void onNext(Response<Repo> repo) {
-        }
+        public void onNext(VisumResponse<Repo> repo) {}
 
         @Override
-        public void onCompleted() {
-        }
+        public void onCompleted() {}
 
         @Override
         public void onError(Throwable e) {
-            Toast.makeText(getContext(), like ? R.string.error_to_like : R.string.error_to_unlike, Toast.LENGTH_SHORT).show();
+            view().displayError(new BaseError(e));
         }
+
     }
 
-    private class RepoListObserver implements Observer<Response<List<Repo>>> {
+    private class RepoListObserver implements Observer<VisumResponse<List<Repo>>> {
 
         @Override
-        public void onNext(Response<List<Repo>> response) {
+        public void onNext(VisumResponse<List<Repo>> response) {
             Log.i(TAG, "--- OBSERVED ON " + Thread.currentThread() + " ---");
             UserReposView view = view();
             if (response.isSuccessful()) {
@@ -107,13 +105,12 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
         @Override
         public void onError(Throwable e) {
             Log.e(TAG, "Error fetching data", e);
-            Toast.makeText(getContext(), R.string.github_repo_loading_list_error, Toast.LENGTH_LONG).show();
+            view().displayError(new BaseError(e));
             view().showLoader(false);
         }
 
         @Override
-        public void onCompleted() {
-        }
+        public void onCompleted() {}
 
     }
 

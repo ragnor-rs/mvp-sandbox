@@ -87,7 +87,6 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHo
     }
 
     public interface ItemClickListener {
-
         void itemClicked(Repo repo);
     }
 
