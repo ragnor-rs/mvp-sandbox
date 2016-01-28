@@ -6,20 +6,12 @@
 
     <string name="action_settings">Settings</string>
 
-    <string name="github_repo_loading_list_error">Error loading repositories</string>
-
-    <string name="permissions_required">Some of the required permissions are missing</string>
     <string name="create_repo">Create repo</string>
-    <string name="github_repo_saving_list_error">Saving repo error</string>
     <string name="repo_saved">Repo saved successfully</string>
     <string name="network_error">Network error, \nplease try again later</string>
     <string name="retry">Retry</string>
-    <string name="error_unexpected">Oops, something bad has happened. Try one more time</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
-
-    <string name="error_to_like">Failed to like</string>
-    <string name="error_to_unlike">Failed to unlike</string>
 
     <string name="repo_button_like">like</string>
     <string name="repo_button_unlike">unlike</string>

@@ -31,11 +31,22 @@
 -dontnote rx.internal.util.PlatformDependent
 
 # Retrofit
--dontwarn retrofit.**
--keep class retrofit.** { *; }
--dontnote retrofit.Platform
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-dontnote retrofit2.Platform
+-dontwarn retrofit2.Platform$Java8
 
-# Butter Knife
+# Okio
+-keep class okio.**
+-dontwarn okio.**
+
+# OkHttp
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+-dontnote okhttp3.internal.Platform
+
+# Butterknife
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
 -keep class **$$ViewBinder { *; }
@@ -48,10 +59,6 @@
 
 # Retrolambda
 -dontwarn java.lang.invoke.*
-
-# Okio
--keep class okio.**
--dontwarn okio.**
 
 # RxJava
 -dontwarn sun.misc.**
@@ -66,12 +73,6 @@
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 -keep class rx.Subscriber
-
-# OkHttp
--keep class com.squareup.okhttp.** { *; }
--keep interface com.squareup.okhttp.** { *; }
--dontwarn com.squareup.okhttp.**
--dontnote com.squareup.okhttp.internal.Platform
 
 # Android Support
 -keep class android.support.v4.**

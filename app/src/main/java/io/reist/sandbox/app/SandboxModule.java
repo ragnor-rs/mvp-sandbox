@@ -28,9 +28,6 @@ import com.google.gson.GsonBuilder;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 
 import javax.inject.Singleton;
 
@@ -49,9 +46,12 @@ import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.visum.model.remote.NestedFieldNameAdapter;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Retrofit;
+import retrofit2.RxJavaCallAdapterFactory;
 
 @Module(includes = {
         UsersModule.class,
@@ -107,23 +107,23 @@ public class SandboxModule {
                 .registerTypeHierarchyAdapter(Object.class, new NestedFieldNameAdapter())
                 .create();
 
-        OkHttpClient httpClient = new OkHttpClient();
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
 
-        httpClient.interceptors().add(chain -> {
+                    Request request = chain.request();
+                    HttpUrl httpUrl = request
+                            .url()
+                            .newBuilder()
+                            .addQueryParameter("user_id", "1")
+                            .build();
+                    request = request.newBuilder().url(httpUrl).build();
 
-            Request request = chain.request();
-            HttpUrl httpUrl = request
-                    .httpUrl()
-                    .newBuilder()
-                    .addQueryParameter("user_id", "1")
-                    .build();
-            request = request.newBuilder().url(httpUrl).build();
+                    Log.i(TAG, request.toString());
 
-            Log.i(TAG, request.toString());
+                    return chain.proceed(request);
 
-            return chain.proceed(request);
-
-        });
+                })
+                .build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))

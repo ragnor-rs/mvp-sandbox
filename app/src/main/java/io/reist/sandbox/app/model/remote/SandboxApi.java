@@ -25,11 +25,11 @@ import java.util.List;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.SandboxResponse;
 import io.reist.sandbox.app.model.User;
-import retrofit.http.Body;
-import retrofit.http.DELETE;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
 import rx.Observable;
 
 /**
