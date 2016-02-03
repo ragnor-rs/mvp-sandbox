@@ -25,13 +25,13 @@ import android.support.test.InstrumentationRegistry;
 import android.test.ActivityInstrumentationTestCase2;
 
 import io.reist.sandbox.app.SandboxApplication;
+import io.reist.sandbox.app.view.MainActivity;
 import io.reist.visum.ComponentCache;
-import io.reist.visum.view.VisumActivity;
 
 /**
  * Created by m039 on 11/30/15.
  */
-public class ActivityInstrumentationTestCase<T extends VisumActivity> extends ActivityInstrumentationTestCase2<T> {
+public class ActivityInstrumentationTestCase<T extends MainActivity> extends ActivityInstrumentationTestCase2<T> {
 
     public ActivityInstrumentationTestCase(Class<T> clazz) {
         super(clazz);
