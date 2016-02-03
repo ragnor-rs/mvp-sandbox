@@ -27,6 +27,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,10 +35,13 @@ import android.view.MenuItem;
 import io.reist.sandbox.R;
 import io.reist.sandbox.repos.view.RepoListFragment;
 import io.reist.sandbox.users.view.UserListFragment;
-import io.reist.visum.view.VisumActivity;
+import io.reist.visum.view.VisumFragment;
+import io.reist.visum.view.VisumFragmentManager;
 
-public class MainActivity extends VisumActivity
-        implements NavigationView.OnNavigationItemSelectedListener, android.app.FragmentManager.OnBackStackChangedListener {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener,
+        FragmentManager.OnBackStackChangedListener,
+        BaseFragment.FragmentController {
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
@@ -139,4 +143,20 @@ public class MainActivity extends VisumActivity
         drawerToggle.syncState();
     }
 
+    @Override
+    public void showFragment(VisumFragment fragment, boolean remove) {
+        VisumFragmentManager.showFragment(getFragmentManager(),
+                fragment,
+                R.id.fragment_container,
+                remove,
+                false);
+    }
+
+    private void showFragment(VisumFragment fragment, boolean remove, boolean popBackStack) {
+        VisumFragmentManager.showFragment(getFragmentManager(),
+                fragment,
+                R.id.fragment_container,
+                remove,
+                popBackStack);
+    }
 }

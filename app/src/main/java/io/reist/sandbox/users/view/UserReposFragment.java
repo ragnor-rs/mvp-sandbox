@@ -70,7 +70,9 @@ public class UserReposFragment extends VisumFragment<UserReposPresenter> impleme
     }
 
     @Override
-    public void ready() {
+    public void attachPresenter() {
+        super.attachPresenter();
+
         // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);

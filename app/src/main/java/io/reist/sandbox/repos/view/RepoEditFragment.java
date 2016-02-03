@@ -86,7 +86,9 @@ public class RepoEditFragment extends VisumFragment<RepoEditPresenter> implement
     }
 
     @Override
-    public void ready() {}
+    public void attachPresenter() {
+        super.attachPresenter();
+    }
 
     @OnClick(R.id.save)
     void onSaveButtonClick() {

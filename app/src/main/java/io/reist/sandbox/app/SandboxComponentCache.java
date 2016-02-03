@@ -27,7 +27,7 @@ import io.reist.sandbox.repos.view.RepoListFragment;
 import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.sandbox.users.view.UserReposFragment;
 import io.reist.visum.ComponentCache;
-import io.reist.visum.view.VisumView;
+import io.reist.visum.view.VisumClient;
 
 /**
  * Created by Reist on 29.11.15.
@@ -45,7 +45,7 @@ public class SandboxComponentCache extends ComponentCache {
     }
 
     @Override
-    public Object buildComponentFor(Class<? extends VisumView> viewClass) {
+    public Object buildComponentFor(Class<? extends VisumClient> viewClass) {
         if (
                 RepoListFragment.class.isAssignableFrom(viewClass) ||
                 RepoEditFragment.class.isAssignableFrom(viewClass)

@@ -32,17 +32,17 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.User;
+import io.reist.sandbox.app.view.BaseFragment;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.users.UsersComponent;
 import io.reist.sandbox.users.presenter.UserListAdapter;
 import io.reist.sandbox.users.presenter.UserListPresenter;
 import io.reist.visum.model.VisumError;
-import io.reist.visum.view.VisumFragment;
 
 /**
  * Created by m039 on 11/12/15.
  */
-public class UserListFragment extends VisumFragment<UserListPresenter>
+public class UserListFragment extends BaseFragment<UserListPresenter>
         implements UserListView {
 
     @Inject
@@ -65,7 +65,9 @@ public class UserListFragment extends VisumFragment<UserListPresenter>
     }
 
     @Override
-    public void ready() {
+    public void attachPresenter() {
+        super.attachPresenter();
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         mRecyclerView.setLayoutManager(layoutManager);

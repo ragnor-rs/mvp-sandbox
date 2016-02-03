@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.view.RepoListView;
 import io.reist.visum.model.VisumError;
@@ -81,9 +82,14 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
         Random rand = new Random();
         Repo object = new Repo();
 
-        object.id = (long) rand.nextInt(100);
+        object.id = (long) rand.nextInt(1000);
         object.name = "name_" + object.id;
         object.url = "url";
+
+        User owner = new User();
+        owner.id = (long) rand.nextInt(1000);
+        owner.login = owner.name = "Vasy_" + owner.id;
+        object.owner = owner;
 
         subscribe(repoService.save(object), new AddRepoSubscriber());
     }

@@ -33,17 +33,17 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.view.BaseFragment;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.repos.ReposComponent;
 import io.reist.sandbox.repos.presenter.RepoListAdapter;
 import io.reist.sandbox.repos.presenter.RepoListPresenter;
 import io.reist.visum.model.VisumError;
-import io.reist.visum.view.VisumFragment;
 
 /**
  * Created by Reist on 10/13/15.
  */
-public class RepoListFragment extends VisumFragment<RepoListPresenter> implements RepoListView {
+public class RepoListFragment extends BaseFragment<RepoListPresenter> implements RepoListView {
 
     @Bind(R.id.daggertest_repo_recycler_view)
     RecyclerView mRecyclerView;
@@ -65,7 +65,8 @@ public class RepoListFragment extends VisumFragment<RepoListPresenter> implement
     }
 
     @Override
-    public void ready() {
+    public void attachPresenter() {
+        super.attachPresenter();
         // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
