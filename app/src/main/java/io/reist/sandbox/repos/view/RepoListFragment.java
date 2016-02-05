@@ -93,7 +93,6 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         return presenter;
     }
 
-
     @Override
     public void showLoader(boolean show) {
         loaderView.showLoading(show);

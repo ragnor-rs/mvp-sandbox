@@ -29,8 +29,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,14 +36,15 @@ import org.junit.runner.RunWith;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.view.MainActivity;
 import io.reist.sandbox.core.ActivityInstrumentationTestCase;
+import io.reist.sandbox.core.TestUtils;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static io.reist.sandbox.core.TestUtils.clickOnId;
-import static io.reist.sandbox.core.TestUtils.waitForMs;
 import static org.hamcrest.Matchers.allOf;
 
 /**
@@ -53,11 +52,6 @@ import static org.hamcrest.Matchers.allOf;
  */
 @RunWith(AndroidJUnit4.class)
 public class UsersUiTest extends ActivityInstrumentationTestCase<MainActivity> {
-
-    /**
-     * Should take into consideration delays during network operations
-     */
-    public static final int ACTION_TIMEOUT = 5000;
 
     MainActivity mMainActivity;
 
@@ -82,13 +76,15 @@ public class UsersUiTest extends ActivityInstrumentationTestCase<MainActivity> {
         onView(allOf(isDescendantOfA(withId(R.id.nav_view)), withText(R.string.menu_users)))
                 .perform(click());
 
-        waitForMs(ACTION_TIMEOUT);
+        onView(isRoot())
+                .perform(TestUtils.waitId(R.id.name, TestUtils.ACTION_TIMEOUT));
 
         // click on user
         onView(withId(R.id.recycler))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        waitForMs(ACTION_TIMEOUT);
+        onView(isRoot())
+                .perform(TestUtils.waitId(R.id.like, TestUtils.ACTION_TIMEOUT));
 
         // is first repo liked?
         boolean isLiked = isRepoLiked(R.id.recycler, 0);
@@ -99,23 +95,20 @@ public class UsersUiTest extends ActivityInstrumentationTestCase<MainActivity> {
         onView(withId(R.id.recycler))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, clickOnId(R.id.like)));
 
-        waitForMs(ACTION_TIMEOUT);
-
-        // check if like status changed
-        Assert.assertEquals(!isLiked, isRepoLiked(R.id.recycler, 0));
+        onView(isRoot())
+                .perform(TestUtils.waitId(R.id.like, TestUtils.ACTION_TIMEOUT, v -> !isLiked == isRepoLiked(R.id.recycler, 0)));
 
         // click on like button (should be an opposite of first button state)
         onView(withId(R.id.recycler))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, clickOnId(R.id.like)));
 
-        waitForMs(ACTION_TIMEOUT);
-
-        // check if like status reverted
-        Assert.assertEquals(isLiked, isRepoLiked(R.id.recycler, 0));
+        onView(isRoot())
+                .perform(TestUtils.waitId(R.id.like, TestUtils.ACTION_TIMEOUT, v -> isLiked == isRepoLiked(R.id.recycler, 0)));
 
     }
 
     boolean isRepoLiked(@IdRes int recyclerViewId, int position) {
+
         Activity activity = mMainActivity;
 
         TextView like = (TextView) ((RecyclerView) activity.findViewById(recyclerViewId))
@@ -124,6 +117,7 @@ public class UsersUiTest extends ActivityInstrumentationTestCase<MainActivity> {
                 .findViewById(R.id.like);
 
         final String label = like.getText().toString();
+
         if (label.equalsIgnoreCase(activity.getString(R.string.repo_button_unlike))) {
             return true;
         } else if (label.equalsIgnoreCase(activity.getString(R.string.repo_button_like))) {
@@ -132,5 +126,7 @@ public class UsersUiTest extends ActivityInstrumentationTestCase<MainActivity> {
             fail("Like button label: " + label);
             return false;
         }
+
     }
+
 }
