@@ -20,62 +20,47 @@
 
 package io.reist.sandbox.core;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.os.SystemClock;
 import android.support.annotation.IdRes;
+import android.support.test.espresso.PerformException;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
-import android.support.v7.widget.RecyclerView;
+import android.support.test.espresso.util.HumanReadables;
+import android.support.test.espresso.util.TreeIterables;
 import android.view.View;
+
+import org.hamcrest.Matcher;
+import org.hamcrest.core.IsAnything;
+
+import java.util.concurrent.TimeoutException;
+
+import rx.functions.Func1;
+
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.Matchers.anything;
 
 /**
  * Created by m039 on 11/27/15.
  */
 public class TestUtils {
 
-    static public void waitForMs(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (Exception ignored) {
-        }
+    /**
+     * Should take into consideration delays during network operations
+     */
+    public static final int ACTION_TIMEOUT = 30000;
+
+    public static ViewAction waitId(final @IdRes int viewId, final long timeout) {
+        return wait(withId(viewId), timeout);
     }
 
-    static void waitForFragment(Activity activity, Class<? extends Fragment> fragmentClass, @IdRes int fragmentResId, long timeOutMillis) {
-        FragmentManager fm = activity.getFragmentManager();
-
-        long end = SystemClock.uptimeMillis() + timeOutMillis;
-
-        while (SystemClock.uptimeMillis() <= end) {
-            Fragment fragment = fm.findFragmentById(fragmentResId);
-            if (fragment != null && fragmentClass.isAssignableFrom(fragment.getClass())) {
-                return;
-            }
-
-            try { Thread.sleep(10); } catch (InterruptedException ignored) {}
-        }
-
-        throw new RuntimeException("waitForFragment: timeout for " + fragmentClass);
+    public static ViewAction waitId(final @IdRes int viewId, final long timeout, final Func1<View, Boolean> condition) {
+        return wait(withId(viewId), timeout, condition);
     }
 
-    static void waitForItems(RecyclerView recyclerView, long timeoutMillis) {
-        long end = SystemClock.uptimeMillis() + timeoutMillis;
-
-        while (end >= SystemClock.uptimeMillis()) {
-            RecyclerView.Adapter adapter = recyclerView.getAdapter();
-            if (adapter != null && adapter.getItemCount() > 0) {
-                return;
-            }
-
-            try { Thread.sleep(10); } catch (InterruptedException ignored) {}
-        }
-    }
-
-    static public ViewAction clickOnId(final @IdRes int resId) {
+    public static ViewAction clickOnId(final @IdRes int resId) {
         return new ViewAction() {
+
             @Override
-            public org.hamcrest.Matcher<View> getConstraints() {
+            public Matcher<View> getConstraints() {
                 return null;
             }
 
@@ -88,6 +73,54 @@ public class TestUtils {
             public void perform(UiController uiController, View view) {
                 view.findViewById(resId).performClick();
             }
+
+        };
+    }
+
+    public static ViewAction wait(final Matcher<View> viewMatcher, final long timeout) {
+        return wait(viewMatcher, timeout, v -> true);
+    }
+
+    public static ViewAction wait(final Matcher<View> viewMatcher, final long timeout, final Func1<View, Boolean> condition) {
+        return new ViewAction() {
+
+            @Override
+            public Matcher<View> getConstraints() {
+                return new IsAnything<>();
+            }
+
+            @Override
+            public String getDescription() {
+                return "wait for a view which matches <" + viewMatcher + "> during " + timeout + " millis";
+            }
+
+            @Override
+            public void perform(final UiController uiController, final View view) {
+
+                uiController.loopMainThreadUntilIdle();
+
+                final long startTime = System.currentTimeMillis();
+                final long endTime = startTime + timeout;
+
+                do {
+                    for (View child : TreeIterables.breadthFirstViewTraversal(view)) {
+                        if (viewMatcher.matches(child) && condition.call(child)) {
+                            return;
+                        }
+                    }
+                    uiController.loopMainThreadForAtLeast(50);
+                }
+                while (System.currentTimeMillis() < endTime);
+
+                // timeout happens
+                throw new PerformException.Builder()
+                        .withActionDescription(this.getDescription())
+                        .withViewDescription(HumanReadables.describe(view))
+                        .withCause(new TimeoutException())
+                        .build();
+
+            }
+
         };
     }
 

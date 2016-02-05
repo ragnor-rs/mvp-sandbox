@@ -23,6 +23,8 @@ package io.reist.sandbox.repos;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.runner.AndroidJUnit4;
+import android.text.TextUtils;
+import android.widget.TextView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +35,7 @@ import java.util.Random;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.view.MainActivity;
 import io.reist.sandbox.core.ActivityInstrumentationTestCase;
+import io.reist.sandbox.core.TestUtils;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -41,6 +44,7 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -66,18 +70,24 @@ public class ReposUiTest extends ActivityInstrumentationTestCase<MainActivity> {
 
     @Test
     public void testRepo() throws InterruptedException {
+
         onView(withId(R.id.drawer_layout))
                 .perform(DrawerActions.open());
 
         onView(allOf(isDescendantOfA(withId(R.id.nav_view)), withText(R.string.menu_repos)))
                 .perform(click());
 
-        Thread.sleep(1000);
+        onView(isRoot())
+                .perform(TestUtils.waitId(R.id.daggertest_repo_item_text_view, TestUtils.ACTION_TIMEOUT));
 
         onView(withId(R.id.daggertest_repo_recycler_view))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        Thread.sleep(1000);
+        onView(isRoot())
+                .perform(TestUtils.waitId(R.id.repo_name, TestUtils.ACTION_TIMEOUT, v -> {
+                    final CharSequence text = ((TextView) v).getText();
+                    return !TextUtils.isEmpty(text);
+                }));
 
         String generatedRepoName = generateRepoName();
 
@@ -90,12 +100,15 @@ public class ReposUiTest extends ActivityInstrumentationTestCase<MainActivity> {
         onView(withContentDescription(android.support.v7.appcompat.R.string.abc_action_bar_up_description))
                 .perform(click());
 
-        Thread.sleep(1000);
+        onView(isRoot())
+                .perform(TestUtils.wait(withText(generatedRepoName), TestUtils.ACTION_TIMEOUT));
 
         onView(withText(generatedRepoName)).check(matches(isDisplayed()));
+
     }
 
     public static String generateRepoName() {
         return "cracky" + (new Random().nextInt(10000));
     }
+
 }
