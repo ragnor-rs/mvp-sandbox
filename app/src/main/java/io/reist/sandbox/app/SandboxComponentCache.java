@@ -27,7 +27,7 @@ import io.reist.sandbox.repos.view.RepoListFragment;
 import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.sandbox.users.view.UserReposFragment;
 import io.reist.visum.ComponentCache;
-import io.reist.visum.view.VisumClient;
+import io.reist.visum.VisumClient;
 
 /**
  * Created by Reist on 29.11.15.
