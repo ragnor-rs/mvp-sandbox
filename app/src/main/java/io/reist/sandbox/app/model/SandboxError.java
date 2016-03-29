@@ -24,12 +24,10 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
-import io.reist.visum.model.VisumError;
-
 /**
  * Created by m039 on 11/26/15.
  */
-public class SandboxError implements VisumError {
+public class SandboxError {
 
     @SerializedName("message")
     private String message;
@@ -37,13 +35,11 @@ public class SandboxError implements VisumError {
     private transient Throwable throwable;
 
     @Nullable
-    @Override
     public Throwable getThrowable() {
         return throwable;
     }
 
     @Nullable
-    @Override
     public String getMessage() {
         return message;
     }

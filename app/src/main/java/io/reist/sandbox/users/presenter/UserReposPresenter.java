@@ -29,9 +29,9 @@ import javax.inject.Singleton;
 
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.SandboxError;
+import io.reist.sandbox.app.model.SandboxResponse;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.users.view.UserReposView;
-import io.reist.visum.model.VisumResponse;
 import io.reist.visum.presenter.VisumPresenter;
 import rx.Observer;
 
@@ -65,7 +65,7 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
         subscribe(repoService.findReposByUserId(view().getUserId()), new RepoListObserver());
     }
 
-    private class LikeObserver implements Observer<VisumResponse<Repo>> {
+    private class LikeObserver implements Observer<SandboxResponse<Repo>> {
 
         final boolean like;
 
@@ -74,7 +74,7 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
         }
 
         @Override
-        public void onNext(VisumResponse<Repo> repo) {}
+        public void onNext(SandboxResponse<Repo> repo) {}
 
         @Override
         public void onCompleted() {}
@@ -86,10 +86,10 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
 
     }
 
-    private class RepoListObserver implements Observer<VisumResponse<List<Repo>>> {
+    private class RepoListObserver implements Observer<SandboxResponse<List<Repo>>> {
 
         @Override
-        public void onNext(VisumResponse<List<Repo>> response) {
+        public void onNext(SandboxResponse<List<Repo>> response) {
             Log.i(TAG, "--- OBSERVED ON " + Thread.currentThread() + " ---");
             UserReposView view = view();
             if (response.isSuccessful()) {

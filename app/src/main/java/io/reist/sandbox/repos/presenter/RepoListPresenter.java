@@ -29,11 +29,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.SandboxError;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.presenter.ResponseObserver;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.view.RepoListView;
-import io.reist.visum.model.VisumError;
 import io.reist.visum.presenter.VisumPresenter;
 
 @Singleton
@@ -64,7 +64,7 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
         subscribe(repoService.list(), new ResponseObserver<List<Repo>>() {
 
             @Override
-            protected void onFail(VisumError error) {
+            protected void onFail(SandboxError error) {
                 view().showLoader(false);
                 view().displayError(error);
             }
@@ -98,7 +98,7 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
     private class AddRepoSubscriber extends ResponseObserver<Repo> {
 
         @Override
-        protected void onFail(VisumError error) {
+        protected void onFail(SandboxError error) {
             Log.e(TAG, "Error saving data" + error.getMessage());
             view().displayError(error);
             view().showLoader(false);

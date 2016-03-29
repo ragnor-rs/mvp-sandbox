@@ -23,7 +23,7 @@ package io.reist.sandbox.users.view;
 import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
-import io.reist.visum.model.VisumError;
+import io.reist.sandbox.app.model.SandboxError;
 
 /**
  * Created by defuera on 05/11/2015.
@@ -31,7 +31,7 @@ import io.reist.visum.model.VisumError;
 public interface UserReposView {
     void showLoader(boolean show);
 
-    void displayError(VisumError error);
+    void displayError(SandboxError error);
 
     void displayData(List<Repo> data);
 

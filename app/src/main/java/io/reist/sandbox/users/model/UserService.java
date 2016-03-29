@@ -20,10 +20,10 @@
 
 package io.reist.sandbox.users.model;
 
+import io.reist.sandbox.app.model.SandboxService;
 import io.reist.sandbox.app.model.User;
-import io.reist.visum.model.VisumService;
 
 /**
  * Created by m039 on 11/12/15.
  */
-public interface UserService extends VisumService<User> {}
+public interface UserService extends SandboxService<User> {}

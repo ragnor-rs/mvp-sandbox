@@ -18,12 +18,12 @@ import io.reist.sandbox.BuildConfig;
 import io.reist.sandbox.app.SandboxComponent;
 import io.reist.sandbox.app.SandboxModule;
 import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.SandboxResponse;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.core.RobolectricTestCase;
 import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.repos.ReposModule;
-import io.reist.visum.model.VisumResponse;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
@@ -99,7 +99,7 @@ public class RepoServiceTest extends RobolectricTestCase {
     }
 
     private void testOfflineLike(boolean like) {
-        TestSubscriber<VisumResponse<Repo>> subscriber = new TestSubscriber<>();
+        TestSubscriber<SandboxResponse<Repo>> subscriber = new TestSubscriber<>();
 
         if (like) {
             repoService.like(newRepo()).subscribe(subscriber);

@@ -24,12 +24,13 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
-import io.reist.visum.model.VisumResponse;
-
 /**
  * Created by m039 on 11/26/15.
+ * This is a helper interface for your api responses.
+ * If you use REST api and all your responses are wrapped in some model.
+ * This is probably the way to go.
  */
-public class SandboxResponse<T> implements VisumResponse<T> {
+public class SandboxResponse<T> {
 
     @SerializedName("result")
     private T result;
@@ -46,18 +47,15 @@ public class SandboxResponse<T> implements VisumResponse<T> {
     }
 
     @Nullable
-    @Override
     public T getResult() {
         return result;
     }
 
     @Nullable
-    @Override
     public SandboxError getError() {
         return error;
     }
 
-    @Override
     public boolean isSuccessful() {
         return error == null;
     }

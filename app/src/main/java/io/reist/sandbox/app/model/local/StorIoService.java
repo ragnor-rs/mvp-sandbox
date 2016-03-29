@@ -30,14 +30,13 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 import java.util.List;
 
 import io.reist.sandbox.app.model.SandboxResponse;
-import io.reist.visum.model.VisumResponse;
-import io.reist.visum.model.VisumService;
+import io.reist.sandbox.app.model.SandboxService;
 import rx.Observable;
 
 /**
  * Created by Reist on 10/23/15.
  */
-public abstract class StorIoService<T> implements VisumService<T> {
+public abstract class StorIoService<T> implements SandboxService<T> {
 
     protected final StorIOSQLite storIoSqLite;
 
@@ -73,7 +72,7 @@ public abstract class StorIoService<T> implements VisumService<T> {
     }
 
     @Override
-    public final VisumResponse<List<T>> saveSync(List<T> list) {
+    public final SandboxResponse<List<T>> saveSync(List<T> list) {
 
         preparedPutBuilder()
                 .objects(list)
@@ -84,7 +83,7 @@ public abstract class StorIoService<T> implements VisumService<T> {
     }
 
     @Override
-    public final VisumResponse<T> saveSync(T t) {
+    public final SandboxResponse<T> saveSync(T t) {
 
         preparedPutBuilder()
                 .object(t)
@@ -95,12 +94,12 @@ public abstract class StorIoService<T> implements VisumService<T> {
     }
 
     @Override
-    public Observable<? extends VisumResponse<List<T>>> save(List<T> list) {
+    public Observable<SandboxResponse<List<T>>> save(List<T> list) {
         return Observable.just(saveSync(list));
     }
 
     @Override
-    public Observable<? extends VisumResponse<T>> save(T t) {
+    public Observable<SandboxResponse<T>> save(T t) {
         return Observable.just(saveSync(t));
     }
 

@@ -21,24 +21,23 @@
 package io.reist.sandbox.app.presenter;
 
 import io.reist.sandbox.app.model.SandboxError;
-import io.reist.visum.model.VisumError;
-import io.reist.visum.model.VisumResponse;
+import io.reist.sandbox.app.model.SandboxResponse;
 import rx.Observer;
 
 /**
  * Created by defuera on 12/11/2015.
  */
-public abstract class ResponseObserver<T> implements Observer<VisumResponse<T>> {
+public abstract class ResponseObserver<T> implements Observer<SandboxResponse<T>> {
 
     @Override
-    public void onNext(VisumResponse<T> response) {
+    public void onNext(SandboxResponse<T> response) {
         if (response.isSuccessful())
             onSuccess(response.getResult());
         else
             onFail(response.getError());
     }
 
-    protected abstract void onFail(VisumError error);
+    protected abstract void onFail(SandboxError error);
 
     protected abstract void onSuccess(T result);
 

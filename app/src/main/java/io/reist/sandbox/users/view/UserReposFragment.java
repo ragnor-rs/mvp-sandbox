@@ -33,12 +33,11 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.SandboxError;
 import io.reist.sandbox.app.view.BaseFragment;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.users.UsersComponent;
 import io.reist.sandbox.users.presenter.UserReposPresenter;
-import io.reist.visum.model.VisumError;
-import io.reist.visum.view.VisumFragment;
 
 /**
  * Created by Reist on 10/13/15.
@@ -122,7 +121,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
     }
 
     @Override
-    public void displayError(VisumError error) {
+    public void displayError(SandboxError error) {
         if (adapter == null || adapter.getItemCount() == 0) {
             loaderView.showNetworkError();
         } else {

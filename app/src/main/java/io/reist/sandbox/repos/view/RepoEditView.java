@@ -21,14 +21,14 @@
 package io.reist.sandbox.repos.view;
 
 import io.reist.sandbox.app.model.Repo;
-import io.reist.visum.model.VisumError;
+import io.reist.sandbox.app.model.SandboxError;
 
 /**
  * Created by defuera on 11/11/2015.
  */
 public interface RepoEditView {
 
-    void displayError(VisumError error);
+    void displayError(SandboxError error);
 
     void displayData(Repo data);
 

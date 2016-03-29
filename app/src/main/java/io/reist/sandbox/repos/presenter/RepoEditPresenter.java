@@ -24,11 +24,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.SandboxError;
+import io.reist.sandbox.app.model.SandboxResponse;
 import io.reist.sandbox.app.presenter.ResponseObserver;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.view.RepoEditView;
-import io.reist.visum.model.VisumError;
-import io.reist.visum.model.VisumResponse;
 import io.reist.visum.presenter.VisumPresenter;
 import rx.Subscriber;
 
@@ -56,7 +56,7 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
         subscribe(repoService.byId(repoId), new ResponseObserver<Repo>() {
 
             @Override
-            protected void onFail(VisumError error) {
+            protected void onFail(SandboxError error) {
                 view().displayLoader(false);
                 view().displayError(error);
             }
@@ -84,7 +84,7 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
         subscribe(repoService.save(repo), new ResponseObserver<Repo>() {
 
             @Override
-            protected void onFail(VisumError error) {
+            protected void onFail(SandboxError error) {
                 view().displayError(error);
             }
 
@@ -97,7 +97,7 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
     }
 
     public void deleteRepo() {
-        subscribe(repoService.delete(repo.id), new Subscriber<VisumResponse<Integer>>() {
+        subscribe(repoService.delete(repo.id), new Subscriber<SandboxResponse<Integer>>() {
 
             @Override
             public void onCompleted() {}
@@ -106,7 +106,7 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
             public void onError(Throwable e) {}
 
             @Override
-            public void onNext(VisumResponse<Integer> response) {
+            public void onNext(SandboxResponse<Integer> response) {
                 view().back();
             }
 
