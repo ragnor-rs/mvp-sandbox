@@ -29,9 +29,12 @@ public class UserTable extends BaseTable {
 
     public static final String NAME = "user";
 
-    public interface Column extends BaseTable.Column {
-        String NAME = "name";
-        String LOGIN = "login";
+    public static final class Column extends BaseTable.Column {
+
+        private Column() {}
+
+        public static final String NAME = "name";
+        public static final String LOGIN = "login";
     }
 
     private static final String CREATE_TABLE = "create table " + NAME + "(" +

@@ -29,12 +29,15 @@ public class ReposTable extends BaseTable {
 
     public static final String NAME = "repos";
 
-    public interface Column extends BaseTable.Column {
-        String NAME = "name";
-        String URL = "url";
-        String LIKE_COUNT = "like_count";
-        String USER_ID = "user_id";
-        String LIKED_BY_ME = "liked_by_me";
+    public static final class Column extends BaseTable.Column {
+
+        private Column() {}
+
+        public static final String NAME = "name";
+        public static final String URL = "url";
+        public static final String LIKE_COUNT = "like_count";
+        public static final String USER_ID = "user_id";
+        public static final String LIKED_BY_ME = "liked_by_me";
     }
 
     private static final String CREATE_TABLE = "create table " + NAME + "(" +
