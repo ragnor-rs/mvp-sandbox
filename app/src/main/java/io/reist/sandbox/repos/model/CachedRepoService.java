@@ -25,7 +25,7 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
-import io.reist.visum.model.CachedService;
+import io.reist.sandbox.app.model.CachedService;
 import io.reist.visum.model.VisumResponse;
 import rx.Observable;
 

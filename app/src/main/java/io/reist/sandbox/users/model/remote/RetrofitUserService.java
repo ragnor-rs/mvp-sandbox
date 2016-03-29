@@ -26,7 +26,7 @@ import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.users.model.UserService;
 import io.reist.visum.model.VisumResponse;
-import io.reist.visum.model.remote.RetrofitService;
+import io.reist.sandbox.app.model.remote.RetrofitService;
 import rx.Observable;
 
 /**
@@ -34,10 +34,8 @@ import rx.Observable;
  */
 public class RetrofitUserService extends RetrofitService<User> implements UserService {
 
-    protected final SandboxApi sandboxApi;
-
     public RetrofitUserService(SandboxApi sandboxApi) {
-        this.sandboxApi = sandboxApi;
+        super(sandboxApi);
     }
 
     @Override
@@ -47,22 +45,32 @@ public class RetrofitUserService extends RetrofitService<User> implements UserSe
 
     @Override
     public VisumResponse<User> saveSync(User user) {
-        throw new IllegalStateException("Unsupported");
+        throw new UnsupportedOperationException("Unsupported");
     }
 
     @Override
     public Observable<VisumResponse<User>> byId(Long id) {
-        throw new IllegalStateException("Unsupported");
+        throw new UnsupportedOperationException("Unsupported");
     }
 
     @Override
     public Observable<VisumResponse<Integer>> delete(Long id) {
-        throw new IllegalStateException("Unsupported");
+        throw new UnsupportedOperationException("Unsupported");
     }
 
     @Override
     public VisumResponse<List<User>> saveSync(List<User> list) {
-        throw new IllegalStateException("Unsupported");
+        throw new UnsupportedOperationException("Unsupported");
     }
 
+    @Override
+    public Observable<? extends VisumResponse<List<User>>> save(List<User> list) {
+        throw new UnsupportedOperationException("Unsupported");
+    }
+
+    @Override
+    public Observable<? extends VisumResponse<User>> save(User t) {
+        throw new UnsupportedOperationException("Unsupported");
+    }
+    
 }

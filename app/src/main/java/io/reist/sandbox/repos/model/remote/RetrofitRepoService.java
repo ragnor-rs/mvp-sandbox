@@ -28,15 +28,13 @@ import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.visum.model.VisumResponse;
-import io.reist.visum.model.remote.RetrofitService;
+import io.reist.sandbox.app.model.remote.RetrofitService;
 import rx.Observable;
 
 public class RetrofitRepoService extends RetrofitService<Repo> implements RepoService {
 
-    protected final SandboxApi sandboxApi;
-
     public RetrofitRepoService(SandboxApi sandboxApi) {
-        this.sandboxApi = sandboxApi;
+        super(sandboxApi);
     }
 
     @RxLogObservable

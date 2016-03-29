@@ -32,6 +32,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.view.BaseFragment;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.repos.ReposComponent;
 import io.reist.sandbox.repos.presenter.RepoEditPresenter;
@@ -41,7 +42,7 @@ import io.reist.visum.view.VisumFragment;
 /**
  * Created by defuera on 10/11/2015.
  */
-public class RepoEditFragment extends VisumFragment<RepoEditPresenter> implements RepoEditView {
+public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements RepoEditView {
 
     private static final String EXTRA_REPO_ID = "io.reist.sandbox.extra_repo_id";
 

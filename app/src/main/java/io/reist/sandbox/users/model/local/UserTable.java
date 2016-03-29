@@ -18,9 +18,9 @@
  * along with MVP-Sandbox.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.reist.sandbox.app.model.local;
+package io.reist.sandbox.users.model.local;
 
-import io.reist.visum.model.local.BaseTable;
+import io.reist.sandbox.app.model.local.BaseTable;
 
 /**
  * Created by m039 on 11/12/15.

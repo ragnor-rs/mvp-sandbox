@@ -41,6 +41,10 @@ public class SandboxResponse<T> implements VisumResponse<T> {
         this.result = result;
     }
 
+    public SandboxResponse(SandboxError error) {
+        this.error = error;
+    }
+
     @Nullable
     @Override
     public T getResult() {

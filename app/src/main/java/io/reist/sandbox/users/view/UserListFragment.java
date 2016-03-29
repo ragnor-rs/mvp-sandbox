@@ -42,8 +42,7 @@ import io.reist.visum.model.VisumError;
 /**
  * Created by m039 on 11/12/15.
  */
-public class UserListFragment extends BaseFragment<UserListPresenter>
-        implements UserListView {
+public class UserListFragment extends BaseFragment<UserListPresenter> implements UserListView {
 
     @Inject
     UserListPresenter mPresenter;

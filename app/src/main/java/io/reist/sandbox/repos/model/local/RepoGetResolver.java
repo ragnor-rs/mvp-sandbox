@@ -18,7 +18,7 @@
  * along with MVP-Sandbox.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.reist.sandbox.app.model.local.resolvers;
+package io.reist.sandbox.repos.model.local;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
@@ -31,8 +31,7 @@ import com.pushtorefresh.storio.sqlite.queries.RawQuery;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.RepoStorIOSQLiteGetResolver;
 import io.reist.sandbox.app.model.User;
-import io.reist.sandbox.app.model.local.ReposTable;
-import io.reist.sandbox.app.model.local.UserTable;
+import io.reist.sandbox.users.model.local.UserTable;
 
 /**
  * Created by m039 on 11/17/15.
@@ -50,7 +49,7 @@ public class RepoGetResolver extends GetResolver<Repo> {
     public Repo mapFromCursor(@NonNull Cursor cursor) {
         Repo repo = defaultGetResolver.mapFromCursor(cursor);
 
-        long userId = cursor.getLong(cursor.getColumnIndex(ReposTable.Column.USER_ID));
+        long userId = cursor.getLong(cursor.getColumnIndex(RepoTable.Column.USER_ID));
 
         final StorIOSQLite storIOSQLite = storIOSQLiteFromPerformGet.get();
 

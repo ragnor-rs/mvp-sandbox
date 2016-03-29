@@ -26,19 +26,17 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 import java.util.List;
 
 import io.reist.sandbox.app.model.User;
-import io.reist.sandbox.app.model.local.UserTable;
 import io.reist.sandbox.users.model.UserService;
-import io.reist.visum.model.BaseResponse;
+import io.reist.sandbox.app.model.SandboxResponse;
 import io.reist.visum.model.VisumResponse;
-import io.reist.visum.model.local.StorIoService;
+import io.reist.sandbox.app.model.local.StorIoService;
 import rx.Observable;
 
 /**
  * Created by m039 on 11/12/15.
  */
-public class StorIoUserService extends StorIoService<User>
-    implements UserService
-{
+public class StorIoUserService extends StorIoService<User> implements UserService {
+
 
     public StorIoUserService(StorIOSQLite storIoSqLite) {
         super(storIoSqLite);
@@ -47,7 +45,7 @@ public class StorIoUserService extends StorIoService<User>
     @Override
     public Observable<? extends VisumResponse<User>> byId(Long id) {
         return unique(User.class, UserTable.NAME, id)
-                .map(BaseResponse<User>::new);
+                .map(SandboxResponse<User>::new);
     }
 
     @Override
@@ -65,6 +63,7 @@ public class StorIoUserService extends StorIoService<User>
                         .build())
                 .prepare()
                 .createObservable()
-                .map(BaseResponse::new);
+                .map(SandboxResponse::new);
     }
+
 }

@@ -28,9 +28,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.SandboxError;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.users.view.UserReposView;
-import io.reist.visum.model.BaseError;
 import io.reist.visum.model.VisumResponse;
 import io.reist.visum.presenter.VisumPresenter;
 import rx.Observer;
@@ -81,7 +81,7 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
 
         @Override
         public void onError(Throwable e) {
-            view().displayError(new BaseError(e));
+            view().displayError(new SandboxError(e));
         }
 
     }
@@ -105,7 +105,7 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
         @Override
         public void onError(Throwable e) {
             Log.e(TAG, "Error fetching data", e);
-            view().displayError(new BaseError(e));
+            view().displayError(new SandboxError(e));
             view().showLoader(false);
         }
 

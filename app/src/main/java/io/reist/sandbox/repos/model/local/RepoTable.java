@@ -18,16 +18,17 @@
  * along with MVP-Sandbox.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.reist.sandbox.app.model.local;
+package io.reist.sandbox.repos.model.local;
 
-import io.reist.visum.model.local.BaseTable;
+import io.reist.sandbox.app.model.local.BaseTable;
+import io.reist.sandbox.users.model.local.UserTable;
 
 /**
  * Created by Reist on 10/16/15.
  */
-public class ReposTable extends BaseTable {
+public class RepoTable extends BaseTable {
 
-    public static final String NAME = "repos";
+    public static final String NAME = "repo";
 
     public static final class Column extends BaseTable.Column {
 

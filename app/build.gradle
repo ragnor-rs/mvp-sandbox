@@ -59,6 +59,9 @@ android {
 }
 
 def supportVersion = '23.2.0'
+def retrofitVersion = '2.0.0-beta4'
+def storioVersion = '1.5.0'
+def daggerVersion = '2.0.1'
 
 dependencies {
 
@@ -69,12 +72,22 @@ dependencies {
     androidTestCompile "com.android.support:support-annotations:$supportVersion"
 
     // IoC
-    apt 'com.google.dagger:dagger-compiler:2.0.1'
-    compile 'com.google.dagger:dagger:2.0.1'
+    apt "com.google.dagger:dagger-compiler:$daggerVersion"
+    compile "com.google.dagger:dagger:$daggerVersion"
     provided 'javax.annotation:jsr250-api:1.0'
 
+    // Network layer
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
+
     // Database layer
-    apt 'com.pushtorefresh.storio:sqlite-annotations-processor:1.5.0'
+    compile "com.pushtorefresh.storio:sqlite:$storioVersion"
+    compile "com.pushtorefresh.storio:sqlite-annotations:$storioVersion"
+    apt "com.pushtorefresh.storio:sqlite-annotations-processor:$storioVersion"
+
+    // UI
+    compile 'com.jakewharton:butterknife:7.0.1'
 
     compile project(':visum')
 
