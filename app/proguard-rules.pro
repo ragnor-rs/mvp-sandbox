@@ -35,6 +35,7 @@
 -keep class retrofit2.** { *; }
 -dontnote retrofit2.Platform
 -dontwarn retrofit2.Platform$Java8
+-dontnote retrofit2.Platform$IOS$MainThreadExecutor
 
 # Okio
 -keep class okio.**
@@ -80,6 +81,9 @@
 -keep class android.support.design.**
 -dontnote android.support.v4.text.ICUCompat**
 -dontnote android.support.v7.widget.DrawableUtils
+-dontnote android.support.v4.media.IMediaBrowserServiceCallbacksAdapterApi21
+-dontnote android.support.v4.media.IMediaBrowserServiceCallbacksAdapterApi21$Stub
+-dontnote android.support.v4.media.ParceledListSliceAdapterApi21
 
 # Gson
 -keep class com.google.gson.**
