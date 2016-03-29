@@ -18,7 +18,7 @@
  * along with MVP-Sandbox.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.reist.sandbox.app.model.local.resolvers;
+package io.reist.sandbox.repos.model.local;
 
 import android.content.ContentValues;
 import android.support.annotation.NonNull;
@@ -32,8 +32,7 @@ import java.util.Set;
 
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.RepoStorIOSQLitePutResolver;
-import io.reist.sandbox.app.model.local.ReposTable;
-import io.reist.sandbox.app.model.local.UserTable;
+import io.reist.sandbox.users.model.local.UserTable;
 
 /**
  * Created by m039 on 11/17/15.
@@ -47,7 +46,7 @@ public class RepoPutResolver extends PutResolver<Repo> {
         public ContentValues mapToContentValues(@NonNull Repo object) {
             ContentValues contentValues = super.mapToContentValues(object);
 
-            contentValues.put(ReposTable.Column.USER_ID, object.owner.id);
+            contentValues.put(RepoTable.Column.USER_ID, object.owner.id);
 
             return contentValues;
         }
@@ -72,7 +71,7 @@ public class RepoPutResolver extends PutResolver<Repo> {
         Set<String> affectedTables = new HashSet<>(2);
 
         affectedTables.add(UserTable.NAME);
-        affectedTables.add(ReposTable.NAME);
+        affectedTables.add(RepoTable.NAME);
 
         if (repoResult.wasInserted()) {
             return PutResult.newInsertResult(repoResult.insertedId(), affectedTables);

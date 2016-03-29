@@ -18,36 +18,23 @@
  * along with MVP-Sandbox.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.reist.sandbox.repos.presenter;
+package io.reist.sandbox.app.model.local;
 
-import io.reist.visum.model.BaseError;
-import io.reist.visum.model.VisumError;
-import io.reist.visum.model.VisumResponse;
-import rx.Observer;
+import android.content.Context;
+import android.support.annotation.NonNull;
 
-/**
- * Created by defuera on 12/11/2015.
- */
-public abstract class ResponseObserver<T> implements Observer<VisumResponse<T>> {
+import io.reist.sandbox.repos.model.local.RepoTable;
+import io.reist.sandbox.users.model.local.UserTable;
 
-    @Override
-    public void onNext(VisumResponse<T> response) {
-        if (response.isSuccessful())
-            onSuccess(response.getResult());
-        else
-            onFail(response.getError());
+public class DbOpenHelper extends BaseDbHelper {
+
+    private static final String DATABASE_NAME = "sandbox";
+    private static final int DATABASE_VERSION = 3;
+
+    public DbOpenHelper(@NonNull Context context) {
+        super(context, DATABASE_NAME, DATABASE_VERSION);
+        addTable(RepoTable.class);
+        addTable(UserTable.class);
     }
-
-    protected abstract void onFail(VisumError error);
-
-    protected abstract void onSuccess(T result);
-
-    @Override
-    public void onError(Throwable e) {
-        onFail(new BaseError(e));
-    }
-
-    @Override
-    public void onCompleted() {}
 
 }

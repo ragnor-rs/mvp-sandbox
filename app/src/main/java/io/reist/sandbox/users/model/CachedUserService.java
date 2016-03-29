@@ -21,7 +21,7 @@
 package io.reist.sandbox.users.model;
 
 import io.reist.sandbox.app.model.User;
-import io.reist.visum.model.CachedService;
+import io.reist.sandbox.app.model.CachedService;
 
 /**
  * Created by m039 on 11/12/15.

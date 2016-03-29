@@ -25,7 +25,7 @@ import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.repos.model.RepoService;
 import io.reist.sandbox.repos.view.RepoEditView;
 import io.reist.sandbox.repos.view.RepoListView;
-import io.reist.visum.model.BaseResponse;
+import io.reist.sandbox.app.model.SandboxResponse;
 import rx.Observable;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -103,11 +103,11 @@ public class ReposPresentersTest extends RobolectricTestCase {
             repos.add(repo1);
             repos.add(repo2);
 
-            doReturn(Observable.just(new BaseResponse<>(repos)))
+            doReturn(Observable.just(new SandboxResponse<>(repos)))
                     .when(mockedRepoService)
                     .list();
 
-            doReturn(Observable.just(new BaseResponse<>(repo1)))
+            doReturn(Observable.just(new SandboxResponse<>(repo1)))
                     .when(mockedRepoService)
                     .byId(any());
 

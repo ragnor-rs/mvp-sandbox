@@ -24,14 +24,14 @@ import com.google.gson.annotations.SerializedName;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
-import io.reist.sandbox.app.model.local.ReposTable;
-import io.reist.visum.model.local.BaseTable;
+import io.reist.sandbox.repos.model.local.RepoTable;
+import io.reist.sandbox.app.model.local.BaseTable;
 
-@StorIOSQLiteType(table = ReposTable.NAME)
+@StorIOSQLiteType(table = RepoTable.NAME)
 public class Repo {
 
     @SerializedName("id")
-    @StorIOSQLiteColumn(name = ReposTable.Column.ID, key = true)
+    @StorIOSQLiteColumn(name = RepoTable.Column.ID, key = true)
     public Long id;
 
     @SerializedName("revision")
@@ -39,19 +39,19 @@ public class Repo {
     public int revision;
 
     @SerializedName("name")
-    @StorIOSQLiteColumn(name = ReposTable.Column.NAME)
+    @StorIOSQLiteColumn(name = RepoTable.Column.NAME)
     public String name;
 
     @SerializedName("html_url")
-    @StorIOSQLiteColumn(name = ReposTable.Column.URL)
+    @StorIOSQLiteColumn(name = RepoTable.Column.URL)
     public String url;
 
     @SerializedName("like_count")
-    @StorIOSQLiteColumn(name = ReposTable.Column.LIKE_COUNT)
+    @StorIOSQLiteColumn(name = RepoTable.Column.LIKE_COUNT)
     public int likeCount;
 
     @SerializedName("liked_by_me")
-    @StorIOSQLiteColumn(name = ReposTable.Column.LIKED_BY_ME)
+    @StorIOSQLiteColumn(name = RepoTable.Column.LIKED_BY_ME)
     public boolean likedByMe;
 
     @SerializedName("owner")

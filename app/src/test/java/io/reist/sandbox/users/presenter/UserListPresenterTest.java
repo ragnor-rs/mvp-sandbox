@@ -25,7 +25,7 @@ import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.view.UserListView;
-import io.reist.visum.model.BaseResponse;
+import io.reist.sandbox.app.model.SandboxResponse;
 import rx.Observable;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,7 +84,7 @@ public class UserListPresenterTest extends RobolectricTestCase {
             user2.name = "Frank";
             users.add(user2);
 
-            doReturn(Observable.just(new BaseResponse<>(users))).when(mockedUserService).list();
+            doReturn(Observable.just(new SandboxResponse<>(users))).when(mockedUserService).list();
 
             return mockedUserService;
         }

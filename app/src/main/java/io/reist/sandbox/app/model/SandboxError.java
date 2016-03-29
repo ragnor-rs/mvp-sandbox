@@ -34,16 +34,22 @@ public class SandboxError implements VisumError {
     @SerializedName("message")
     private String message;
 
+    private transient Throwable throwable;
+
     @Nullable
     @Override
     public Throwable getThrowable() {
-        return null;
+        return throwable;
     }
 
     @Nullable
     @Override
     public String getMessage() {
         return message;
+    }
+
+    public SandboxError(Throwable t) {
+        throwable = t;
     }
 
 }

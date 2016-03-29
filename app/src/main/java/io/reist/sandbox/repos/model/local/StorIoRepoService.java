@@ -28,11 +28,10 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
-import io.reist.sandbox.app.model.local.ReposTable;
 import io.reist.sandbox.repos.model.RepoService;
-import io.reist.visum.model.BaseResponse;
+import io.reist.sandbox.app.model.SandboxResponse;
 import io.reist.visum.model.VisumResponse;
-import io.reist.visum.model.local.StorIoService;
+import io.reist.sandbox.app.model.local.StorIoService;
 import rx.Observable;
 
 public class StorIoRepoService extends StorIoService<Repo> implements RepoService {
@@ -45,17 +44,17 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
     @Override
     public Observable<VisumResponse<List<Repo>>> list() {
         return preparedGetBuilder(Repo.class)
-                .withQuery(Query.builder().table(ReposTable.NAME).build())
+                .withQuery(Query.builder().table(RepoTable.NAME).build())
                 .prepare()
                 .createObservable()
-                .map(BaseResponse::new);
+                .map(SandboxResponse::new);
     }
 
     @RxLogObservable
     @Override
     public Observable<VisumResponse<Repo>> byId(Long id) {
-        return unique(Repo.class, ReposTable.NAME, id)
-                .map(BaseResponse::new);
+        return unique(Repo.class, RepoTable.NAME, id)
+                .map(SandboxResponse::new);
     }
 
     @Override
@@ -64,14 +63,14 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 .delete()
                 .byQuery(
                         DeleteQuery.builder()
-                                .table(ReposTable.NAME)
-                                .where(ReposTable.Column.ID + " = ?")
+                                .table(RepoTable.NAME)
+                                .where(RepoTable.Column.ID + " = ?")
                                 .whereArgs(id)
                                 .build()
                 )
                 .prepare() // BTW: it will use transaction!
                 .createObservable()
-                .map(t -> new BaseResponse<>(t.numberOfRowsDeleted()));
+                .map(t -> new SandboxResponse<>(t.numberOfRowsDeleted()));
     }
 
     @RxLogObservable
@@ -81,14 +80,14 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 .withQuery(
                         Query
                                 .builder()
-                                .table(ReposTable.NAME)
-                                .where(ReposTable.Column.USER_ID + " = ?")
+                                .table(RepoTable.NAME)
+                                .where(RepoTable.Column.USER_ID + " = ?")
                                 .whereArgs(userId)
-                                .orderBy(ReposTable.Column.ID)
+                                .orderBy(RepoTable.Column.ID)
                                 .build())
                 .prepare()
                 .createObservable()
-                .map(BaseResponse::new);
+                .map(SandboxResponse::new);
     }
 
     @Override
@@ -102,6 +101,7 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
     }
 
     private Observable<VisumResponse<Repo>> like(final Repo repo, boolean likedByMe) {
+
         if (likedByMe) {
             repo.likeCount += 1;
         } else {
@@ -115,7 +115,8 @@ public class StorIoRepoService extends StorIoService<Repo> implements RepoServic
                 .prepare()
                 .executeAsBlocking();
 
-        return Observable.just(repo).map(BaseResponse::new);
+        return Observable.just(repo).map(SandboxResponse::new);
+
     }
 
 }

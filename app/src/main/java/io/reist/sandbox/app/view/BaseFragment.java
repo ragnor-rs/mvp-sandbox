@@ -20,8 +20,14 @@
 
 package io.reist.sandbox.app.view;
 
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import butterknife.ButterKnife;
 import io.reist.visum.presenter.VisumPresenter;
 import io.reist.visum.view.VisumFragment;
 
@@ -45,6 +51,14 @@ public abstract class BaseFragment<P extends VisumPresenter> extends VisumFragme
 
     public interface FragmentController {
         void showFragment(VisumFragment fragment, boolean remove);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View view = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
 }

@@ -28,7 +28,7 @@ import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.local.StorIoUserService;
 import io.reist.sandbox.users.model.remote.RetrofitUserService;
-import io.reist.visum.model.BaseResponse;
+import io.reist.sandbox.app.model.SandboxResponse;
 import io.reist.visum.model.VisumResponse;
 import rx.Observable;
 import rx.observers.TestSubscriber;
@@ -136,7 +136,7 @@ public class UserServiceTest extends RobolectricTestCase {
 
         users.add(user);
 
-        doReturn(Observable.just(new BaseResponse<>(users)))
+        doReturn(Observable.just(new SandboxResponse<>(users)))
                 .when(S_MOCKED_MVP_SANDBOX_API)
                 .listUsers();
     }
