@@ -22,8 +22,6 @@ package io.reist.sandbox.app.model;
 
 import java.util.List;
 
-import io.reist.visum.model.VisumResponse;
-import io.reist.visum.model.VisumService;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -31,12 +29,12 @@ import rx.functions.Func1;
  * Created by Reist on 11/2/15.
  * Combines local and remote services
  */
-public abstract class CachedService<T> implements VisumService<T> {
+public abstract class CachedService<T> implements SandboxService<T> {
 
-    protected final VisumService<T> local;
-    protected final VisumService<T> remote;
+    protected final SandboxService<T> local;
+    protected final SandboxService<T> remote;
 
-    public CachedService(VisumService<T> local, VisumService<T> remote) {
+    public CachedService(SandboxService<T> local, SandboxService<T> remote) {
         this.local = local;
         this.remote = remote;
     }
@@ -47,7 +45,7 @@ public abstract class CachedService<T> implements VisumService<T> {
      * On success remote service saves data to local service, which should emit updated data immediately
      */
     @Override
-    public final Observable<VisumResponse<List<T>>> list() {
+    public final Observable<SandboxResponse<List<T>>> list() {
         return Observable
                 .merge(
                         local.list(),
@@ -60,7 +58,7 @@ public abstract class CachedService<T> implements VisumService<T> {
      * @see CachedService#list()
      */
     @Override
-    public final Observable<VisumResponse<T>> byId(Long id) {
+    public final Observable<SandboxResponse<T>> byId(Long id) {
         return Observable
                 .merge(
                         local.byId(id),
@@ -77,7 +75,7 @@ public abstract class CachedService<T> implements VisumService<T> {
      * @return num of updated items
      */
     @Override
-    public final Observable<VisumResponse<List<T>>> save(List<T> list) { //cur we are getting num of updated items, but what about rest response?
+    public final Observable<SandboxResponse<List<T>>> save(List<T> list) { //cur we are getting num of updated items, but what about rest response?
         return Observable.concat(local.save(list), remote.save(list));
     }
 
@@ -88,42 +86,42 @@ public abstract class CachedService<T> implements VisumService<T> {
      * @return boolean - whether data saved successfully
      */
     @Override
-    public final Observable<VisumResponse<T>> save(T t) {
+    public final Observable<SandboxResponse<T>> save(T t) {
         return Observable.concat(
                 local.save(t).first(),
                 remote.save(t));
     }
 
     @Override
-    public Observable<VisumResponse<Integer>> delete(Long id) {
+    public Observable<SandboxResponse<Integer>> delete(Long id) {
         return Observable.concat(local.delete(id), remote.delete(id));
     }
 
     @Override
-    public VisumResponse<List<T>> saveSync(List<T> list) {
+    public SandboxResponse<List<T>> saveSync(List<T> list) {
         return local.saveSync(list);
     }
 
     @Override
-    public VisumResponse<T> saveSync(T t) {
+    public SandboxResponse<T> saveSync(T t) {
         return local.saveSync(t);
     }
 
     // ----
 
-    public static class ListResponseFilter<T> implements Func1<VisumResponse<List<T>>, Boolean> {
+    public static class ListResponseFilter<T> implements Func1<SandboxResponse<List<T>>, Boolean> {
 
         @Override
-        public Boolean call(VisumResponse<List<T>> response) {
+        public Boolean call(SandboxResponse<List<T>> response) {
             return response.getResult() != null && !response.getResult().isEmpty() || !response.isSuccessful();
         }
 
     }
 
-    public static class ResponseFilter<T> implements Func1<VisumResponse<T>, Boolean> {
+    public static class ResponseFilter<T> implements Func1<SandboxResponse<T>, Boolean> {
 
         @Override
-        public Boolean call(VisumResponse<T> response) {
+        public Boolean call(SandboxResponse<T> response) {
             return response.getResult() != null || !response.isSuccessful();
         }
 
@@ -131,9 +129,9 @@ public abstract class CachedService<T> implements VisumService<T> {
 
     private static class SaveTransformer<T> {
 
-        protected final VisumService<T> service;
+        protected final SandboxService<T> service;
 
-        public SaveTransformer(VisumService<T> service) {
+        public SaveTransformer(SandboxService<T> service) {
             this.service = service;
         }
 
@@ -141,14 +139,14 @@ public abstract class CachedService<T> implements VisumService<T> {
 
     public static class SaveAndEmitErrorsTransformer<T>
             extends SaveTransformer<T>
-            implements Observable.Transformer<VisumResponse<T>, VisumResponse<T>> {
+            implements Observable.Transformer<SandboxResponse<T>, SandboxResponse<T>> {
 
-        public SaveAndEmitErrorsTransformer(VisumService<T> service) {
+        public SaveAndEmitErrorsTransformer(SandboxService<T> service) {
             super(service);
         }
 
         @Override
-        public Observable<VisumResponse<T>> call(Observable<VisumResponse<T>> observable) {
+        public Observable<SandboxResponse<T>> call(Observable<SandboxResponse<T>> observable) {
             return observable
                     .doOnNext(r -> service.saveSync(r.getResult()))
                     .filter(r -> !r.isSuccessful())
@@ -158,14 +156,14 @@ public abstract class CachedService<T> implements VisumService<T> {
 
     public static class SaveAndEmitErrorsListTransformer<T>
             extends SaveTransformer<T>
-            implements Observable.Transformer<VisumResponse<List<T>>, VisumResponse<List<T>>> {
+            implements Observable.Transformer<SandboxResponse<List<T>>, SandboxResponse<List<T>>> {
 
-        public SaveAndEmitErrorsListTransformer(VisumService<T> service) {
+        public SaveAndEmitErrorsListTransformer(SandboxService<T> service) {
             super(service);
         }
 
         @Override
-        public Observable<VisumResponse<List<T>>> call(Observable<VisumResponse<List<T>>> observable) {
+        public Observable<SandboxResponse<List<T>>> call(Observable<SandboxResponse<List<T>>> observable) {
             return observable
                     .doOnNext(r -> service.saveSync(r.getResult()))
                     .filter(r -> !r.isSuccessful())

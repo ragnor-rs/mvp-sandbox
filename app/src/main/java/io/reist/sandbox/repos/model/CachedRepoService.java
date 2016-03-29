@@ -24,9 +24,9 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 
 import java.util.List;
 
-import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.CachedService;
-import io.reist.visum.model.VisumResponse;
+import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.SandboxResponse;
 import rx.Observable;
 
 public class CachedRepoService extends CachedService<Repo> implements RepoService {
@@ -43,7 +43,7 @@ public class CachedRepoService extends CachedService<Repo> implements RepoServic
 
     @RxLogObservable
     @Override
-    public Observable<VisumResponse<List<Repo>>> findReposByUserId(final Long userId) {
+    public Observable<SandboxResponse<List<Repo>>> findReposByUserId(final Long userId) {
         return Observable
                 .merge(
                         local.findReposByUserId(userId),
@@ -54,18 +54,18 @@ public class CachedRepoService extends CachedService<Repo> implements RepoServic
 
     @RxLogObservable
     @Override
-    public Observable<VisumResponse<Repo>> like(Repo repo) {
+    public Observable<SandboxResponse<Repo>> like(Repo repo) {
         return like(repo, true);
     }
 
     @RxLogObservable
     @Override
-    public Observable<VisumResponse<Repo>> unlike(Repo repo) {
+    public Observable<SandboxResponse<Repo>> unlike(Repo repo) {
         return like(repo, false);
     }
 
     @RxLogObservable
-    private Observable<VisumResponse<Repo>> like(Repo repo, boolean like) {
+    private Observable<SandboxResponse<Repo>> like(Repo repo, boolean like) {
         return Observable
                 .merge(
                         (like ? local.like(repo) : local.unlike(repo)),

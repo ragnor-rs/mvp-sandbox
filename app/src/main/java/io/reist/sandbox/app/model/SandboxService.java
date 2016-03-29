@@ -18,19 +18,29 @@
  * along with Visum.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.reist.sandbox.app.model.remote;
+package io.reist.sandbox.app.model;
 
-import io.reist.sandbox.app.model.SandboxService;
+import java.util.List;
+
+import rx.Observable;
 
 /**
- * Created by Reist on 11/2/15.
+ * Created by Reist on 12/2/15.
  */
-public abstract class RetrofitService<T> implements SandboxService<T> {
+public interface SandboxService<T> {
 
-    protected final SandboxApi sandboxApi;
+    Observable<SandboxResponse<List<T>>> list();
 
-    public RetrofitService(SandboxApi sandboxApi) {
-        this.sandboxApi = sandboxApi;
-    }
+    Observable<SandboxResponse<T>> byId(Long id);
+
+    Observable<SandboxResponse<List<T>>> save(List<T> list);
+
+    Observable<SandboxResponse<T>> save(T t);
+
+    Observable<SandboxResponse<Integer>> delete(Long id);
+
+    SandboxResponse<List<T>> saveSync(List<T> list);
+
+    SandboxResponse<T> saveSync(T t);
 
 }

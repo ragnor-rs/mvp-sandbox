@@ -32,11 +32,11 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
 import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.SandboxError;
 import io.reist.sandbox.app.view.BaseFragment;
 import io.reist.sandbox.app.view.widget.LoaderView;
 import io.reist.sandbox.repos.ReposComponent;
 import io.reist.sandbox.repos.presenter.RepoEditPresenter;
-import io.reist.visum.model.VisumError;
 import io.reist.visum.view.VisumFragment;
 
 /**
@@ -105,7 +105,7 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     }
 
     @Override
-    public void displayError(VisumError error) {
+    public void displayError(SandboxError error) {
         loaderView.showNetworkError();
     }
 

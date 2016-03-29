@@ -23,19 +23,19 @@ package io.reist.sandbox.repos.model;
 import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
-import io.reist.visum.model.VisumResponse;
-import io.reist.visum.model.VisumService;
+import io.reist.sandbox.app.model.SandboxResponse;
+import io.reist.sandbox.app.model.SandboxService;
 import rx.Observable;
 
 /**
  * Created by Reist on 11/2/15.
  */
-public interface RepoService extends VisumService<Repo> {
+public interface RepoService extends SandboxService<Repo> {
 
-    Observable<? extends VisumResponse<List<Repo>>> findReposByUserId(Long userId);
+    Observable<SandboxResponse<List<Repo>>> findReposByUserId(Long userId);
 
-    Observable<? extends VisumResponse<Repo>> like(Repo repo);
+    Observable<SandboxResponse<Repo>> like(Repo repo);
 
-    Observable<? extends VisumResponse<Repo>> unlike(Repo repo);
+    Observable<SandboxResponse<Repo>> unlike(Repo repo);
 
 }

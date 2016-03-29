@@ -25,10 +25,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reist.sandbox.app.model.SandboxResponse;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.users.view.UserListView;
-import io.reist.visum.model.VisumResponse;
 import io.reist.visum.presenter.VisumPresenter;
 import rx.Observer;
 
@@ -65,10 +65,10 @@ public class UserListPresenter extends VisumPresenter<UserListView> {
         return mIsDataLoaded;
     }
 
-    private class UsersObserver implements Observer<VisumResponse<List<User>>> {
+    private class UsersObserver implements Observer<SandboxResponse<List<User>>> {
 
         @Override
-        public void onNext(VisumResponse<List<User>> response) {
+        public void onNext(SandboxResponse<List<User>> response) {
             UserListView view = view();
             if (response.isSuccessful()) {
                 view.displayData(response.getResult());

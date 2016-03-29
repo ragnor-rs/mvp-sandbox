@@ -22,8 +22,8 @@ package io.reist.sandbox.users.view;
 
 import java.util.List;
 
+import io.reist.sandbox.app.model.SandboxError;
 import io.reist.sandbox.app.model.User;
-import io.reist.visum.model.VisumError;
 
 /**
  * Created by m039 on 11/12/15.
@@ -32,7 +32,7 @@ public interface UserListView {
 
     void showLoader(boolean show);
 
-    void displayError(VisumError error);
+    void displayError(SandboxError error);
 
     void displayData(List<User> users);
 

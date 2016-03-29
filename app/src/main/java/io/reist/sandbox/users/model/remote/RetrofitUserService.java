@@ -22,11 +22,11 @@ package io.reist.sandbox.users.model.remote;
 
 import java.util.List;
 
+import io.reist.sandbox.app.model.SandboxResponse;
 import io.reist.sandbox.app.model.User;
+import io.reist.sandbox.app.model.remote.RetrofitService;
 import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.users.model.UserService;
-import io.reist.visum.model.VisumResponse;
-import io.reist.sandbox.app.model.remote.RetrofitService;
 import rx.Observable;
 
 /**
@@ -39,37 +39,37 @@ public class RetrofitUserService extends RetrofitService<User> implements UserSe
     }
 
     @Override
-    public Observable<? extends VisumResponse<List<User>>> list() {
+    public Observable<SandboxResponse<List<User>>> list() {
         return sandboxApi.listUsers();
     }
 
     @Override
-    public VisumResponse<User> saveSync(User user) {
+    public SandboxResponse<User> saveSync(User user) {
         throw new UnsupportedOperationException("Unsupported");
     }
 
     @Override
-    public Observable<VisumResponse<User>> byId(Long id) {
+    public Observable<SandboxResponse<User>> byId(Long id) {
         throw new UnsupportedOperationException("Unsupported");
     }
 
     @Override
-    public Observable<VisumResponse<Integer>> delete(Long id) {
+    public Observable<SandboxResponse<Integer>> delete(Long id) {
         throw new UnsupportedOperationException("Unsupported");
     }
 
     @Override
-    public VisumResponse<List<User>> saveSync(List<User> list) {
+    public SandboxResponse<List<User>> saveSync(List<User> list) {
         throw new UnsupportedOperationException("Unsupported");
     }
 
     @Override
-    public Observable<? extends VisumResponse<List<User>>> save(List<User> list) {
+    public Observable<SandboxResponse<List<User>>> save(List<User> list) {
         throw new UnsupportedOperationException("Unsupported");
     }
 
     @Override
-    public Observable<? extends VisumResponse<User>> save(User t) {
+    public Observable<SandboxResponse<User>> save(User t) {
         throw new UnsupportedOperationException("Unsupported");
     }
     

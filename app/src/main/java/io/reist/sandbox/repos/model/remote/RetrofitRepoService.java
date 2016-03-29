@@ -25,10 +25,10 @@ import com.fernandocejas.frodo.annotation.RxLogObservable;
 import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
+import io.reist.sandbox.app.model.SandboxResponse;
+import io.reist.sandbox.app.model.remote.RetrofitService;
 import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.repos.model.RepoService;
-import io.reist.visum.model.VisumResponse;
-import io.reist.sandbox.app.model.remote.RetrofitService;
 import rx.Observable;
 
 public class RetrofitRepoService extends RetrofitService<Repo> implements RepoService {
@@ -39,55 +39,55 @@ public class RetrofitRepoService extends RetrofitService<Repo> implements RepoSe
 
     @RxLogObservable
     @Override
-    public Observable<? extends VisumResponse<List<Repo>>> list() {
+    public Observable<SandboxResponse<List<Repo>>> list() {
         return sandboxApi.listRepos();
     }
 
     @RxLogObservable
     @Override
-    public Observable<? extends VisumResponse<Repo>> byId(Long id) {
+    public Observable<SandboxResponse<Repo>> byId(Long id) {
         return sandboxApi.repoById(id);
     }
 
     @RxLogObservable
     @Override
-    public Observable<? extends VisumResponse<List<Repo>>> save(List<Repo> list) { //cur this is not what we really get form api
+    public Observable<SandboxResponse<List<Repo>>> save(List<Repo> list) { //cur this is not what we really get form api
         throw new UnsupportedOperationException();
     }
 
     @RxLogObservable
     @Override
-    public Observable<? extends VisumResponse<Repo>> save(Repo repo) {
+    public Observable<SandboxResponse<Repo>> save(Repo repo) {
         return sandboxApi.save(repo);
     }
 
     @Override
-    public Observable<? extends VisumResponse<Integer>> delete(Long id) {
+    public Observable<SandboxResponse<Integer>> delete(Long id) {
         return sandboxApi.deleteRepo(id);
     }
 
     @Override
-    public VisumResponse<List<Repo>> saveSync(List<Repo> list) {
+    public SandboxResponse<List<Repo>> saveSync(List<Repo> list) {
         throw new UnsupportedOperationException("you cannot save make api calls synchronously");
     }
 
     @Override
-    public VisumResponse<Repo> saveSync(Repo repo) {
+    public SandboxResponse<Repo> saveSync(Repo repo) {
         throw new UnsupportedOperationException("you cannot save make api calls synchronously");
     }
 
     @Override
-    public Observable<? extends VisumResponse<Repo>> unlike(Repo repo) {
+    public Observable<SandboxResponse<Repo>> unlike(Repo repo) {
         return sandboxApi.unlike(repo.id);
     }
 
     @Override
-    public Observable<? extends VisumResponse<Repo>> like(Repo repo) {
+    public Observable<SandboxResponse<Repo>> like(Repo repo) {
         return sandboxApi.like(repo.id);
     }
 
     @Override
-    public Observable<? extends VisumResponse<List<Repo>>> findReposByUserId(Long userId) {
+    public Observable<SandboxResponse<List<Repo>>> findReposByUserId(Long userId) {
         return sandboxApi.reposByUserId(userId);
     }
 

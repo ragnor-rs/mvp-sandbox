@@ -21,6 +21,7 @@ import dagger.Component;
 import io.reist.sandbox.BuildConfig;
 import io.reist.sandbox.app.SandboxApplication;
 import io.reist.sandbox.app.SandboxModule;
+import io.reist.sandbox.app.model.SandboxResponse;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.core.RobolectricTestCase;
@@ -28,8 +29,6 @@ import io.reist.sandbox.core.RobolectricTestRunner;
 import io.reist.sandbox.users.UsersModule;
 import io.reist.sandbox.users.model.local.StorIoUserService;
 import io.reist.sandbox.users.model.remote.RetrofitUserService;
-import io.reist.sandbox.app.model.SandboxResponse;
-import io.reist.visum.model.VisumResponse;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
@@ -109,7 +108,7 @@ public class UserServiceTest extends RobolectricTestCase {
     }
 
     void testIfUsersExist() {
-        TestSubscriber<VisumResponse<List<User>>> testSubscriber = new TestSubscriber<>();
+        TestSubscriber<SandboxResponse<List<User>>> testSubscriber = new TestSubscriber<>();
         userService.list().subscribe(testSubscriber);
 
         testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(500, TimeUnit.MILLISECONDS);
@@ -119,7 +118,7 @@ public class UserServiceTest extends RobolectricTestCase {
     }
 
     void testIfUserWithUserIdExist() {
-        TestSubscriber<VisumResponse<User>> testSubscriber = new TestSubscriber<>();
+        TestSubscriber<SandboxResponse<User>> testSubscriber = new TestSubscriber<>();
         userService.byId(USER_ID).subscribe(testSubscriber);
 
         testSubscriber.awaitTerminalEventAndUnsubscribeOnTimeout(500, TimeUnit.MILLISECONDS);

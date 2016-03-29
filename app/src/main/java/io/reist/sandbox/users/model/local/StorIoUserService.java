@@ -25,11 +25,10 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
 
-import io.reist.sandbox.app.model.User;
-import io.reist.sandbox.users.model.UserService;
 import io.reist.sandbox.app.model.SandboxResponse;
-import io.reist.visum.model.VisumResponse;
+import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.local.StorIoService;
+import io.reist.sandbox.users.model.UserService;
 import rx.Observable;
 
 /**
@@ -43,18 +42,18 @@ public class StorIoUserService extends StorIoService<User> implements UserServic
     }
 
     @Override
-    public Observable<? extends VisumResponse<User>> byId(Long id) {
+    public Observable<SandboxResponse<User>> byId(Long id) {
         return unique(User.class, UserTable.NAME, id)
                 .map(SandboxResponse<User>::new);
     }
 
     @Override
-    public Observable<VisumResponse<Integer>> delete(Long id) {
+    public Observable<SandboxResponse<Integer>> delete(Long id) {
         throw new IllegalStateException("Unsupported");
     }
 
     @Override
-    public Observable<VisumResponse<List<User>>> list() {
+    public Observable<SandboxResponse<List<User>>> list() {
         return preparedGetBuilder(User.class)
                 .withQuery(Query
                         .builder()
