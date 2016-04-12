@@ -20,10 +20,10 @@
 
 package io.reist.sandbox.app.view;
 
-import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fragmentManager = getFragmentManager();
+        fragmentManager = getSupportFragmentManager();
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showFragment(VisumFragment fragment, boolean remove) {
-        VisumFragmentManager.showFragment(getFragmentManager(),
+        VisumFragmentManager.showFragment(getSupportFragmentManager(),
                 fragment,
                 R.id.fragment_container,
                 remove,
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showFragment(VisumFragment fragment, boolean remove, boolean popBackStack) {
-        VisumFragmentManager.showFragment(getFragmentManager(),
+        VisumFragmentManager.showFragment(getSupportFragmentManager(),
                 fragment,
                 R.id.fragment_container,
                 remove,
