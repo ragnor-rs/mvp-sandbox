@@ -96,7 +96,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
 
         });
 
-        loaderView.setOnRetryClickListener(v -> presenter.loadData());
+        loaderView.setOnRetryClickListener(v -> presenter.loadData(getUserId()));
     }
 
     @Override
@@ -127,7 +127,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
         } else {
             Snackbar
                     .make(mRecyclerView, R.string.network_error, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.retry, v -> presenter.loadData())
+                    .setAction(R.string.retry, v -> presenter.loadData(getUserId()))
                     .show();
         }
     }

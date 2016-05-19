@@ -52,7 +52,11 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
     @Override
     protected void onViewAttached() {
         mIsDataLoaded = false;
-        view().showLoader(true);
+        RepoListView view = view();
+        if (view == null) {
+            throw new RuntimeException("view() for onViewAttached() is null");
+        }
+        view.showLoader(true);
         loadData();
     }
 
@@ -65,21 +69,32 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
 
             @Override
             protected void onFail(SandboxError error) {
-                view().showLoader(false);
-                view().displayError(error);
+                RepoListView view = view();
+                if (view == null) {
+                    return;
+                }
+                view.showLoader(false);
+                view.displayError(error);
             }
 
             @Override
             protected void onSuccess(List<Repo> result) {
                 mIsDataLoaded = true;
-                view().showLoader(false);
-                view().displayData(result); //cur need to check if view detached or crash can occure
+                RepoListView view = view();
+                if (view == null) {
+                    return;
+                }
+                view.showLoader(false);
+                view.displayData(result); //cur need to check if view detached or crash can occure
             }
         });
     }
 
     public void createRepo() {
-        view().showLoader(true);
+        RepoListView view = view();
+        if (view != null) {
+            view.showLoader(true);
+        }
         Random rand = new Random();
         Repo object = new Repo();
 
@@ -100,15 +115,23 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
         @Override
         protected void onFail(SandboxError error) {
             Log.e(TAG, "Error saving data" + error.getMessage());
-            view().displayError(error);
-            view().showLoader(false);
+            RepoListView view = view();
+            if (view == null) {
+                return;
+            }
+            view.displayError(error);
+            view.showLoader(false);
         }
 
         @Override
         protected void onSuccess(Repo result) {
             Log.i(TAG, "success add repo subscriber");
-            view().displaySuccess();
-            view().showLoader(false);
+            RepoListView view = view();
+            if (view == null) {
+                return;
+            }
+            view.displaySuccess();
+            view.showLoader(false);
         }
 
     }

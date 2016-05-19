@@ -51,22 +51,34 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
     protected void onViewAttached() {
         mIsDataLoaded = false;
 
-        long repoId = view().getRepoId();
-        view().displayLoader(true);
+        RepoEditView view = view();
+        if (view == null) {
+            throw new RuntimeException("view() for onViewAttached() is null");
+        }
+        long repoId = view.getRepoId();
+        view.displayLoader(true);
         subscribe(repoService.byId(repoId), new ResponseObserver<Repo>() {
 
             @Override
             protected void onFail(SandboxError error) {
-                view().displayLoader(false);
-                view().displayError(error);
+                RepoEditView view = view();
+                if (view == null) {
+                    return;
+                }
+                view.displayLoader(false);
+                view.displayError(error);
             }
 
             @Override
             protected void onSuccess(Repo result) {
+                RepoEditView view = view();
+                if (view == null) {
+                    return;
+                }
                 mIsDataLoaded = true;
-                view().displayLoader(false);
+                view.displayLoader(false);
                 repo = result;
-                view().displayData(result);
+                view.displayData(result);
             }
 
         });
@@ -85,12 +97,18 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
 
             @Override
             protected void onFail(SandboxError error) {
-                view().displayError(error);
+                RepoEditView view = view();
+                if (view != null) {
+                    view.displayError(error);
+                }
             }
 
             @Override
             protected void onSuccess(Repo result) {
-                view().displayEditSuccess();
+                RepoEditView view = view();
+                if (view != null) {
+                    view.displayEditSuccess();
+                }
             }
 
         });
@@ -107,7 +125,10 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
 
             @Override
             public void onNext(SandboxResponse<Integer> response) {
-                view().back();
+                RepoEditView view = view();
+                if (view != null) {
+                    view.back();
+                }
             }
 
         });

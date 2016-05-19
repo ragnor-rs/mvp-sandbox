@@ -50,7 +50,11 @@ public class UserListPresenter extends VisumPresenter<UserListView> {
     protected void onViewAttached() {
         mIsDataLoaded = false;
 
-        view().showLoader(true);
+        UserListView view = view();
+        if (view == null) {
+            throw new RuntimeException("view() for onViewAttached() is null");
+        }
+        view.showLoader(true);
         loadData();
     }
 
@@ -71,10 +75,16 @@ public class UserListPresenter extends VisumPresenter<UserListView> {
         public void onNext(SandboxResponse<List<User>> response) {
             UserListView view = view();
             if (response.isSuccessful()) {
+                mIsDataLoaded = true;
+                if (view == null) {
+                    return;
+                }
                 view.displayData(response.getResult());
                 view.showLoader(false);
-                mIsDataLoaded = true;
             } else {
+                if (view == null) {
+                    return;
+                }
                 view.displayError(response.getError());
             }
 
@@ -85,7 +95,10 @@ public class UserListPresenter extends VisumPresenter<UserListView> {
 
         @Override
         public void onError(Throwable e) {
-            view().showLoader(false);
+            UserListView view = view();
+            if (view != null) {
+                view.showLoader(false);
+            }
         }
 
     }

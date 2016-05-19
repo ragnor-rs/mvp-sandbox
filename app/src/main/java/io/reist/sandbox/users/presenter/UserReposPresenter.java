@@ -22,6 +22,7 @@ package io.reist.sandbox.users.presenter;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -49,8 +50,12 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
 
     @Override
     protected void onViewAttached() {
-        view().showLoader(true);
-        loadData();
+        UserReposView view = view();
+        if (view == null) {
+            throw new RuntimeException("view() for onViewAttached() is null");
+        }
+        view.showLoader(true);
+        loadData(view.getUserId());
     }
 
     public void like(Repo repo) {
@@ -61,8 +66,8 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
         subscribe(repoService.unlike(repo), new LikeObserver(false));
     }
 
-    public void loadData() {
-        subscribe(repoService.findReposByUserId(view().getUserId()), new RepoListObserver());
+    public void loadData(Long userId) {
+        subscribe(repoService.findReposByUserId(userId), new RepoListObserver());
     }
 
     private class LikeObserver implements Observer<SandboxResponse<Repo>> {
@@ -81,7 +86,11 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
 
         @Override
         public void onError(Throwable e) {
-            view().displayError(new SandboxError(e));
+            UserReposView view = view();
+            if (view == null) {
+                return;
+            }
+            view.displayError(new SandboxError(e));
         }
 
     }
@@ -93,11 +102,21 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
             Log.i(TAG, "--- OBSERVED ON " + Thread.currentThread() + " ---");
             UserReposView view = view();
             if (response.isSuccessful()) {
-                Log.d(TAG, "successfully loaded " + response.getResult().size() + " items");
-                view.displayData(response.getResult());
+                List<Repo> result = response.getResult();
+                if (result == null) {
+                    result = new ArrayList<>();
+                }
+                Log.d(TAG, "successfully loaded " + result.size() + " items");
+                if (view == null) {
+                    return;
+                }
+                view.displayData(result);
                 view.showLoader(false);
             } else {
-                Log.w(TAG, "network error occured");
+                Log.w(TAG, "network error occurred");
+                if (view == null) {
+                    return;
+                }
                 view.displayError(response.getError());
             }
         }
@@ -105,8 +124,12 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
         @Override
         public void onError(Throwable e) {
             Log.e(TAG, "Error fetching data", e);
-            view().displayError(new SandboxError(e));
-            view().showLoader(false);
+            UserReposView view = view();
+            if (view == null) {
+                return;
+            }
+            view.displayError(new SandboxError(e));
+            view.showLoader(false);
         }
 
         @Override

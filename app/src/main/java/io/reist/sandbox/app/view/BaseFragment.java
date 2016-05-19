@@ -36,8 +36,11 @@ import io.reist.visum.view.VisumFragment;
  */
 public abstract class BaseFragment<P extends VisumPresenter> extends VisumFragment<P> {
 
+    private final int layoutResId;
+
     public BaseFragment(@LayoutRes int layoutResId) {
-        super(layoutResId);
+        super();
+        this.layoutResId = layoutResId;
     }
 
     protected FragmentController getFragmentController() {
@@ -59,6 +62,11 @@ public abstract class BaseFragment<P extends VisumPresenter> extends VisumFragme
         final View view = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    protected int getLayoutRes() {
+        return layoutResId;
     }
 
 }
