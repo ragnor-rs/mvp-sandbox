@@ -24,11 +24,13 @@ import java.util.List;
 
 import io.reist.sandbox.app.model.SandboxError;
 import io.reist.sandbox.app.model.User;
+import io.reist.sandbox.users.presenter.UserListPresenter;
+import io.reist.visum.view.VisumView;
 
 /**
  * Created by m039 on 11/12/15.
  */
-public interface UserListView {
+public interface UserListView extends VisumView<UserListPresenter> {
 
     void showLoader(boolean show);
 

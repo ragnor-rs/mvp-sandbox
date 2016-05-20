@@ -9,5 +9,9 @@
         android:id="@+id/nav_users"
         android:icon="@android:drawable/ic_menu_gallery"
         android:title="@string/menu_users" />
+    <item
+        android:id="@+id/nav_time"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="@string/menu_users" />
 
 </menu>

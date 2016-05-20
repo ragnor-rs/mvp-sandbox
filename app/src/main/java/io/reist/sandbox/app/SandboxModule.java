@@ -33,19 +33,20 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.reist.sandbox.app.model.local.DbOpenHelper;
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.RepoStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.app.model.User;
 import io.reist.sandbox.app.model.UserStorIOSQLiteDeleteResolver;
 import io.reist.sandbox.app.model.UserStorIOSQLiteGetResolver;
 import io.reist.sandbox.app.model.UserStorIOSQLitePutResolver;
-import io.reist.sandbox.repos.model.local.RepoGetResolver;
-import io.reist.sandbox.repos.model.local.RepoPutResolver;
+import io.reist.sandbox.app.model.local.DbOpenHelper;
+import io.reist.sandbox.app.model.remote.NestedFieldNameAdapter;
 import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.repos.ReposModule;
+import io.reist.sandbox.repos.model.local.RepoGetResolver;
+import io.reist.sandbox.repos.model.local.RepoPutResolver;
+import io.reist.sandbox.time.TimeModule;
 import io.reist.sandbox.users.UsersModule;
-import io.reist.sandbox.app.model.remote.NestedFieldNameAdapter;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -55,7 +56,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module(includes = {
         UsersModule.class,
-        ReposModule.class
+        ReposModule.class,
+        TimeModule.class
 })
 public class SandboxModule {
 
@@ -134,6 +136,11 @@ public class SandboxModule {
 
         return retrofit.create(SandboxApi.class);
 
+    }
+
+    @Provides @Singleton
+    SandboxApplication sandboxApplication() {
+        return (SandboxApplication) context.getApplicationContext();
     }
 
 }

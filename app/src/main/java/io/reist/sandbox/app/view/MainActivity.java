@@ -34,6 +34,7 @@ import android.view.MenuItem;
 
 import io.reist.sandbox.R;
 import io.reist.sandbox.repos.view.RepoListFragment;
+import io.reist.sandbox.time.view.TimeFragment;
 import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.visum.view.VisumFragment;
 import io.reist.visum.view.VisumFragmentManager;
@@ -121,6 +122,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_users:
                 showFragment(new UserListFragment(), true, true);
+                break;
+            case R.id.nav_time:
+                showFragment(new TimeFragment(), true, true);
                 break;
         }
 

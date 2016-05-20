@@ -24,11 +24,14 @@ import java.util.List;
 
 import io.reist.sandbox.app.model.Repo;
 import io.reist.sandbox.app.model.SandboxError;
+import io.reist.sandbox.repos.presenter.RepoListPresenter;
+import io.reist.visum.view.VisumView;
 
 /**
  * Created by defuera on 05/11/2015.
  */
-public interface RepoListView {
+public interface RepoListView extends VisumView<RepoListPresenter> {
+
     void showLoader(boolean show);
 
     void displayError(SandboxError error);
@@ -36,4 +39,5 @@ public interface RepoListView {
     void displayData(List<Repo> data);
 
     void displaySuccess();
+
 }
