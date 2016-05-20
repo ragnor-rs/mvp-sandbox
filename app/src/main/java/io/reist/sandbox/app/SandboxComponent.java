@@ -24,6 +24,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import io.reist.sandbox.repos.ReposComponent;
+import io.reist.sandbox.time.TimeComponent;
 import io.reist.sandbox.users.UsersComponent;
 
 @Singleton
@@ -33,5 +34,7 @@ public interface SandboxComponent {
     ReposComponent reposComponent();
 
     UsersComponent usersComponent();
+
+    TimeComponent timeComponent();
 
 }

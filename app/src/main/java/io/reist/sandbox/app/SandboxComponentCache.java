@@ -24,6 +24,8 @@ import android.content.Context;
 
 import io.reist.sandbox.repos.view.RepoEditFragment;
 import io.reist.sandbox.repos.view.RepoListFragment;
+import io.reist.sandbox.time.view.TimeFragment;
+import io.reist.sandbox.time.view.TimeNotification;
 import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.sandbox.users.view.UserReposFragment;
 import io.reist.visum.ComponentCache;
@@ -56,6 +58,11 @@ public class SandboxComponentCache extends ComponentCache {
                 UserReposFragment.class.isAssignableFrom(viewClass)
         ) {
             return sandboxComponent.usersComponent();
+        } else if (
+                TimeFragment.class.isAssignableFrom(viewClass) ||
+                TimeNotification.class.isAssignableFrom(viewClass)
+        ) {
+            return sandboxComponent.timeComponent();
         } else {
             throw new RuntimeException("Unknown view class: " + viewClass.getName());
         }

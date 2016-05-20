@@ -18,8 +18,6 @@ import io.reist.sandbox.time.TimeComponent;
 import io.reist.sandbox.time.presenter.TimePresenter;
 import io.reist.visum.view.VisumBaseView;
 
-import static android.support.v4.app.NotificationCompat.Action;
-
 /**
  * Created by Reist on 20.05.16.
  */
@@ -44,12 +42,12 @@ public class TimeNotification extends VisumBaseView<TimePresenter> implements Ti
 
         Intent intent = new Intent(application, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(application, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Action action = new Action.Builder(android.R.drawable.ic_menu_agenda, application.getString(R.string.go_to_app), pendingIntent).build();
         Notification notification = new NotificationCompat.Builder(application)
                 .setContentTitle(application.getString(R.string.app_name))
                 .setContentText(application.getString(R.string.current_time, new Date(t)))
-                .addAction(action)
+                .setContentIntent(pendingIntent)
                 .setOngoing(true)
+                .setSmallIcon(android.R.drawable.ic_menu_agenda)
                 .build();
         notificationManager.notify(NOTIFICATION_ID, notification);
 

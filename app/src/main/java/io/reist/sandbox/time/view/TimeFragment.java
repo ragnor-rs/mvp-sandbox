@@ -7,14 +7,14 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 import io.reist.sandbox.R;
+import io.reist.sandbox.app.view.BaseFragment;
 import io.reist.sandbox.time.TimeComponent;
 import io.reist.sandbox.time.presenter.TimePresenter;
-import io.reist.visum.view.VisumFragment;
 
 /**
  * Created by Reist on 20.05.16.
  */
-public class TimeFragment extends VisumFragment<TimePresenter> implements TimeView {
+public class TimeFragment extends BaseFragment<TimePresenter> implements TimeView {
 
     @Bind(R.id.time_text)
     TextView timeText;
@@ -23,12 +23,7 @@ public class TimeFragment extends VisumFragment<TimePresenter> implements TimeVi
     TimePresenter presenter;
 
     public TimeFragment() {
-        super(TimePresenter.VIEW_ID_MAIN);
-    }
-
-    @Override
-    protected int getLayoutRes() {
-        return R.layout.fragment_time;
+        super(TimePresenter.VIEW_ID_MAIN, R.layout.fragment_time);
     }
 
     @Override

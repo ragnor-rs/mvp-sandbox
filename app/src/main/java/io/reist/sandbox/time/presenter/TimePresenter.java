@@ -20,6 +20,8 @@ public class TimePresenter extends VisumPresenter<TimeView> {
 
     private final TimeService timeService;
 
+    private TimeNotification timeNotification;
+
     @Inject
     public TimePresenter(TimeService timeService) {
         this.timeService = timeService;
@@ -31,11 +33,17 @@ public class TimePresenter extends VisumPresenter<TimeView> {
     }
 
     public void onShowTimeClicked(Context context) {
-        attach(VIEW_ID_NOTIFICATION, TimeNotification.class, context);
+        if (timeNotification == null) {
+            timeNotification = new TimeNotification(context);
+        }
+        timeNotification.attachPresenter();
     }
 
     public void onHideTimeClicked() {
-        detach(VIEW_ID_NOTIFICATION);
+        if (timeNotification == null) {
+            return;
+        }
+        timeNotification.detachPresenter();
     }
 
 }
