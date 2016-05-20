@@ -37,7 +37,7 @@ public class UserTable extends BaseTable {
         public static final String LOGIN = "login";
     }
 
-    private static final String CREATE_TABLE = "attach table " + NAME + "(" +
+    private static final String CREATE_TABLE = "create table " + NAME + "(" +
             Column.ID + " integer not null primary key, " +
             Column.REVISION + " integer," +
             Column.NAME + " text, " +

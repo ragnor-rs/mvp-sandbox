@@ -41,7 +41,7 @@ public class RepoTable extends BaseTable {
         public static final String LIKED_BY_ME = "liked_by_me";
     }
 
-    private static final String CREATE_TABLE = "attach table " + NAME + "(" +
+    private static final String CREATE_TABLE = "create table " + NAME + "(" +
             Column.ID + " integer not null primary key, " +
             Column.REVISION + " integer," +
             Column.NAME + " text, " +
