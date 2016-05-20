@@ -66,6 +66,8 @@ public class TimeNotification extends VisumBaseView<TimePresenter> implements Ti
     @Override
     public void detachPresenter() {
 
+        super.detachPresenter();
+
         NotificationManager notificationManager = (NotificationManager) application.getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.cancel(NOTIFICATION_ID);
