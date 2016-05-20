@@ -51,9 +51,6 @@ public class UserListPresenter extends VisumPresenter<UserListView> {
         mIsDataLoaded = false;
 
         UserListView view = view();
-        if (view == null) {
-            throw new RuntimeException("view() for onViewAttached() is null");
-        }
         view.showLoader(true);
         loadData();
     }
@@ -76,15 +73,9 @@ public class UserListPresenter extends VisumPresenter<UserListView> {
             UserListView view = view();
             if (response.isSuccessful()) {
                 mIsDataLoaded = true;
-                if (view == null) {
-                    return;
-                }
                 view.displayData(response.getResult());
                 view.showLoader(false);
             } else {
-                if (view == null) {
-                    return;
-                }
                 view.displayError(response.getError());
             }
 
@@ -96,9 +87,7 @@ public class UserListPresenter extends VisumPresenter<UserListView> {
         @Override
         public void onError(Throwable e) {
             UserListView view = view();
-            if (view != null) {
-                view.showLoader(false);
-            }
+            view.showLoader(false);
         }
 
     }

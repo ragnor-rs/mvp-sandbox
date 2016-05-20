@@ -52,9 +52,6 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
         mIsDataLoaded = false;
 
         RepoEditView view = view();
-        if (view == null) {
-            throw new RuntimeException("view() for onViewAttached() is null");
-        }
         long repoId = view.getRepoId();
         view.displayLoader(true);
         subscribe(repoService.byId(repoId), new ResponseObserver<Repo>() {
@@ -62,9 +59,6 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
             @Override
             protected void onFail(SandboxError error) {
                 RepoEditView view = view();
-                if (view == null) {
-                    return;
-                }
                 view.displayLoader(false);
                 view.displayError(error);
             }
@@ -72,9 +66,6 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
             @Override
             protected void onSuccess(Repo result) {
                 RepoEditView view = view();
-                if (view == null) {
-                    return;
-                }
                 mIsDataLoaded = true;
                 view.displayLoader(false);
                 repo = result;
@@ -98,17 +89,13 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
             @Override
             protected void onFail(SandboxError error) {
                 RepoEditView view = view();
-                if (view != null) {
-                    view.displayError(error);
-                }
+                view.displayError(error);
             }
 
             @Override
             protected void onSuccess(Repo result) {
                 RepoEditView view = view();
-                if (view != null) {
-                    view.displayEditSuccess();
-                }
+                view.displayEditSuccess();
             }
 
         });
@@ -126,9 +113,7 @@ public class RepoEditPresenter extends VisumPresenter<RepoEditView> {
             @Override
             public void onNext(SandboxResponse<Integer> response) {
                 RepoEditView view = view();
-                if (view != null) {
-                    view.back();
-                }
+                view.back();
             }
 
         });

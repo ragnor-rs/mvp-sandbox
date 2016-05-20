@@ -53,9 +53,6 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
     protected void onViewAttached() {
         mIsDataLoaded = false;
         RepoListView view = view();
-        if (view == null) {
-            throw new RuntimeException("view() for onViewAttached() is null");
-        }
         view.showLoader(true);
         loadData();
     }
@@ -70,9 +67,6 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
             @Override
             protected void onFail(SandboxError error) {
                 RepoListView view = view();
-                if (view == null) {
-                    return;
-                }
                 view.showLoader(false);
                 view.displayError(error);
             }
@@ -81,9 +75,6 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
             protected void onSuccess(List<Repo> result) {
                 mIsDataLoaded = true;
                 RepoListView view = view();
-                if (view == null) {
-                    return;
-                }
                 view.showLoader(false);
                 view.displayData(result); //cur need to check if view detached or crash can occure
             }
@@ -92,9 +83,7 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
 
     public void createRepo() {
         RepoListView view = view();
-        if (view != null) {
-            view.showLoader(true);
-        }
+        view.showLoader(true);
         Random rand = new Random();
         Repo object = new Repo();
 
@@ -116,9 +105,6 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
         protected void onFail(SandboxError error) {
             Log.e(TAG, "Error saving data" + error.getMessage());
             RepoListView view = view();
-            if (view == null) {
-                return;
-            }
             view.displayError(error);
             view.showLoader(false);
         }
@@ -127,9 +113,6 @@ public class RepoListPresenter extends VisumPresenter<RepoListView> {
         protected void onSuccess(Repo result) {
             Log.i(TAG, "success add repo subscriber");
             RepoListView view = view();
-            if (view == null) {
-                return;
-            }
             view.displaySuccess();
             view.showLoader(false);
         }

@@ -51,9 +51,6 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
     @Override
     protected void onViewAttached() {
         UserReposView view = view();
-        if (view == null) {
-            throw new RuntimeException("view() for onViewAttached() is null");
-        }
         view.showLoader(true);
         loadData(view.getUserId());
     }
@@ -87,9 +84,6 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
         @Override
         public void onError(Throwable e) {
             UserReposView view = view();
-            if (view == null) {
-                return;
-            }
             view.displayError(new SandboxError(e));
         }
 
@@ -107,16 +101,10 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
                     result = new ArrayList<>();
                 }
                 Log.d(TAG, "successfully loaded " + result.size() + " items");
-                if (view == null) {
-                    return;
-                }
                 view.displayData(result);
                 view.showLoader(false);
             } else {
                 Log.w(TAG, "network error occurred");
-                if (view == null) {
-                    return;
-                }
                 view.displayError(response.getError());
             }
         }
@@ -125,9 +113,6 @@ public class UserReposPresenter extends VisumPresenter<UserReposView> {
         public void onError(Throwable e) {
             Log.e(TAG, "Error fetching data", e);
             UserReposView view = view();
-            if (view == null) {
-                return;
-            }
             view.displayError(new SandboxError(e));
             view.showLoader(false);
         }
