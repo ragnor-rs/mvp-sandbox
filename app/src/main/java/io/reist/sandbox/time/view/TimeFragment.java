@@ -12,6 +12,11 @@ import io.reist.sandbox.time.TimeComponent;
 import io.reist.sandbox.time.presenter.TimePresenter;
 
 /**
+ * This class is a part of the example of single presenter - multiple views feature of Visum.
+ *
+ * @see TimeNotification
+ * @see TimePresenter
+ *
  * Created by Reist on 20.05.16.
  */
 public class TimeFragment extends BaseFragment<TimePresenter> implements TimeView {

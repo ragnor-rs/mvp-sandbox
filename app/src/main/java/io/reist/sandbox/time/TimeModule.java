@@ -10,7 +10,6 @@ import io.reist.sandbox.time.model.TimeService;
 @Module
 public class TimeModule {
 
-
     @Provides
     TimeService provideTimeService() {
         return new TimeService();
