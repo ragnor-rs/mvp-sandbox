@@ -83,7 +83,7 @@ public class UserListFragment extends BaseFragment<UserListPresenter> implements
     }
 
     @Override
-    public void inject(Object from) {
+    public void inject(@NonNull Object from) {
         ((UsersComponent) from).inject(this);
     }
 

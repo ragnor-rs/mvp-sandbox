@@ -21,6 +21,7 @@
 package io.reist.sandbox.app;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 
 import io.reist.visum.ComponentCache;
 import io.reist.visum.ComponentCacheProvider;
@@ -33,6 +34,7 @@ public class SandboxApplication extends Application implements ComponentCachePro
     private ComponentCache componentCache;
 
     @Override
+    @NonNull
     public ComponentCache getComponentCache() {
         if (componentCache == null) {
             componentCache = new SandboxComponentCache(this);

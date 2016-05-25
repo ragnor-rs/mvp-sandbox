@@ -22,6 +22,8 @@ package io.reist.sandbox.app;
 
 import android.content.Context;
 
+import java.util.Arrays;
+
 import io.reist.sandbox.repos.view.RepoEditFragment;
 import io.reist.sandbox.repos.view.RepoListFragment;
 import io.reist.sandbox.time.view.TimeFragment;
@@ -29,43 +31,33 @@ import io.reist.sandbox.time.view.TimeNotification;
 import io.reist.sandbox.users.view.UserListFragment;
 import io.reist.sandbox.users.view.UserReposFragment;
 import io.reist.visum.ComponentCache;
-import io.reist.visum.VisumClient;
 
 /**
  * Created by Reist on 29.11.15.
  */
 public class SandboxComponentCache extends ComponentCache {
 
-    private final SandboxComponent sandboxComponent;
-
     public SandboxComponentCache(Context context) {
         this(DaggerSandboxComponent.builder().sandboxModule(new SandboxModule(context)).build());
     }
 
     public SandboxComponentCache(SandboxComponent sandboxComponent) {
-        this.sandboxComponent = sandboxComponent;
-    }
 
-    @Override
-    public Object buildComponentFor(Class<? extends VisumClient> viewClass) {
-        if (
-                RepoListFragment.class.isAssignableFrom(viewClass) ||
-                RepoEditFragment.class.isAssignableFrom(viewClass)
-        ) {
-            return sandboxComponent.reposComponent();
-        } else if (
-                UserListFragment.class.isAssignableFrom(viewClass) ||
-                UserReposFragment.class.isAssignableFrom(viewClass)
-        ) {
-            return sandboxComponent.usersComponent();
-        } else if (
-                TimeFragment.class.isAssignableFrom(viewClass) ||
-                TimeNotification.class.isAssignableFrom(viewClass)
-        ) {
-            return sandboxComponent.timeComponent();
-        } else {
-            throw new RuntimeException("Unknown view class: " + viewClass.getName());
-        }
+        register(
+                Arrays.asList(RepoListFragment.class, RepoEditFragment.class),
+                sandboxComponent::reposComponent
+        );
+
+        register(
+                Arrays.asList(UserListFragment.class, UserReposFragment.class),
+                sandboxComponent::usersComponent
+        );
+
+        register(
+                Arrays.asList(TimeFragment.class, TimeNotification.class),
+                sandboxComponent::timeComponent
+        );
+
     }
 
 }
