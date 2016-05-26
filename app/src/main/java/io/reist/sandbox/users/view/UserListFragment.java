@@ -61,6 +61,9 @@ public class UserListFragment extends BaseFragment<UserListPresenter> implements
 
     @Override
     public void attachPresenter() {
+
+        super.attachPresenter();
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         mRecyclerView.setLayoutManager(layoutManager);
@@ -68,6 +71,7 @@ public class UserListFragment extends BaseFragment<UserListPresenter> implements
 
         mAdapter.setOnUserClickListener(user ->
                 getFragmentController().showFragment(UserReposFragment.newInstance(user.id), true));
+
     }
 
     @NonNull

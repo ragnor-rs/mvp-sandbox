@@ -67,6 +67,9 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
 
     @Override
     public void attachPresenter() {
+
+        super.attachPresenter();
+
         // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -76,6 +79,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         loaderView.setOnRetryClickListener(v -> presenter.loadData());
+
     }
 
     @OnClick(R.id.create_repo_button)

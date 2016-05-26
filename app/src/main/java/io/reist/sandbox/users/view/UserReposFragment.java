@@ -71,6 +71,9 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
 
     @Override
     public void attachPresenter() {
+
+        super.attachPresenter();
+
         // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -95,6 +98,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
         });
 
         loaderView.setOnRetryClickListener(v -> presenter.loadData(getUserId()));
+
     }
 
     @Override
