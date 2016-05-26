@@ -87,11 +87,6 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
         return presenter;
     }
 
-    @Override
-    public void attachPresenter() {
-        super.attachPresenter();
-    }
-
     @OnClick(R.id.save)
     void onSaveButtonClick() {
         presenter.saveRepo(
