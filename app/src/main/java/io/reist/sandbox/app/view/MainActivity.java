@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
 
         fragmentManager.addOnBackStackChangedListener(this);
 
-        // if (getSupportFragmentManager().findFragmentById(R.id.fragment_container))
+        // TODO check if the fragment has been already restored by the fragment manager
         showFragment(new RepoListFragment(), false);
 
     }
