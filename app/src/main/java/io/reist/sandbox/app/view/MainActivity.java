@@ -29,6 +29,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -36,6 +37,7 @@ import io.reist.sandbox.R;
 import io.reist.sandbox.repos.view.RepoListFragment;
 import io.reist.sandbox.time.view.TimeFragment;
 import io.reist.sandbox.users.view.UserListFragment;
+import io.reist.visum.presenter.VisumPresenter;
 import io.reist.visum.view.VisumFragment;
 import io.reist.visum.view.VisumFragmentManager;
 
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity
 
         fragmentManager.addOnBackStackChangedListener(this);
 
+        // if (getSupportFragmentManager().findFragmentById(R.id.fragment_container))
         showFragment(new RepoListFragment(), false);
 
     }
@@ -150,18 +153,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showFragment(VisumFragment fragment, boolean remove) {
-        VisumFragmentManager.showFragment(getSupportFragmentManager(),
-                fragment,
-                R.id.fragment_container,
-                remove,
-                false);
+        showFragment(fragment, remove, false);
     }
 
     private void showFragment(VisumFragment fragment, boolean remove, boolean popBackStack) {
+        Log.d(VisumPresenter.TAG, "showFragment(" + VisumPresenter.toString(fragment) + ", remove = " + remove + ", popBackStack = " + popBackStack + ")");
         VisumFragmentManager.showFragment(getSupportFragmentManager(),
                 fragment,
                 R.id.fragment_container,
                 remove,
-                popBackStack);
+                popBackStack
+        );
     }
+
 }
