@@ -67,7 +67,6 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
 
     @Override
     public void attachPresenter() {
-        super.attachPresenter();
         // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);

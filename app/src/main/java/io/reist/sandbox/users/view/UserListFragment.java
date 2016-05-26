@@ -59,14 +59,8 @@ public class UserListFragment extends BaseFragment<UserListPresenter> implements
         super(R.layout.fragment_users);
     }
 
-    public static UserListFragment newInstance() {
-        return new UserListFragment();
-    }
-
     @Override
     public void attachPresenter() {
-        super.attachPresenter();
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         mRecyclerView.setLayoutManager(layoutManager);
