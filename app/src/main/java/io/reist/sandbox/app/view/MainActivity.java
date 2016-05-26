@@ -157,7 +157,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showFragment(VisumFragment fragment, boolean remove, boolean popBackStack) {
-        Log.d(VisumPresenter.TAG, "showFragment(" + VisumPresenter.toString(fragment) + ", remove = " + remove + ", popBackStack = " + popBackStack + ")");
         VisumFragmentManager.showFragment(getSupportFragmentManager(),
                 fragment,
                 R.id.fragment_container,
