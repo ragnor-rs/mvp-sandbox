@@ -21,6 +21,7 @@
 package io.reist.sandbox.repos.view;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -77,18 +78,13 @@ public class RepoEditFragment extends BaseFragment<RepoEditPresenter> implements
     }
 
     @Override
-    public void inject(Object from) {
+    public void inject(@NonNull Object from) {
         ((ReposComponent) from).inject(this);
     }
 
     @Override
     public RepoEditPresenter getPresenter() {
         return presenter;
-    }
-
-    @Override
-    public void attachPresenter() {
-        super.attachPresenter();
     }
 
     @OnClick(R.id.save)

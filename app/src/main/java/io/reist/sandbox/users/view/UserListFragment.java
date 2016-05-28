@@ -59,12 +59,9 @@ public class UserListFragment extends BaseFragment<UserListPresenter> implements
         super(R.layout.fragment_users);
     }
 
-    public static UserListFragment newInstance() {
-        return new UserListFragment();
-    }
-
     @Override
     public void attachPresenter() {
+
         super.attachPresenter();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -74,6 +71,7 @@ public class UserListFragment extends BaseFragment<UserListPresenter> implements
 
         mAdapter.setOnUserClickListener(user ->
                 getFragmentController().showFragment(UserReposFragment.newInstance(user.id), true));
+
     }
 
     @NonNull
@@ -83,7 +81,7 @@ public class UserListFragment extends BaseFragment<UserListPresenter> implements
     }
 
     @Override
-    public void inject(Object from) {
+    public void inject(@NonNull Object from) {
         ((UsersComponent) from).inject(this);
     }
 

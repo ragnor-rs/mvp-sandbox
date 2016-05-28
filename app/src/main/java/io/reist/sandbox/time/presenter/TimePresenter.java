@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.reist.sandbox.time.model.TimeService;
 import io.reist.sandbox.time.view.TimeNotification;
@@ -18,6 +19,7 @@ import io.reist.visum.presenter.VisumPresenter;
  * @see io.reist.sandbox.time.view.TimeNotification
  * @see io.reist.sandbox.time.view.TimeFragment
  */
+@Singleton
 public class TimePresenter extends VisumPresenter<TimeView> {
 
     public static final int VIEW_ID_MAIN = 1;

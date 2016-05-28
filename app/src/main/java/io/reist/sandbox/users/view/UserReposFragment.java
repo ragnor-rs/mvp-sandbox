@@ -71,6 +71,7 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
 
     @Override
     public void attachPresenter() {
+
         super.attachPresenter();
 
         // setView this setting to improve performance if you know that changes
@@ -97,10 +98,11 @@ public class UserReposFragment extends BaseFragment<UserReposPresenter> implemen
         });
 
         loaderView.setOnRetryClickListener(v -> presenter.loadData(getUserId()));
+
     }
 
     @Override
-    public void inject(Object from) {
+    public void inject(@NonNull Object from) {
         ((UsersComponent) from).inject(this);
     }
 

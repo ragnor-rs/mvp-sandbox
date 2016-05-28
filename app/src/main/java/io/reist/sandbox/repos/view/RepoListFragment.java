@@ -20,6 +20,7 @@
 
 package io.reist.sandbox.repos.view;
 
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,7 +67,9 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
 
     @Override
     public void attachPresenter() {
+
         super.attachPresenter();
+
         // setView this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -76,6 +79,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         loaderView.setOnRetryClickListener(v -> presenter.loadData());
+
     }
 
     @OnClick(R.id.create_repo_button)
@@ -84,7 +88,7 @@ public class RepoListFragment extends BaseFragment<RepoListPresenter> implements
     }
 
     @Override
-    public void inject(Object from) {
+    public void inject(@NonNull Object from) {
         ((ReposComponent) from).inject(this);
     }
 
