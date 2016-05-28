@@ -44,18 +44,18 @@ public class SandboxComponentCache extends ComponentCache {
     public SandboxComponentCache(SandboxComponent sandboxComponent) {
 
         register(
-                Arrays.asList(RepoListFragment.class, RepoEditFragment.class),
-                sandboxComponent::reposComponent
+                sandboxComponent::reposComponent,
+                RepoListFragment.class, RepoEditFragment.class
         );
 
         register(
-                Arrays.asList(UserListFragment.class, UserReposFragment.class),
-                sandboxComponent::usersComponent
+                sandboxComponent::usersComponent,
+                UserListFragment.class, UserReposFragment.class
         );
 
         register(
-                Arrays.asList(TimeFragment.class, TimeNotification.class),
-                sandboxComponent::timeComponent
+                sandboxComponent::timeComponent,
+                TimeFragment.class, TimeNotification.class
         );
 
     }
