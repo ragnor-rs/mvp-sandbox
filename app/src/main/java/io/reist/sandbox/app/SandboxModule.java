@@ -45,6 +45,7 @@ import io.reist.sandbox.app.model.remote.SandboxApi;
 import io.reist.sandbox.repos.ReposModule;
 import io.reist.sandbox.repos.model.local.RepoGetResolver;
 import io.reist.sandbox.repos.model.local.RepoPutResolver;
+import io.reist.sandbox.result.ResultModule;
 import io.reist.sandbox.time.TimeModule;
 import io.reist.sandbox.users.UsersModule;
 import okhttp3.HttpUrl;
@@ -57,7 +58,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module(includes = {
         UsersModule.class,
         ReposModule.class,
-        TimeModule.class
+        TimeModule.class,
+        ResultModule.class
 })
 public class SandboxModule {
 

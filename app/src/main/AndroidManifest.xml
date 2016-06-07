@@ -25,6 +25,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".result.view.ResultActivity" />
+
+        <activity android:name=".result.view.SubActivity" />
+
     </application>
 
 </manifest>

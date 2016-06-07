@@ -22,10 +22,9 @@ package io.reist.sandbox.app;
 
 import android.content.Context;
 
-import java.util.Arrays;
-
 import io.reist.sandbox.repos.view.RepoEditFragment;
 import io.reist.sandbox.repos.view.RepoListFragment;
+import io.reist.sandbox.result.view.ResultActivity;
 import io.reist.sandbox.time.view.TimeFragment;
 import io.reist.sandbox.time.view.TimeNotification;
 import io.reist.sandbox.users.view.UserListFragment;
@@ -56,6 +55,11 @@ public class SandboxComponentCache extends ComponentCache {
         register(
                 sandboxComponent::timeComponent,
                 TimeFragment.class, TimeNotification.class
+        );
+
+        register(
+                sandboxComponent::resultComponent,
+                ResultActivity.class
         );
 
     }
