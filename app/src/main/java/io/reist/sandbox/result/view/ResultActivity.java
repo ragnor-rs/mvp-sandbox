@@ -14,6 +14,12 @@ import io.reist.sandbox.result.presenter.ResultPresenter;
 import io.reist.visum.view.VisumActivity;
 
 /**
+ * This activity demonstrates how a result received from another activity can be passed directly
+ * to a {@link io.reist.visum.presenter.VisumPresenter}. This was made possible by performing
+ * dependency injection in {@link VisumActivity#onActivityResult(int, int, Intent)}. Among other
+ * dependencies, a presenter is injected directly into the activity. Since then, you can call any
+ * of presenter's methods. In this example, the method is {@link ResultPresenter#receiveResult()}.
+ *
  * Created by Reist on 07.06.16.
  */
 public class ResultActivity extends VisumActivity<ResultPresenter> implements ResultView {
