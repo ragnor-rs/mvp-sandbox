@@ -1,3 +1,5 @@
+**This repo is no longer maintained. The demo app moved to https://github.com/ragnor-rs/visum**
+
 # mvp-sandbox
 Android sample app based on Visum (https://github.com/ragnor-rs/visum)
 
